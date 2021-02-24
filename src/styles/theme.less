@@ -1,0 +1,128 @@
+@import '~antd/lib/style/themes/default.less';
+@import '~antd/dist/antd.less';
+
+@btn-border-radius-base: 5px;
+@btn-border-radius-sm: 5px;
+@font-size-base: 13px;
+@form-vertical-label-padding: 0;
+@form-item-margin-bottom: 18px;
+@input-bg: transparent;
+
+.help-not-inline .ant-form-item {
+  margin-bottom: 8px;
+}
+
+.help-inline {
+  .ant-form-item {
+    margin-bottom: 8px;
+  }
+
+
+  .ant-form-item-with-help {
+    //margin-bottom: @form-item-margin-bottom;
+
+    .ant-input {
+      transition: 0s
+    }
+
+    .show-help-leave.show-help-leave-active {
+      display: none;
+    }
+
+    .show-help-leave.show-help-leave-active,
+    .show-help-enter.show-help-enter-active,
+    .show-help-appear.show-help-appear-active {
+      animation-name: none;
+      animation-play-state: unset;
+      pointer-events: none;
+    }
+
+    .show-help-enter, .show-help-appear {
+      opacity: 1;
+      animation-timing-function: unset;
+      animation-duration: 0s;
+      //animation-fill-mode: both;
+    }
+
+    .ant-form-item-control-input {
+      .ant-select-selection-placeholder {
+        display: none;
+      }
+
+
+      ::-webkit-input-placeholder { /* WebKit browsers */
+        color: transparent;
+      }
+
+      :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+        color: #fff;
+        opacity: 0;
+      }
+
+      ::-moz-placeholder { /* Mozilla Firefox 19+ */
+        color: transparent;
+        opacity: 0;
+      }
+
+      :-ms-input-placeholder { /* Internet Explorer 10+ */
+        color: transparent;
+      }
+    }
+  }
+
+  .ant-form-item-control {
+    position: relative;
+
+    .ant-form-item-control-input {
+      z-index: 1;
+    }
+
+    .ant-form-item-explain {
+      position: absolute;
+      padding: 12px @input-padding-horizontal;
+      top: 50%;
+      transform: translateY(-50%);
+      margin: 0;
+    }
+  }
+}
+
+.ant-form-item-explain.ant-form-item-explain-error {
+  color: rgba(255, 77, 79, 0.80);
+}
+
+.ant-form-small .help-inline .ant-form-item-explain {
+  padding: 12px @input-padding-horizontal-sm;
+}
+
+.tag-action {
+  cursor: pointer;
+  border-radius: 5px;
+
+  &:not(:last-child) {
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+
+  &:nth-child(:last-child) {
+    margin-right: 0;
+  }
+}
+
+.ant-form-item-explain, .ant-form-item-extra {
+  font-size: calc(@font-size-base - 1px);
+}
+
+.ant-divider-horizontal.ant-divider-with-text {
+  font-size: @font-size-base;
+}
+
+.ant-input-number-input,
+textarea.ant-input {
+  background-color: #fff;
+}
+
+.Toastify__toast {
+  font-family: inherit;
+  font-size: 14px;
+}

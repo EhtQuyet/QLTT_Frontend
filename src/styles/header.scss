@@ -1,0 +1,64 @@
+header {
+  .trigger {
+    font-size: 16px;
+    line-height: 50px;
+    padding: 0 24px;
+    transition: color 0.3s;
+    vertical-align: top;
+
+    &:hover {
+      color: #1890ff;
+    }
+  }
+
+}
+
+.sider-logo {
+  height: 34px;
+  background: rgba(255, 255, 255, 0.3);
+  margin: 8px 16px;
+  display: flex;
+
+  &.collapsed {
+    .img {
+      width: 48px;
+      //height: 32px;
+      margin-right: 0;
+      padding-left: 7px;
+    }
+
+    .text {
+      width: 0;
+    }
+  }
+
+  .img {
+    margin-right: 16px;
+    //height: 25px;
+    width: 32px;
+  }
+
+  .img, .text {
+    transition: font-size 0.15s cubic-bezier(0.215, 0.61, 0.355, 1),
+    height 0.15s cubic-bezier(0.215, 0.61, 0.355, 1),
+    margin 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
+    color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
+    padding 0.15s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+
+  .text {
+    font-size: 20px;
+    font-weight: 800;
+    background: -webkit-linear-gradient(45deg, #09009f, #00ff95 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+.ant-layout-header {
+  height: 50px;
+}
+
+.site-layout .site-layout-background {
+  background: #fff;
+}

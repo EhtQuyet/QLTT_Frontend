@@ -1,0 +1,92 @@
+#login {
+  background-image: url("../../../assets/images/bg-01.jpg");
+  background-size: cover;
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+
+
+  .login-form {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    //height: 320px;
+    padding: 36px;
+    box-shadow: 0 0 100px rgba(0, 0, 0, 0.08);
+    background-color: #fff;
+    border-radius: 10px;
+
+    button {
+      width: 100%;
+      font-size: 15px;
+      height: unset;
+      border-radius: 25px;
+    }
+
+    p {
+      color: rgb(204, 204, 204);
+      text-align: center;
+      margin-top: 16px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+
+    .logo {
+      text-align: center;
+      //cursor: pointer;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      img {
+        width: 50px;
+        margin-right: 8px;
+      }
+
+      span {
+        vertical-align: text-bottom;
+        font-size: 30px;
+        text-transform: uppercase;
+        display: inline-block;
+        font-weight: 800;
+        color: blue;
+
+        background: -webkit-linear-gradient(45deg, #09009f, #00ff95 80%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+
+    .ant-spin-container,
+    .ant-spin-nested-loading {
+      height: 100%;
+    }
+
+    .footer {
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+    }
+
+  }
+
+  .ant-form-item:not(.ant-form-item-with-help) {
+    margin-bottom: 20px;
+  }
+
+  .ant-form-item-explain, .ant-form-item-extra {
+    height: 22px;
+    font-size: 15px;
+  }
+
+  .ant-form-large .ant-form-item-label > label {
+    height: 30px;
+    font-size: 15px;
+  }
+
+}
