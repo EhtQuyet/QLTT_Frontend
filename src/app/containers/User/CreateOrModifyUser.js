@@ -38,14 +38,16 @@ function CreateOrModifyUser({ isModalVisible, handleOk, handleCancel, userSelect
     >
       <Loading active={props.isLoading}>
         <Form id="formModal" size='default' form={formUser} autoComplete="new-password" onFinish={onFinish}>
-          <Row>
+          <Row gutter={5}>
             <CustomSkeleton
               size='default'
               label="Họ tên" name="fullName"
               type={CONSTANTS.TEXT}
               layoutItem={{ labelCol: { xs: 6, md: 5 } }}
               layoutCol={{ xs: 24 }}
-              rules={[RULES.REQUIRED]}/>
+              rules={[RULES.REQUIRED]}
+              labelLeft
+            />
 
             <CustomSkeleton
               size='default'
@@ -53,7 +55,9 @@ function CreateOrModifyUser({ isModalVisible, handleOk, handleCancel, userSelect
               type={CONSTANTS.TEXT}
               layoutItem={{ labelCol: { xs: { span: 6 }, md: { span: 10 } } }}
               layoutCol={{ xs: 24, md: 12 }}
-              rules={[RULES.REQUIRED]}/>
+              rules={[RULES.REQUIRED]}
+              labelLeft
+            />
 
             <CustomSkeleton
               size='default'
@@ -61,7 +65,9 @@ function CreateOrModifyUser({ isModalVisible, handleOk, handleCancel, userSelect
               type={CONSTANTS.SELECT}
               layoutItem={{ labelCol: { xs: { span: 6 }, md: { span: 6 } } }}
               layoutCol={{ xs: 24, md: 12 }}
-              options={{ data: GENDER_OPTIONS }}/>
+              options={{ data: GENDER_OPTIONS }}
+              labelLeft
+            />
 
             <CustomSkeleton
               size='default'
@@ -71,7 +77,9 @@ function CreateOrModifyUser({ isModalVisible, handleOk, handleCancel, userSelect
               layoutItem={{ labelCol: { xs: { span: 6 }, md: { span: 5 } } }}
               layoutCol={{ xs: 24 }}
               rules={props.type === CONSTANTS.CREATE ? [RULES.REQUIRED, RULES.USERNAME_RANGER] : []}
-              helpInline={false}/>
+              helpInline={false}
+              labelLeft
+            />
 
             {props.type === CONSTANTS.CREATE && <Fragment>
               <CustomSkeleton
@@ -81,7 +89,9 @@ function CreateOrModifyUser({ isModalVisible, handleOk, handleCancel, userSelect
                 layoutCol={{ xs: 24 }}
                 layoutItem={{ labelCol: { xs: 6, md: 5 } }}
                 rules={[RULES.REQUIRED, RULES.PASSWORD_FORMAT]}
-                helpInline={false}/>
+                helpInline={false}
+                labelLeft
+              />
 
               <CustomSkeleton
                 size='default'
@@ -101,7 +111,9 @@ function CreateOrModifyUser({ isModalVisible, handleOk, handleCancel, userSelect
                     },
                   }),
                 ]}
-                helpInline={false}/>
+                helpInline={false}
+                labelLeft
+              />
             </Fragment>}
 
             <CustomSkeleton
@@ -110,8 +122,10 @@ function CreateOrModifyUser({ isModalVisible, handleOk, handleCancel, userSelect
               type={CONSTANTS.TEXT}
               layoutCol={{ xs: 24 }}
               layoutItem={{ labelCol: { xs: 6, md: 5 } }}
-              rules={[RULES.EMAIL]}
-              helpInline={false}/>
+              rules={[RULES.EMAIL, RULES.REQUIRED]}
+              helpInline={false}
+              labelLeft
+            />
 
           </Row>
         </Form>

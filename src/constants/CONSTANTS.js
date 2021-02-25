@@ -44,9 +44,9 @@ export const PAGINATION_INIT = Object.assign({}, {
 export const TOKEN_EXP_TIME = 1000 * 5 * 60;
 
 export const GENDER_OPTIONS = [
-  { label: 'Nam', value: 'MALE' },
-  { label: 'Nữ', value: 'FEMALE' },
-  { label: 'Khác', value: 'OTHER' },
+  { label: 'Nam', value: 'Nam' },
+  { label: 'Nữ', value: 'Nữ' },
+  { label: 'Khác', value: 'Khác' },
 ];
 
 export const TOAST_MESSAGE = {

@@ -118,25 +118,25 @@ function User({ isLoading, ...props }) {
       title: 'Tên',
       dataIndex: 'fullName',
       key: 'name',
-      // ...searchColumnInput('full_name[like]', handleSearch, 'Tên'),
+      width: 300
     },
     {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
-      // ...searchColumnInput('email[like]', handleSearch, 'Email'),
+      width: 300
     },
     {
-      title: 'Gới tính',
+      title: 'Giới tính',
       dataIndex: 'gender',
       key: 'gender',
-      render: (value) => GENDER_OPTIONS.find(gender => gender.value === value)?.label,
-      // ...searchColumnCheckbox('gender', handleSearch, GENDER_OPTIONS),
+      width: 300
     },
     {
       title: 'Số điện thoại',
       dataIndex: 'phone',
       key: 'phone',
+      width: 300
     },
     {
       align: 'center',

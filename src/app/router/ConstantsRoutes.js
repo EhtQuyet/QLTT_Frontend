@@ -21,6 +21,10 @@ const Dashboard = lazy(() => import('@containers/Dashboard/Dashboard'));
 const User = lazy(() => import('@containers/User/User'));
 const MyInfo = lazy(() => import('@containers/MyInfo/MyInfo'));
 
+const GiaoVien = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyGiaoVienHD/GiaoVien'));
+const SinhVien = lazy(() => import('@containers/QuanLyDanhMuc/QuanLySinhVienTTTN/SinhVien'));
+const BoMon = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyBoMon/BoMon'));
+
 
 
 
@@ -45,6 +49,22 @@ export const ConstantsRoutes = [
 
 
   { path: URL.MY_INFO, breadcrumbName: 'Thông tin cá nhân', component: MyInfo },
+
+  {
+    path: URL.MENU.DANH_MUC_QUAN_LY,
+    menuName: 'Danh mục quản lý',
+    icon: <UnorderedListOutlined/>,
+    children: [
+      {
+        path: URL.MENU.GIAO_VIEN,
+        menuName: 'Quản lý giáo viên',
+        component: GiaoVien,
+        icon: <GroupOutlined/>,
+      },
+      { path: URL.MENU.SINH_VIEN, menuName: 'Quản lý sinh viên', component: SinhVien, icon: <GroupOutlined/> },
+      { path: URL.MENU.BO_MON, menuName: 'Quản lý bộ môn', component: BoMon, icon: <GroupOutlined/> },
+    ],
+  },
 
 ];
 
