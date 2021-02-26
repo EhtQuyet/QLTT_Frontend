@@ -13,11 +13,11 @@ import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
 import moment from 'moment';
 import { connect } from 'react-redux';
-
+import * as lophoc from '@app/store/ducks/lophoc.duck';
 import Filter from '@components/Filter';
 import Loading from '@components/Loading';
 
-function SinhVien({ isLoading, ...props }) {
+function SinhVien({ isLoading, classmateList, ...props }) {
   const [sinhvien, setSinhVien] = useState(PAGINATION_INIT);
   const [state, setState] = useState({
     isShowModal: false,
@@ -25,6 +25,9 @@ function SinhVien({ isLoading, ...props }) {
   });
 
   useEffect(() => {
+    if (!props?.classmateList?.length) {
+      props.getClass();
+    }
     (async () => {
       await getDataSinhVien();
     })();
@@ -54,7 +57,7 @@ function SinhVien({ isLoading, ...props }) {
     email: data.email,
     ngaySinh: data.ngay_sinh,
     diaChi: data.dia_chi,
-    maLop: data.ma_lop,
+    maLop: data.ma_lop_hoc,
     maSinhVien: data.ma_sinh_vien,
     gioiTinh: data.gioi_tinh,
     _id: data._id,
@@ -80,9 +83,10 @@ function SinhVien({ isLoading, ...props }) {
       width: 300,
     },
     {
-      title: 'Số điện thoại',
-      dataIndex: 'sdt',
-      key: 'sdt',
+      title: 'Mã lớp',
+      dataIndex: 'maLop',
+      key: 'maLop',
+      render: value => value?.ten_lop_hoc,
       width: 200,
     },
     {
@@ -91,31 +95,12 @@ function SinhVien({ isLoading, ...props }) {
       key: 'email',
       width: 300,
     },
-    // {
-    //   title: 'Ngày sinh',
-    //   dataIndex: 'ngaySinh',
-    //   key: 'ngaySinh',
-    //   render: value => value ? moment(value).format('DD/MM/YYYY') : '',
-    //   width: 200,
-    // },
-    // {
-    //   title: 'Giới tính',
-    //   dataIndex: 'gioiTinh',
-    //   key: 'gioiTinh',
-    //   width: 200,
-    // },
     {
-      title: 'Mã lớp',
-      dataIndex: 'maLop',
-      key: 'maLop',
+      title: 'Số điện thoại',
+      dataIndex: 'sdt',
+      key: 'sdt',
       width: 200,
     },
-    // {
-    //   title: 'Địa chỉ',
-    //   dataIndex: 'diaChi',
-    //   key: 'diaChi',
-    //   width: 200,
-    // },
     {
       align: 'center',
       render: (value) => <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>,
@@ -147,7 +132,7 @@ function SinhVien({ isLoading, ...props }) {
 
     const dataRequest = {
       ten_sinh_vien: dataForm.tenSinhVien,
-      ma_lop: dataForm.maLop,
+      ma_lop_hoc: dataForm.maLop,
       ngay_sinh: dataForm.ngaySinh ? dataForm.ngaySinh.toString() : null,
       ma_sinh_vien: dataForm.maSinhVien,
       dia_chi: dataForm.diaChi,
@@ -197,7 +182,10 @@ function SinhVien({ isLoading, ...props }) {
         dataSearch={[
           { name: 'ten_sinh_vien', label: 'Tên sinh viên', type: CONSTANTS.TEXT },
           { name: 'ma_sinh_vien', label: 'Mã sinh viên ', type: CONSTANTS.TEXT },
-          { name: 'ma_lop', label: 'Mã lớp ', type: CONSTANTS.TEXT },
+          {
+            name: 'ma_lop_hoc', label: 'Lớp ', type: CONSTANTS.SELECT,
+            options: { data: classmateList, valueString: '_id', labelString: 'name'}
+          },
         ]}
         handleFilter={(query) => getDataSinhVien(1, sinhvien.pageSize, query)}/>
 
@@ -219,6 +207,7 @@ function SinhVien({ isLoading, ...props }) {
 
 function mapStateToProps(store) {
   const { isLoading } = store.app;
-  return { isLoading };
+  const { classmateList } = store.lophoc;
+  return { isLoading, classmateList };
 }
-export default (connect(mapStateToProps)(SinhVien));
+export default (connect(mapStateToProps, { ...lophoc.actions})(SinhVien));

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Popconfirm, Button } from 'antd';
+import { Table, Tag, Popconfirm , Button} from 'antd';
 import AddNewButton from '@AddNewButton';
 import { DeleteOutlined, EditOutlined, EyeOutlined, SendOutlined } from '@ant-design/icons';
-import ThemSuaDeTaiTTTN from './ThemSuaDeTaiTTTN';
 import { createDeTai, deleteDeTai, getAllDetai, updateDeTai } from '@app/services/DeTaiTTTN/DeTaiService';
-import ActionCell from '@components/ActionCell';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT, TRANG_THAI, TRANG_THAI_LABEL } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
 import moment from 'moment';
@@ -17,7 +15,7 @@ import * as user from '@app/store/ducks/user.duck';
 import * as detai from '@app/store/ducks/detai.reduck';
 
 
-function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props }) {
+function DangKyDeTai({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props }) {
   const [detai, setDetai] = useState(PAGINATION_INIT);
   const [state, setState] = useState({
     isShowModal: false,
@@ -43,7 +41,7 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
   async function getDataDeTai(
     currentPage = detai.currentPage,
     pageSize = detai.pageSize,
-    query = detai.query,
+    query = { trang_thai: TRANG_THAI.DA_DUOC_DUYET },
   ) {
     const apiResponse = await getAllDetai(currentPage, pageSize, query);
     if (apiResponse) {
@@ -63,11 +61,11 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
     tenDeTai: data.ten_de_tai,
     maDeTai: data.ma_de_tai,
     ngayTao: data.ngay_tao,
-    trangThai: data.trang_thai,
-    hoanThanh: data.trang_thai === TRANG_THAI.DA_DUOC_DUYET,
+    trangThai: data.trang_thai_dang_ky,
+    // hoanThanh: data.trang_thai === TRANG_THAI.DA_DUOC_DUYET,
     giaoVien: data?.ma_giao_vien,
     boMon: data?.ma_bo_mon,
-    nguoiTao: data?.ma_nguoi_tao,
+    nguoiDangKy: data?.ma_nguoi_dang_ky,
   }));
 
   const columns = [
@@ -99,17 +97,10 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
       width: 200,
     },
     {
-      title: 'Người tạo',
-      dataIndex: 'nguoiTao',
-      key: 'nguoiTao',
+      title: 'Người đăng ký',
+      dataIndex: 'nguoiDangky',
+      key: 'nguoiDangKy',
       render: (value => value?.full_name),
-      width: 200,
-    },
-    {
-      title: 'Ngày tạo',
-      dataIndex: 'ngayTao',
-      key: 'ngayTao',
-      render: value => value?.ngayTao ? moment(value?.ngayTao).format('DD/MM/YYYY') : '',
       width: 200,
     },
     {
@@ -127,36 +118,18 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
     {
       align: 'center',
       render: (text, record, index) => {
-        const daDuyet = record.trangThai === TRANG_THAI.DA_DUOC_DUYET;
+        const daDangKy = record.trangThai === TRANG_THAI.DA_DANG_KY;
         return <>
-          {!daDuyet && <div className='mt-2'>
+          {!daDangKy && <div className='mt-2'>
             <Popconfirm
-              title='Bạn có chắc chắn duyệt đề tài hay không'
-              onConfirm={() => handleComfirmTopic(record)}
+              title='Bạn có chắc chắn đăng ký tài hay không'
+              onConfirm={() => handleRegisTopic(record)}
               cancelText='Huỷ' okText='Xác nhận' okButtonProps={{ type: 'access' }}>
               <Tag color='green' className='tag-action'>
-                <SendOutlined/><span className='ml-1'>Duyệt đề tài</span>
+                <SendOutlined/><span className='ml-1'>Đăng ký đề tài</span>
               </Tag>
             </Popconfirm>
           </div>}
-          <div className='mt-2'>
-            <Button size='small' onClick={() => handleEdit(record)} style={{ borderColor: 'white' }}>
-              <Tag color='blue' className='tag-action'>
-                <EditOutlined/><span>Chỉnh sửa đề tài</span>
-              </Tag>
-            </Button>
-          </div>
-          {!daDuyet && <div className='mt-2'>
-            <Popconfirm
-              title='Bạn chắc chắn muốn xoá'
-              onConfirm={() => handleDelete(record)}
-              cancelText='Huỷ' okText='Xóa' okButtonProps={{ type: 'danger' }}>
-              <Tag color='red' className='tag-action'>
-                <DeleteOutlined/><span className='ml-1'>Xoá</span>
-              </Tag>
-            </Popconfirm>
-          </div>}
-
         </>;
       },
     },
@@ -173,9 +146,9 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
     setState({ isShowModal: true, userSelected });
   }
 
-  async function handleComfirmTopic(userSelected) {
+  async function handleRegisTopic(userSelected) {
     const dataRequest = {
-      trang_thai: TRANG_THAI.DA_DUOC_DUYET,
+      trang_thai_dang_ky: TRANG_THAI.DA_DANG_KY,
     };
     dataRequest._id = userSelected._id;
     const apiResponse = await updateDeTai(dataRequest);
@@ -191,7 +164,6 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
       // updateStoreStaff(type, apiResponse);
     }
   }
-
   async function handleDelete(userSelected) {
     const apiResponse = await deleteDeTai(userSelected._id);
     if (apiResponse) {
@@ -240,37 +212,6 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
     }
   }
 
-  // function updateStoreDeTai(type, dataResponse) {
-  //   if (!type || !dataResponse || !staffList.length) return;
-  //
-  //   const dataChanged = {
-  //     _id: dataResponse._id,
-  //     code: dataResponse.ma_nhan_vien,
-  //     name: dataResponse.ten_nhan_vien,
-  //   };
-  //   let staffListUpdated = [];
-  //   if (type === CONSTANTS.UPDATE) {
-  //     staffListUpdated = staffList.map(staff => {
-  //       if (staff._id === dataChanged._id) {
-  //         return dataChanged;
-  //       }
-  //       return staff;
-  //     });
-  //   }
-  //
-  //   if (type === CONSTANTS.DELETE) {
-  //     staffListUpdated = staffList.filter(staff => {
-  //       return staff._id !== dataChanged._id;
-  //     });
-  //   }
-  //
-  //   if (type === CONSTANTS.CREATE) {
-  //     staffListUpdated = [...staffList, dataChanged];
-  //   }
-  //
-  //   props.setCalUnit(staffListUpdated);
-  // }
-
   function handleChangePagination(current, pageSize) {
     getDataDeTai(current, pageSize);
   }
@@ -300,13 +241,6 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
       <Loading active={isLoading}>
         <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
       </Loading>
-      <ThemSuaDeTaiTTTN
-        type={!!state.userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE}
-        isModalVisible={state.isShowModal}
-        handleOk={createAndModifyDetai}
-        handleCancel={() => handleShowModal(false)}
-        userSelected={state.userSelected}
-      />
     </div>
   );
 }
@@ -321,4 +255,4 @@ function mapStateToProps(store) {
   return { isLoading, bomonList, teacherList, myInfo, detaiList };
 }
 
-export default (connect(mapStateToProps, { ...bomon.actions, ...giaovien.actions, ...user.actions, ...detai.actions })(DetaiTTTN));
+export default (connect(mapStateToProps, {...bomon.actions, ...giaovien.actions, ...user.actions, ...detai.actions})(DangKyDeTai));

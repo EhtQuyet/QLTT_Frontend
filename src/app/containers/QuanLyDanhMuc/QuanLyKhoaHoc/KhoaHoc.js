@@ -3,46 +3,46 @@ import { Table } from 'antd';
 import AddNewButton from '@AddNewButton';
 import ThemSuaBoMon from './ThemSuaBoMon';
 import {
-  createBoMon,
-  deleteBoMon,
-  getAllBoMon,
-  updateBoMon,
-} from '@app/services/BoMon/boMonService';
+  createKhoaHoc,
+  deleteKhoaHoc,
+  getAllKhoaHoc,
+  updateKhoaHoc,
+} from '@app/services/KhoaHoc/khoaHocService';
 import ActionCell from '@components/ActionCell';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import * as bomon from '@app/store/ducks/bomon.duck';
+// import * as bomon from '@app/store/ducks/bomon.duck';
 
 import Filter from '@components/Filter';
 import Loading from '@components/Loading';
 
-function BoMon({ isLoading, bomonList, ...props }) {
-  const [bomon, setBomon] = useState(PAGINATION_INIT);
+function BoMon({ isLoading, ...props }) {
+  const [khoahoc, setKhoaHoc] = useState(PAGINATION_INIT);
   const [state, setState] = useState({
     isShowModal: false,
     userSelected: null,
   });
 
   useEffect(() => {
-
-    if (!props?.bomonList?.length) {
-      props.getBoMon();
-    }
+    //
+    // if (!props?.bomonList?.length) {
+    //   props.getBoMon();
+    // }
     (async () => {
-      await getDataBoMon();
+      await getDataKhoaHoc();
     })();
   }, []);
 
-  async function getDataBoMon(
-    currentPage = bomon.currentPage,
-    pageSize = bomon.pageSize,
-    query = bomon.query,
+  async function getDataKhoaHoc(
+    currentPage = khoahoc.currentPage,
+    pageSize = khoahoc.pageSize,
+    query = khoahoc.query,
   ) {
-    const apiResponse = await getAllBoMon(currentPage, pageSize, query);
+    const apiResponse = await getAllKhoaHoc(currentPage, pageSize, query);
     if (apiResponse) {
-      setBomon({
+      setKhoaHoc({
         docs: apiResponse.docs,
         totalDocs: apiResponse.totalDocs,
         pageSize: apiResponse.limit,
@@ -52,24 +52,24 @@ function BoMon({ isLoading, bomonList, ...props }) {
     }
   }
 
-  const dataSource = bomon.docs.map((data, index) => ({
+  const dataSource = khoahoc.docs.map((data, index) => ({
     key: data._id,
     _id: data._id,
-    tenBoMon: data.ten_bo_mon,
-    maBoMon: data.ma_bo_mon,
+    tenKhoaHoc: data.ten_khoa_hoc,
+    maKhoaHoc: data.ma_khoa_hoc,
   }));
 
   const columns = [
-    columnIndex(bomon.pageSize, bomon.currentPage),
+    columnIndex(khoahoc.pageSize, khoahoc.currentPage),
 
     {
-      title: 'Tên bộ môn',
+      title: 'Tên khóa học',
       dataIndex: 'tenBoMon',
       key: 'tenBoMon',
       width: 300,
     },
     {
-      title: 'Mã bộ môn',
+      title: 'Mã khóa học',
       dataIndex: 'maBoMon',
       key: 'maBoMon',
       width: 300,
@@ -135,12 +135,11 @@ function BoMon({ isLoading, bomonList, ...props }) {
       }
     }
   }
-  // update store redux
   function updateStoreBoMon(type, dataResponse) {
     if (!type || !dataResponse || !bomonList.length) return;
 
     const dataChanged = {
-      _id: dataResponse._id,
+      id_vattu: dataResponse._id,
       name: dataResponse.ten_bo_mon,
     };
     let bomonListUpdated = [];

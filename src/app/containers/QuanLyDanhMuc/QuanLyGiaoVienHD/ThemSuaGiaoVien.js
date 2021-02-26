@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Col, Modal, Row } from 'antd';
 import ModalFooter from '@components/ModalFooter/ModalFooter';
 import CustomSkeleton from '@components/CustomSkeleton';
-import { CONSTANTS, GENDER_OPTIONS, RULES } from '@constants';
+import { CONSTANTS, GENDER_OPTIONS, HOCVI_OPTIONS, RULES } from '@constants';
 import Form from 'antd/es/form';
 import { connect } from 'react-redux';
 import Loading from '@components/Loading';
@@ -80,7 +80,7 @@ function ThemSuaGiaoVien({ isModalVisible, handleOk, handleCancel, userSelected,
               type={CONSTANTS.TEXT}
               layoutCol={{ xs: 24 }}
               layoutItem={{ labelCol: { xs: 8 } }}
-              rules={[RULES.EMAIL]}
+              rules={[RULES.EMAIL, RULES.REQUIRED]}
               labelLeft
               form={giaovienForm}
               helpInline={false}
@@ -93,6 +93,7 @@ function ThemSuaGiaoVien({ isModalVisible, handleOk, handleCancel, userSelected,
               layoutItem={{ labelCol: { xs: 8 } }}
               options={{ data: GENDER_OPTIONS }}
               labelLeft
+              rules={[RULES.REQUIRED]}
             />
             <CustomSkeleton
               size='default'
@@ -102,6 +103,7 @@ function ThemSuaGiaoVien({ isModalVisible, handleOk, handleCancel, userSelected,
               layoutItem={{ labelCol: { xs: 8 } }}
               options={{ data: props.bomonList, valueString: '_id', labelString: 'name' }}
               labelLeft
+              rules={[RULES.REQUIRED]}
             />
             <CustomSkeleton
               size='default'
@@ -120,7 +122,6 @@ function ThemSuaGiaoVien({ isModalVisible, handleOk, handleCancel, userSelected,
               type={CONSTANTS.TEXT}
               layoutCol={{ xs: 24 }}
               layoutItem={{ labelCol: { xs: 8 } }}
-              rules={[RULES.REQUIRED]}
               labelLeft
               showSearch
               form={giaovienForm}
@@ -128,13 +129,13 @@ function ThemSuaGiaoVien({ isModalVisible, handleOk, handleCancel, userSelected,
             <CustomSkeleton
               size='default'
               label="Học vị" name="hocVi"
-              type={CONSTANTS.TEXT}
+              type={CONSTANTS.SELECT}
               layoutCol={{ xs: 24 }}
               layoutItem={{ labelCol: { xs: 8 } }}
-              rules={[RULES.REQUIRED]}
               labelLeft
               showSearch
-              form={giaovienForm}
+              options={{ data: HOCVI_OPTIONS }}
+              rules={[RULES.REQUIRED]}
             />
 
           </Row>

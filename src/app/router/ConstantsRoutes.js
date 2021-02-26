@@ -24,8 +24,9 @@ const MyInfo = lazy(() => import('@containers/MyInfo/MyInfo'));
 const GiaoVien = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyGiaoVienHD/GiaoVien'));
 const SinhVien = lazy(() => import('@containers/QuanLyDanhMuc/QuanLySinhVienTTTN/SinhVien'));
 const BoMon = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyBoMon/BoMon'));
-
-
+const LopHoc = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyLopHoc/LopHoc'));
+const DeTai = lazy(() => import('@containers/QuanLyDeTaiTTTN/DeTaiTTTN'));
+const DangKyDeTai = lazy(() => import('@containers/DangKyDeTaiTTTN/DangKyDeTai'));
 
 
 export const ConstantsRoutes = [
@@ -63,9 +64,21 @@ export const ConstantsRoutes = [
       },
       { path: URL.MENU.SINH_VIEN, menuName: 'Quản lý sinh viên', component: SinhVien, icon: <GroupOutlined/> },
       { path: URL.MENU.BO_MON, menuName: 'Quản lý bộ môn', component: BoMon, icon: <GroupOutlined/> },
+      { path: URL.MENU.LOP_HOC, menuName: 'Quản lý lớp học', component: LopHoc, icon: <GroupOutlined/> },
     ],
   },
-
+  {
+    path: URL.MENU.DE_TAI_TTTN,
+    menuName: 'Quản lý đề tài tốt nghiệp',
+    component: DeTai,
+    icon: <UnorderedListOutlined/>,
+  },
+  {
+    path: URL.MENU.DANG_KY_DE_TAI,
+    menuName: 'Đăng ký đề tài tốt nghiệp',
+    component: DangKyDeTai,
+    icon: <UnorderedListOutlined/>,
+  },
 ];
 
 

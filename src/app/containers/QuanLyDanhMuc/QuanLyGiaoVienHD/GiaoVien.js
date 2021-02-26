@@ -13,11 +13,12 @@ import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import * as bomon from '@app/store/ducks/bomon.duck';
 import Filter from '@components/Filter';
 import Loading from '@components/Loading';
+import * as giaovien from '@app/store/ducks/giaovien.duck';
+import * as bomon from '@app/store/ducks/bomon.duck';
 
-function GiaoVien({ isLoading, bomonList, ...props }) {
+function GiaoVien({ isLoading, bomonList, teacherList, ...props }) {
   const [giaovien, setGiaovien] = useState(PAGINATION_INIT);
   const [state, setState] = useState({
     isShowModal: false,
@@ -27,6 +28,9 @@ function GiaoVien({ isLoading, bomonList, ...props }) {
   useEffect(() => {
     if (!props?.bomonList?.length) {
       props.getBoMon();
+    }
+    if (!props?.teacherList?.length) {
+      props.getTeacher();
     }
     (async () => {
       await getDataGiaoVien();
@@ -181,7 +185,36 @@ function GiaoVien({ isLoading, bomonList, ...props }) {
     }
   }
 
+// update store redux
+  function updateStoreTeacher(type, dataResponse) {
+    if (!type || !dataResponse || !teacherList.length) return;
 
+    const dataChanged = {
+      _id: dataResponse._id,
+      name: dataResponse.ten_giao_vien,
+    };
+    let teacherListUpdated = [];
+    if (type === CONSTANTS.UPDATE) {
+      teacherListUpdated = teacherList.map(teacher => {
+        if (teacher._id === dataChanged._id) {
+          return dataChanged;
+        }
+        return teacher;
+      });
+    }
+
+    if (type === CONSTANTS.DELETE) {
+      teacherListUpdated = teacherList.filter(teacher => {
+        return teacher._id !== dataChanged._id;
+      });
+    }
+
+    if (type === CONSTANTS.CREATE) {
+      teacherListUpdated = [...teacherList, dataChanged];
+    }
+
+    props.setTeacher(teacherListUpdated);
+  }
   function handleChangePagination(current, pageSize) {
     getDataGiaoVien(current, pageSize);
   }
@@ -219,7 +252,8 @@ function GiaoVien({ isLoading, bomonList, ...props }) {
 function mapStateToProps(store) {
   const { isLoading } = store.app;
   const { bomonList } = store.bomon;
-  return { isLoading, bomonList };
+  const { teacherList } = store.giaovien;
+  return { isLoading, bomonList, teacherList };
 }
 
-export default (connect(mapStateToProps, {...bomon.actions})(GiaoVien));
+export default (connect(mapStateToProps, {...bomon.actions, ...giaovien.actions})(GiaoVien));

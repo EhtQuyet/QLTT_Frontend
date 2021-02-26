@@ -48,7 +48,12 @@ export const GENDER_OPTIONS = [
   { label: 'Nữ', value: 'Nữ' },
   { label: 'Khác', value: 'Khác' },
 ];
-
+export const HOCVI_OPTIONS = [
+  { label: 'Giáo sư', value: 'Giáo sư' },
+  { label: 'Phó giáo sư', value: 'Phó giáo sư' },
+  { label: 'Tiến sĩ', value: 'Tiến sĩ' },
+  { label: 'Thạc sĩ', value: 'Thạc sĩ' },
+];
 export const TOAST_MESSAGE = {
   SUCCESS: {
     DEFAULT: 'Thành công',
@@ -99,4 +104,18 @@ export const PAGINATION_CONFIG = {
 export const TRANSFER_TYPE = {
   YEU_CAU_DIEU_CHUYEN: 'YeuCauDieuChuyen',
   BIEN_BAN_DIEU_CHUYEN: 'BienBanDieuChuyen',
+};
+
+export const TRANG_THAI = {
+  DA_DUOC_DUYET: 'DA_DUOC_DUYET',
+  CHUA_DUOC_DUYET: 'CHUA_DUOC_DUYET',
+  CHUA_DANG_KY: 'CHUA_DANG_KY',
+  DA_DANG_KY: 'DA_DANG_KY',
+};
+
+export const TRANG_THAI_LABEL = {
+  CHUA_DUOC_DUYET: { label: 'Chưa được duyệt', color: '#fa541c' },
+  DA_DUOC_DUYET: { label: 'Đã được duyệt', color: '#52c41a' },
+  CHUA_DANG_KY: { label: 'Chưa đăng ký', color: '#fa541c' },
+  DA_DANG_KY: { label: 'Đã đăng ký', color: '#52c41a' },
 };

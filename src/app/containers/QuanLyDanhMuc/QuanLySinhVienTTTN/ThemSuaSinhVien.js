@@ -15,6 +15,7 @@ function ThemSuaSinhVien({ isModalVisible, handleOk, handleCancel, userSelected,
     if (userSelected && isModalVisible) {
       const dataField = Object.assign({}, userSelected);
       dataField.ngaySinh = userSelected.ngaySinh ? moment(userSelected.ngaySinh) : '';
+      dataField.maLop = userSelected.maLop._id;
       sinhvienForm.setFieldsValue(dataField);
     } else if (!isModalVisible) {
       sinhvienForm.resetFields();
@@ -64,6 +65,17 @@ function ThemSuaSinhVien({ isModalVisible, handleOk, handleCancel, userSelected,
             />
             <CustomSkeleton
               size='default'
+              label="Lớp học" name="maLop"
+              type={CONSTANTS.SELECT}
+              layoutCol={{ xs: 24 }}
+              layoutItem={{ labelCol: { xs: 8 } }}
+              rules={[RULES.REQUIRED]}
+              labelLeft
+              showSearch
+              options={{ data: props.classmateList, valueString: '_id', labelString: 'name' }}
+            />
+            <CustomSkeleton
+              size='default'
               label="Ngày sinh" name="ngaySinh"
               type={CONSTANTS.DATE}
               layoutCol={{ xs: 24 }}
@@ -77,7 +89,7 @@ function ThemSuaSinhVien({ isModalVisible, handleOk, handleCancel, userSelected,
               type={CONSTANTS.TEXT}
               layoutCol={{ xs: 24 }}
               layoutItem={{ labelCol: { xs: 8 } }}
-              rules={[RULES.EMAIL]}
+              rules={[RULES.EMAIL, RULES.REQUIRED]}
               labelLeft
               form={sinhvienForm}
               helpInline={false}
@@ -90,6 +102,7 @@ function ThemSuaSinhVien({ isModalVisible, handleOk, handleCancel, userSelected,
               layoutItem={{ labelCol: { xs: 8 } }}
               options={{ data: GENDER_OPTIONS }}
               labelLeft
+              rules={[RULES.REQUIRED]}
             />
             <CustomSkeleton
               size='default'
@@ -108,23 +121,9 @@ function ThemSuaSinhVien({ isModalVisible, handleOk, handleCancel, userSelected,
               type={CONSTANTS.TEXT}
               layoutCol={{ xs: 24 }}
               layoutItem={{ labelCol: { xs: 8 } }}
-              rules={[RULES.REQUIRED]}
               labelLeft
               showSearch
               form={sinhvienForm}
-            />
-            <CustomSkeleton
-              size='default'
-              label="Mã lớp" name="maLop"
-              type={CONSTANTS.TEXT}
-              layoutCol={{ xs: 24 }}
-              layoutItem={{ labelCol: { xs: 8 } }}
-              rules={[RULES.REQUIRED]}
-              labelLeft
-              showSearch
-              form={sinhvienForm}
-              helpInline={false}
-
             />
 
           </Row>
@@ -136,7 +135,8 @@ function ThemSuaSinhVien({ isModalVisible, handleOk, handleCancel, userSelected,
 
 function mapStateToProps(store) {
   const { isLoading } = store.app;
-  return { isLoading };
+  const { classmateList } = store.lophoc;
+  return { isLoading, classmateList };
 }
 export default (connect(mapStateToProps)(ThemSuaSinhVien));
 
