@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Tag, Popconfirm , Button} from 'antd';
 import AddNewButton from '@AddNewButton';
-import { DeleteOutlined, EditOutlined, EyeOutlined, SendOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, EyeOutlined, SendOutlined, PlusCircleOutlined  } from '@ant-design/icons';
 import { createDeTai, deleteDeTai, getAllDetai, updateDeTai } from '@app/services/DeTaiTTTN/DeTaiService';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT, TRANG_THAI, TRANG_THAI_LABEL } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
 import moment from 'moment';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Filter from '@components/Filter';
 import Loading from '@components/Loading';
 import * as giaovien from '@app/store/ducks/giaovien.duck';
 import * as bomon from '@app/store/ducks/bomon.duck';
 import * as user from '@app/store/ducks/user.duck';
 import * as detai from '@app/store/ducks/detai.reduck';
+import ThemSuaDeTaiTTTN from '@containers/QuanLyDeTaiTTTN/ThemSuaDeTaiTTTN';
+import ChiTietDangKyDeTai from '@containers/DangKyDeTaiTTTN/ChiTietDangKyDeTai';
+import ActionCell from '@components/ActionCell';
 
 
 function DangKyDeTai({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props }) {
@@ -98,7 +102,7 @@ function DangKyDeTai({ isLoading, bomonList, teacherList, myInfo, detaiList, ...
     },
     {
       title: 'Người đăng ký',
-      dataIndex: 'nguoiDangky',
+      dataIndex: 'nguoiDangKy',
       key: 'nguoiDangKy',
       render: (value => value?.full_name),
       width: 200,
@@ -129,6 +133,19 @@ function DangKyDeTai({ isLoading, bomonList, teacherList, myInfo, detaiList, ...
                 <SendOutlined/><span className='ml-1'>Đăng ký đề tài</span>
               </Tag>
             </Popconfirm>
+            <Tag color='cyan' className='tag-action' onClick={() => handleEdit(record)}>
+              <PlusCircleOutlined /><span className='ml-1'>Thêm thành viên</span>
+            </Tag>
+          </div>}
+          {daDangKy && <div className='mt-2'>
+            <Popconfirm
+              title='Bạn có chắc chắn hủy đăng ký tài hay không'
+              onConfirm={() => handleCancelRegisTopic(record)}
+              cancelText='Huỷ' okText='Xác nhận' okButtonProps={{ type: 'access' }}>
+              <Tag color='red' className='tag-action'>
+                <SendOutlined/><span className='ml-1'>Hủy đăng ký đề tài</span>
+              </Tag>
+            </Popconfirm>
           </div>}
         </>;
       },
@@ -148,7 +165,8 @@ function DangKyDeTai({ isLoading, bomonList, teacherList, myInfo, detaiList, ...
 
   async function handleRegisTopic(userSelected) {
     const dataRequest = {
-      trang_thai_dang_ky: TRANG_THAI.DA_DANG_KY,
+      trang_thai_dang_ky:  TRANG_THAI.DA_DANG_KY,
+      ma_nguoi_dang_ky : myInfo._id,
     };
     dataRequest._id = userSelected._id;
     const apiResponse = await updateDeTai(dataRequest);
@@ -160,7 +178,26 @@ function DangKyDeTai({ isLoading, bomonList, teacherList, myInfo, detaiList, ...
         return doc;
       });
       setDetai(Object.assign({}, detai, { docs }));
-      toast(CONSTANTS.SUCCESS, 'Duyệt đề tài thành công');
+      toast(CONSTANTS.SUCCESS, 'Đăng ký đề tài thành công');
+      // updateStoreStaff(type, apiResponse);
+    }
+  }
+  async function handleCancelRegisTopic(userSelected) {
+    const dataRequest = {
+      trang_thai_dang_ky:  TRANG_THAI.CHUA_DANG_KY,
+      ma_nguoi_dang_ky : null,
+    };
+    dataRequest._id = userSelected._id;
+    const apiResponse = await updateDeTai(dataRequest);
+    if (apiResponse) {
+      const docs = detai.docs.map(doc => {
+        if (doc._id === apiResponse._id) {
+          doc = apiResponse;
+        }
+        return doc;
+      });
+      setDetai(Object.assign({}, detai, { docs }));
+      toast(CONSTANTS.SUCCESS, 'Hủy đăng ký tài thành công');
       // updateStoreStaff(type, apiResponse);
     }
   }
@@ -170,45 +207,6 @@ function DangKyDeTai({ isLoading, bomonList, teacherList, myInfo, detaiList, ...
       getDataDeTai();
       toast(CONSTANTS.SUCCESS, 'Xóa đề tài thành công');
       // updateStoreStaff(CONSTANTS.DELETE, apiResponse);
-    }
-  }
-
-// function create or modify
-  async function createAndModifyDetai(type, dataForm) {
-
-    const dataRequest = {
-      ten_de_tai: dataForm.tenDeTai,
-      ma_de_tai: dataForm.maDeTai,
-      ngay_tao: dataForm.ngayTao ? dataForm.ngayTao.toString() : null,
-      ma_giao_vien: dataForm.giaoVien,
-      ma_bo_mon: dataForm.boMon,
-      ma_nguoi_tao: myInfo._id,
-    };
-    if (type === CONSTANTS.CREATE) {
-      const apiResponse = await createDeTai(dataRequest);
-      if (apiResponse) {
-        getDataDeTai();
-        handleShowModal(false);
-        toast(CONSTANTS.SUCCESS, 'Thêm mới nhân viên thành công');
-        // updateStoreStaff(type, apiResponse);
-      }
-    }
-
-    if (type === CONSTANTS.UPDATE) {
-      dataRequest._id = state.userSelected._id;
-      const apiResponse = await updateDeTai(dataRequest);
-      if (apiResponse) {
-        const docs = detai.docs.map(doc => {
-          if (doc._id === apiResponse._id) {
-            doc = apiResponse;
-          }
-          return doc;
-        });
-        setDetai(Object.assign({}, detai, { docs }));
-        handleShowModal(false);
-        toast(CONSTANTS.SUCCESS, 'Chỉnh sửa thông tin đề tài thành công');
-        // updateStoreStaff(type, apiResponse);
-      }
     }
   }
 
@@ -235,12 +233,18 @@ function DangKyDeTai({ isLoading, bomonList, teacherList, myInfo, detaiList, ...
             options: { data: bomonList, valueString: '_id', labelString: 'name' },
           },
         ]}
-        handleFilter={(query) => getDataDeTai(1, detai.pageSize, query)}/>
-
-      <AddNewButton onClick={() => handleShowModal(true)} disabled={isLoading}/>
+        handleFilter={(query) => getDataDeTai(1, detai.pageSize, query)}
+      />
       <Loading active={isLoading}>
         <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
       </Loading>
+      <ChiTietDangKyDeTai
+        type={!!state.userSelected}
+        isModalVisible={state.isShowModal}
+        handleOk={handleRegisTopic}
+        handleCancel={() => handleShowModal(false)}
+        userSelected={state.userSelected}
+      />
     </div>
   );
 }

@@ -20,14 +20,13 @@ import {
 const Dashboard = lazy(() => import('@containers/Dashboard/Dashboard'));
 const User = lazy(() => import('@containers/User/User'));
 const MyInfo = lazy(() => import('@containers/MyInfo/MyInfo'));
-
 const GiaoVien = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyGiaoVienHD/GiaoVien'));
 const SinhVien = lazy(() => import('@containers/QuanLyDanhMuc/QuanLySinhVienTTTN/SinhVien'));
 const BoMon = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyBoMon/BoMon'));
 const LopHoc = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyLopHoc/LopHoc'));
 const DeTai = lazy(() => import('@containers/QuanLyDeTaiTTTN/DeTaiTTTN'));
 const DangKyDeTai = lazy(() => import('@containers/DangKyDeTaiTTTN/DangKyDeTai'));
-
+// import ChiTietDangKyDeTai from '@containers/DangKyDeTaiTTTN/ChiTietDangKyDeTai';
 
 export const ConstantsRoutes = [
   { isRedirect: true, exact: true, from: '/', to: URL.MENU.DASHBOARD },
@@ -79,6 +78,12 @@ export const ConstantsRoutes = [
     component: DangKyDeTai,
     icon: <UnorderedListOutlined/>,
   },
+
+  // {
+  //   path: `${URL.MENU.DANG_KY_DE_TAI}/:id`,
+  //   breadcrumbName: 'Đăng ký đề tài',
+  //   component: ChiTietDangKyDeTai,
+  // },
 ];
 
 

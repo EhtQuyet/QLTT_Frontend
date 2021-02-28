@@ -25,7 +25,6 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
   });
 
   useEffect(() => {
-    console.log('myInfo', myInfo);
     if (!props?.teacherList?.length) {
       props.getTeacher();
     }
@@ -37,6 +36,7 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
     }
     (async () => {
       await getDataDeTai();
+      console.log('detai', detai);
     })();
   }, []);
 
@@ -62,7 +62,7 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
     key: data._id,
     tenDeTai: data.ten_de_tai,
     maDeTai: data.ma_de_tai,
-    ngayTao: data.ngay_tao,
+    ngayTao: data?.ngay_tao,
     trangThai: data.trang_thai,
     hoanThanh: data.trang_thai === TRANG_THAI.DA_DUOC_DUYET,
     giaoVien: data?.ma_giao_vien,
@@ -77,7 +77,7 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
       title: 'Mã đề tài',
       dataIndex: 'maDeTai',
       key: 'maDeTai',
-      width: 200,
+      width: 150,
     },
     {
       title: 'Tên đề tài',
@@ -96,7 +96,7 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
       dataIndex: 'giaoVien',
       key: 'giaoVien',
       render: (value => value?.ten_giao_vien),
-      width: 200,
+      width: 250,
     },
     {
       title: 'Người tạo',
@@ -109,7 +109,7 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
       title: 'Ngày tạo',
       dataIndex: 'ngayTao',
       key: 'ngayTao',
-      render: value => value?.ngayTao ? moment(value?.ngayTao).format('DD/MM/YYYY') : '',
+      render: value => value ? moment(value).format('DD/MM/YYYY') : '',
       width: 200,
     },
     {
@@ -122,7 +122,7 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
           return <Tag color={color}>{label}</Tag>;
         }
       },
-      width: 200,
+      width: 150,
     },
     {
       align: 'center',

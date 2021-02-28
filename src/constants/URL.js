@@ -11,7 +11,9 @@ export const URL = {
     KHOA_HOC: '/khoa-hoc',
 
     DE_TAI_TTTN: '/de-tai-thuc-tap-tot-nghiep',
-    DANG_KY_DE_TAI: '/dang-ky-de-tai'
+    DANG_KY_DE_TAI: '/dang-ky-de-tai',
+    DANG_KY_DE_TAI_ID: '/dang-ky-de-tai/{0}',
+
   },
   MY_INFO: '/my-info',
 };
