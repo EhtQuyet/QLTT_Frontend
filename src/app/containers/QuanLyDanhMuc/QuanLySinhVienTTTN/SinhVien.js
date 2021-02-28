@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Table } from 'antd';
+import { Table, Button} from 'antd';
 import AddNewButton from '@AddNewButton';
 import ThemSuaSinhVien from './ThemSuaSinhVien';
+import ThemFile from './ThemFile';
 import {
   createSinhVien,
   deleteSinhVien,
@@ -12,10 +13,12 @@ import ActionCell from '@components/ActionCell';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as lophoc from '@app/store/ducks/lophoc.duck';
 import Filter from '@components/Filter';
 import Loading from '@components/Loading';
+import { URL } from '@url';
 
 function SinhVien({ isLoading, classmateList, ...props }) {
   const [sinhvien, setSinhVien] = useState(PAGINATION_INIT);
@@ -127,7 +130,7 @@ function SinhVien({ isLoading, classmateList, ...props }) {
     }
   }
 
-// function create or modify
+
   async function createAndModifySinhVien(type, dataForm) {
 
     const dataRequest = {
@@ -189,7 +192,13 @@ function SinhVien({ isLoading, classmateList, ...props }) {
         ]}
         handleFilter={(query) => getDataSinhVien(1, sinhvien.pageSize, query)}/>
 
+    <Link to={URL.FILE_SINH_VIEN} >
+        <Button size='small' type="primary" style={{marginLeft: '7px', marginRight: '7px'}} className='float-right'  icon={<i className='fa fa-plus mr-1'/>}>
+          Nhập file
+        </Button>
+    </Link>
       <AddNewButton onClick={() => handleShowModal(true)} disabled={isLoading}/>
+
       <Loading active={isLoading}>
         <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
       </Loading>
