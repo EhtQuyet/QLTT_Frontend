@@ -24,6 +24,7 @@ function ThemSuaSinhVien({ isModalVisible, handleOk, handleCancel, userSelected,
 
   function onFinish(data) {
     if (props.isLoading) return;
+    console.log('data', data);
     handleOk(userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE, data);
   }
 

@@ -17,6 +17,7 @@ import * as detai from '@app/store/ducks/detai.reduck';
 import ThemSuaDeTaiTTTN from '@containers/QuanLyDeTaiTTTN/ThemSuaDeTaiTTTN';
 import ChiTietDangKyDeTai from '@containers/DangKyDeTaiTTTN/ChiTietDangKyDeTai';
 import ActionCell from '@components/ActionCell';
+import { URL } from '@url';
 
 
 function DangKyDeTai({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props }) {
@@ -179,6 +180,7 @@ function DangKyDeTai({ isLoading, bomonList, teacherList, myInfo, detaiList, ...
       });
       setDetai(Object.assign({}, detai, { docs }));
       toast(CONSTANTS.SUCCESS, 'Đăng ký đề tài thành công');
+      handleShowModal(false);
       // updateStoreStaff(type, apiResponse);
     }
   }
