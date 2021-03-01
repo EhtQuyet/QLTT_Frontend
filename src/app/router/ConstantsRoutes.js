@@ -26,7 +26,7 @@ const BoMon = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyBoMon/BoMon'));
 const LopHoc = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyLopHoc/LopHoc'));
 const DeTai = lazy(() => import('@containers/QuanLyDeTaiTTTN/DeTaiTTTN'));
 const DangKyDeTai = lazy(() => import('@containers/DangKyDeTaiTTTN/DangKyDeTai'));
-// import ChiTietDangKyDeTai from '@containers/DangKyDeTaiTTTN/ChiTietDangKyDeTai';
+const ThemFile = lazy(() => import('@containers/QuanLyDanhMuc/QuanLySinhVienTTTN/ThemFile'));
 
 export const ConstantsRoutes = [
   { isRedirect: true, exact: true, from: '/', to: URL.MENU.DASHBOARD },
@@ -46,10 +46,6 @@ export const ConstantsRoutes = [
       { path: URL.MENU.USER, menuName: 'Danh sách người dùng', component: User, icon: <UserOutlined/> },
     ],
   },
-
-
-  { path: URL.MY_INFO, breadcrumbName: 'Thông tin cá nhân', component: MyInfo },
-
   {
     path: URL.MENU.DANH_MUC_QUAN_LY,
     menuName: 'Danh mục quản lý',
@@ -79,11 +75,8 @@ export const ConstantsRoutes = [
     icon: <UnorderedListOutlined/>,
   },
 
-  // {
-  //   path: `${URL.MENU.DANG_KY_DE_TAI}/:id`,
-  //   breadcrumbName: 'Đăng ký đề tài',
-  //   component: ChiTietDangKyDeTai,
-  // },
+  { path: URL.MY_INFO, breadcrumbName: 'Thông tin cá nhân', component: MyInfo },
+  { path: URL.FILE_SINH_VIEN, component: ThemFile },
 ];
 
 
