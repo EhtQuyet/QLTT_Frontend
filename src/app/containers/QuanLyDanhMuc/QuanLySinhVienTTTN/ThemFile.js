@@ -46,9 +46,7 @@ function ThemFile({ isLoading, ...props }) {
     const rABS = !!reader.readAsBinaryString;
 
     reader.onload = e => {
-      console.log('e',e);
       const bstr = e.target.result;
-
       const wb = XLSX.read(bstr, {
         type: rABS ? "binary" : "array",
         bookVBA: true
@@ -56,6 +54,7 @@ function ThemFile({ isLoading, ...props }) {
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
       const data = XLSX.utils.sheet_to_json(ws);
+      console.log('data',data);
       setDataImport(data)
     };
     if (rABS) {
@@ -67,17 +66,18 @@ function ThemFile({ isLoading, ...props }) {
 
   async function handleClickButtonSave(){
     if(dataImport) {
+
       dataImport.forEach( data => {
-        const lopId = classmate.find(item => item.ten_lop_hoc === data.lop);
+        const lopId = classmate.find(item => item.ten_lop_hoc === data['Lớp']);
         const dataRequest = {
-          ten_sinh_vien: data.ten_sinh_vien,
+          ten_sinh_vien: data['Tên sinh viên'],
           ma_lop_hoc: lopId._id,
-          ngay_sinh: data.ngay_sinh ? data.ngay_sinh.toString() : null,
-          ma_sinh_vien: data.ma_sinh_vien,
-          dia_chi: data.dia_chi ? data.dia_chi : null,
-          sdt: data.sdt,
-          email: data.email,
-          gioi_tinh: data.gioi_tinh,
+          ngay_sinh: data['Ngày sinh'] ? data['Ngày sinh'].toString() : null,
+          ma_sinh_vien: data['Mã sinh viên'],
+          dia_chi: data['Địa chỉ'] ? data['Địa chỉ'] : null,
+          sdt: data['Số điện thoại'],
+          email: data['Email'],
+          gioi_tinh: data['Giới tính'],
         }
         createSinhVien(dataRequest);
       });
@@ -90,15 +90,15 @@ function ThemFile({ isLoading, ...props }) {
 
 
   const dataSource = dataImport ? dataImport.map((data, index) => ({
-    key: data._id || index + 1,
-    tenSinhVien: data.ten_sinh_vien || '',
-    sdt: data.sdt || '',
-    email: data.email || '',
-    ngaySinh: data.ngay_sinh || '',
-    diaChi: data.dia_chi || '',
-    tenLop: data.lop || '',
-    maSinhVien: data.ma_sinh_vien || '',
-    gioiTinh: data.gioi_tinh || '',
+    key: index + 1,
+    tenSinhVien: data['Tên sinh viên'] || '',
+    sdt: data['Số điện thoại']|| '',
+    email: data['Email'] || '',
+    ngaySinh: data['Ngày sinh'] || '',
+    diaChi: data['Địa chỉ'] || '',
+    tenLop: data['Lớp'] || '',
+    maSinhVien: data['Mã sinh viên'] || '',
+    gioiTinh: data['Giới tính'] || '',
   })) : [];
 
   const columns = [
@@ -185,15 +185,12 @@ function ThemFile({ isLoading, ...props }) {
           <Button
             style={{float:'right'}}
             type="primary" onClick={handleClickButtonSave}
-            icon={<SaveOutlined />}
           >
+            <SaveOutlined />
             Lưu dữ liệu
           </Button>
         </Col> }
       </Row>
-
-
-
         {dataImport !== null &&  <Table dataSource={dataSource} size='small' columns={columns} bordered/>}
       </Loading>
 
