@@ -13,6 +13,15 @@ export const API = {
   BO_MON: 'api/bomon',
   BO_MON_ID: 'api/bomon/{0}',
 
+  DIA_DIEM_THUC_TAP: 'api/diadiemthuctap',
+  DIA_DIEM_THUC_TAP_ID: 'api/diadiemthuctap/{0}',
+
+  NAM_HOC: 'api/namhoc',
+  NAM_HOC_ID: 'api/namhoc/{0}',
+
+  DANH_SACH_THUC_TAP: 'api/danhsachthuctap',
+  DANH_SACH_THUC_TAP_ID: 'api/danhsachthuctap/{0}',
+
   KHOA_HOC: 'api/khoahoc',
   KHOA_HOC_ID: 'api/khoahoc/{0}',
 

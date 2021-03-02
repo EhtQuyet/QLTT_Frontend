@@ -27,6 +27,11 @@ const LopHoc = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyLopHoc/LopHoc'
 const DeTai = lazy(() => import('@containers/QuanLyDeTaiTTTN/DeTaiTTTN'));
 const DangKyDeTai = lazy(() => import('@containers/DangKyDeTaiTTTN/DangKyDeTai'));
 const ThemFile = lazy(() => import('@containers/QuanLyDanhMuc/QuanLySinhVienTTTN/ThemFile'));
+const DiaDiemThucTap = lazy(()=> import('@containers/QuanLyDanhMuc/QuanLyDiaDiemThucTap/DiaDiemThucTap'))
+const NamHoc = lazy(()=> import('@containers/QuanLyDanhMuc/QuanLyNamHoc/NamHoc'))
+const DanhSachThucTap = lazy(()=> import('@containers/ThucTap/DanhSachThucTap/DanhSachThucTap'))
+
+
 
 export const ConstantsRoutes = [
   { isRedirect: true, exact: true, from: '/', to: URL.MENU.DASHBOARD },
@@ -60,6 +65,19 @@ export const ConstantsRoutes = [
       { path: URL.MENU.SINH_VIEN, menuName: 'Quản lý sinh viên', component: SinhVien, icon: <GroupOutlined/> },
       { path: URL.MENU.BO_MON, menuName: 'Quản lý bộ môn', component: BoMon, icon: <GroupOutlined/> },
       { path: URL.MENU.LOP_HOC, menuName: 'Quản lý lớp học', component: LopHoc, icon: <GroupOutlined/> },
+      { path: URL.MENU.DIA_DIEM_THUC_TAP, menuName: 'Quản lý địa điểm', component: DiaDiemThucTap, icon: <GroupOutlined/> },
+      { path: URL.MENU.NAM_HOC, menuName: 'Quản lý năm học', component: NamHoc, icon: <GroupOutlined/> },
+
+    ],
+  },
+  {
+    path: URL.MENU.QUAN_LY_THUC_TAP,
+    menuName: 'Quản lý đợt thực tập',
+    icon: <UnorderedListOutlined/>,
+    children: [
+      
+      { path: URL.MENU.DANH_SACH_THUC_TAP, menuName: 'Danh sách đợt thực tập', component: DanhSachThucTap, icon: <GroupOutlined/> },
+
     ],
   },
   {

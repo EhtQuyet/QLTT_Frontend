@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import * as app from '@app/store/ducks/app.duck';
 import './Login.scss';
 import { RULES } from '@constants';
+import logocntt from '../../../assets/images/logocntt.jpg'
 
 class Login extends Component {
 
@@ -19,7 +20,7 @@ class Login extends Component {
       <div id='login'>
         <div className='login-form'>
           <div className='logo'>
-            <img alt="" src='https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg'/>
+            <img alt="" src={logocntt}/>
             <span>Quản lý thực tập</span>
           </div>
           <Form id="formModal"  size='large' layout='vertical' onFinish={this.handleLogin.bind(this)} autoComplete="new-password">
