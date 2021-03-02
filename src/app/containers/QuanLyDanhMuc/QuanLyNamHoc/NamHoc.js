@@ -15,9 +15,9 @@ import moment from 'moment';
 import Filter from '@components/Filter';
 import Loading from '@components/Loading';
 import { connect } from 'react-redux';
+import * as namhoc from '@app/store/ducks/namhoc.duck';
 
-
-function NamHoc({ isLoading, ...props }) {
+function NamHoc({ isLoading, namhocList, ...props }) {
   const [namhoc, setNamhoc] = useState(PAGINATION_INIT);
   const [state, setState] = useState({
     isShowModal: false,
@@ -25,7 +25,9 @@ function NamHoc({ isLoading, ...props }) {
   });
 
   useEffect(() => {
-
+    if (!props?.namhocList?.length) {
+      props.getNamHoc();
+    }
     (async () => {
       await getDataNamHoc();
     })();
@@ -165,7 +167,8 @@ function NamHoc({ isLoading, ...props }) {
 
 function mapStateToProps(store) {
   const { isLoading } = store.app;
+  const { namhocList } = store.namhoc;
   return { isLoading };
 }
 
-export default (connect(mapStateToProps)(NamHoc));
+export default (connect(mapStateToProps, namhoc.actions)(NamHoc));

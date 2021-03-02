@@ -16,6 +16,8 @@ function ThemSuaDiaDiemThucTap({ isModalVisible, handleOk, handleCancel, userSel
   useEffect(() => {
     if (userSelected && isModalVisible) {
       const dataField = Object.assign({}, userSelected);
+      dataField.namHoc = dataField.namHoc._id;
+      dataField.thoiGianBatDau = dataField.thoiGianBatDau ? moment(userSelected.thoiGianBatDau) : '';
       danhsachthuchanhForm.setFieldsValue(dataField);
     } else if (!isModalVisible) {
       danhsachthuchanhForm.resetFields();
@@ -45,7 +47,7 @@ function ThemSuaDiaDiemThucTap({ isModalVisible, handleOk, handleCancel, userSel
           <Row gutter={15}>
             <CustomSkeleton
               size='default'
-              label="Đợt thực tập" name="tenThucTap"
+              label="Đợt thực tập" name="tenThuctap"
               type={CONSTANTS.TEXT}
               layoutCol={{ xs: 24 }}
               layoutItem={{ labelCol: { xs: 8 } }}
@@ -55,7 +57,25 @@ function ThemSuaDiaDiemThucTap({ isModalVisible, handleOk, handleCancel, userSel
             />
             <CustomSkeleton
               size='default'
-              label="Ghi chú" name="ghi_chu"
+              label="Năm học" name="namHoc"
+              type={CONSTANTS.SELECT}
+              layoutCol={{ xs: 24 }}
+              layoutItem={{ labelCol: { xs: 8 } }}
+              options={{data: props.namhocList, valueString: '_id', labelString: 'name'}}
+              labelLeft
+            />
+            <CustomSkeleton
+              size='default'
+              label="Thời gian bắt đầu" name="thoiGianBatDau"
+              type={CONSTANTS.DATE}
+              layoutCol={{ xs: 24 }}
+              layoutItem={{ labelCol: { xs: 8 } }}
+              rules={[RULES.REQUIRED]}
+              labelLeft
+            />
+            <CustomSkeleton
+              size='default'
+              label="Ghi chú" name="ghiChu"
               type={CONSTANTS.TEXT}
               layoutCol={{ xs: 24 }}
               layoutItem={{ labelCol: { xs: 8 } }}
@@ -72,7 +92,9 @@ function ThemSuaDiaDiemThucTap({ isModalVisible, handleOk, handleCancel, userSel
 
 function mapStateToProps(store) {
   const { isLoading } = store.app;
-  return { isLoading };
+  const { namhocList } = store.namhoc;
+
+  return { isLoading, namhocList };
 }
 export default (connect(mapStateToProps)(ThemSuaDiaDiemThucTap));
 

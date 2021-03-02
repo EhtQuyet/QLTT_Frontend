@@ -7,6 +7,7 @@ import * as bomon from './ducks/bomon.duck';
 import * as lophoc from './ducks/lophoc.duck';
 import * as giaovien from './ducks/giaovien.duck';
 import * as detai from './ducks/detai.reduck';
+import * as namhoc from './ducks/namhoc.duck';
 
 
 export const rootReducer = combineReducers({
@@ -16,6 +17,7 @@ export const rootReducer = combineReducers({
   lophoc: lophoc.reducer,
   giaovien: giaovien.reducer,
   detai: detai.reducer,
+  namhoc: namhoc.reducer,
 
 });
 
@@ -27,5 +29,6 @@ export function* rootSaga() {
     lophoc.saga(),
     giaovien.saga(),
     detai.saga(),
+    namhoc.saga(),
   ]);
 }

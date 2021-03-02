@@ -15,9 +15,10 @@ import moment from 'moment';
 import Filter from '@components/Filter';
 import Loading from '@components/Loading';
 import { connect } from 'react-redux';
+import * as namhoc from '@app/store/ducks/namhoc.duck';
 
 
-function DanhSachThucTap({ isLoading, ...props }) {
+function DanhSachThucTap({ isLoading, namhocList, ...props }) {
   const [danhsachthuctap, setDanhsachthuctap] = useState(PAGINATION_INIT);
   const [state, setState] = useState({
     isShowModal: false,
@@ -25,7 +26,9 @@ function DanhSachThucTap({ isLoading, ...props }) {
   });
 
   useEffect(() => {
-
+    if (!props?.namhocList?.length) {
+      props.getNamHoc();
+    }
     (async () => {
       await getDataDanhSachThucTap();
     })();
@@ -53,6 +56,8 @@ function DanhSachThucTap({ isLoading, ...props }) {
     _id: data._id,
     tenThuctap: data.ten_thuc_tap,
     ghiChu: data.ghi_chu,
+    namHoc: data.namhoc_id,
+    thoiGianBatDau: data.thoi_gian_bat_dau,
   }));
 
   const columns = [
@@ -62,6 +67,20 @@ function DanhSachThucTap({ isLoading, ...props }) {
       title: 'Đợt thực tập',
       dataIndex: 'tenThuctap',
       key: 'tenThuctap',
+      width: 300,
+    },
+    {
+      title: 'Năm học',
+      dataIndex: 'namHoc',
+      key: 'namHoc',
+      render: value => value?.nam_hoc,
+      width: 300,
+    },
+    {
+      title: 'Thời gian bắt đầu',
+      dataIndex: 'thoiGianBatDau',
+      key: 'thoiGianBatDau',
+      render: value => value ? moment(value).format('DD/MM/YYYY') : '',
       width: 300,
     },
     {
@@ -98,9 +117,11 @@ function DanhSachThucTap({ isLoading, ...props }) {
 
 // function create or modify
   async function createAndModifyDanhSachThucTap(type, dataForm) {
-    const { tenThuctap, ghiChu } = dataForm;
+    const { tenThuctap, ghiChu, thoiGianBatDau, namHoc } = dataForm;
     const dataRequest = {
       ten_thuc_tap: tenThuctap,
+      namhoc_id: namHoc,
+      thoi_gian_bat_dau: thoiGianBatDau? thoiGianBatDau.toString() : null,
       ghi_chu: ghiChu,
     };
     if (type === CONSTANTS.CREATE) {
@@ -165,7 +186,8 @@ function DanhSachThucTap({ isLoading, ...props }) {
 
 function mapStateToProps(store) {
   const { isLoading } = store.app;
+  const { namhocList } = store.namhoc;
   return { isLoading };
 }
 
-export default (connect(mapStateToProps)(DanhSachThucTap));
+export default (connect(mapStateToProps, namhoc.actions)(DanhSachThucTap));
