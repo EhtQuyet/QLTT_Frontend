@@ -10,6 +10,8 @@ export const URL = {
     SINH_VIEN: '/sinh-vien',
 
     BO_MON: '/bo-mon',
+    DIA_DIEM_THUC_TAP: '/dia-diem-thuc-tap',
+    NAM_HOC: '/nam-hoc',
     LOP_HOC: '/lop-hoc',
     KHOA_HOC: '/khoa-hoc',
 
