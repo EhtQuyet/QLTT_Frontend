@@ -4,6 +4,7 @@ export const URL = {
     USER: '/user',
 
     DANH_MUC_QUAN_LY: '/danh-muc-quan-ly',
+    QUAN_LY_THUC_TAP: '/quan-ly-thuc-tap',
     GIAO_VIEN: '/giao-vien',
 
     // Sinh vien
@@ -12,6 +13,7 @@ export const URL = {
     BO_MON: '/bo-mon',
     DIA_DIEM_THUC_TAP: '/dia-diem-thuc-tap',
     NAM_HOC: '/nam-hoc',
+    DANH_SACH_THUC_TAP: '/danh-sach-thuc-tap',
     LOP_HOC: '/lop-hoc',
     KHOA_HOC: '/khoa-hoc',
 

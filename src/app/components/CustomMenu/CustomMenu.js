@@ -6,6 +6,8 @@ import { ConstantsRoutes } from '@app/router/ConstantsRoutes';
 import { connect } from 'react-redux';
 
 import './CustomMenu.scss';
+import logocntt from '../../../assets/images/logocntt.jpg'
+
 
 function CustomMenu({ history, siderCollapsed, isBroken, ...props }) {
   const { pathname } = history.location;
@@ -34,7 +36,7 @@ function CustomMenu({ history, siderCollapsed, isBroken, ...props }) {
   return <div style={{ height: '100%', overflow: 'hidden' }}>
     <div className={`sider-logo ${(siderCollapsed && !isBroken) ? 'collapsed' : ''}`}>
       <div className='img'>
-        <img src='https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg' alt=''
+        <img src={logocntt} alt=''
              style={{ height: '100%' }}/>
       </div>
       <div className='text'>QLSVTT</div>
