@@ -103,7 +103,7 @@ export const ConstantsRoutes = [
     component: DotThucTap,
   },
   {
-    path: URL.MENU.DOT_THUC_TAP_ADD,
+    path: URL.MENU.DOT_THUC_TAP,
     breadcrumbName: 'Thêm mới đợt thực tập',
     component: DotThucTap,
   },

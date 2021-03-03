@@ -70,21 +70,21 @@ function DanhSachThucTap({ isLoading, namhocList, ...props }) {
       title: 'Đợt thực tập',
       dataIndex: 'tenThuctap',
       key: 'tenThuctap',
-      width: 300,
+      width: 200,
     },
     {
       title: 'Năm học',
       dataIndex: 'namHoc',
       key: 'namHoc',
       render: value => value?.nam_hoc,
-      width: 300,
+      width: 150,
     },
     {
       title: 'Thời gian bắt đầu',
       dataIndex: 'thoiGianBatDau',
       key: 'thoiGianBatDau',
       render: value => value ? moment(value).format('DD/MM/YYYY') : '',
-      width: 300,
+      width: 150,
     },
     {
       title: 'Ghi chú',
@@ -99,7 +99,7 @@ function DanhSachThucTap({ isLoading, namhocList, ...props }) {
         return <>
          <div className='mt-2'>
             <Link to={URL.MENU.DOT_THUC_TAP_ID.format(record._id)}>
-              <Tag color='gold' className='tag-action'>
+              <Tag color='blue' className='tag-action'>
                 <EyeOutlined/><span className='ml-1'>Chi tiết</span>
               </Tag>
             </Link>
@@ -114,6 +114,7 @@ function DanhSachThucTap({ isLoading, namhocList, ...props }) {
           </div>
         </>;
       },
+      width: 300
     },
   ];
 
@@ -137,39 +138,39 @@ function DanhSachThucTap({ isLoading, namhocList, ...props }) {
   }
 
 // function create or modify
-  async function createAndModifyDanhSachThucTap(type, dataForm) {
-    const { tenThuctap, ghiChu, thoiGianBatDau, namHoc } = dataForm;
-    const dataRequest = {
-      ten_thuc_tap: tenThuctap,
-      namhoc_id: namHoc,
-      thoi_gian_bat_dau: thoiGianBatDau ? thoiGianBatDau.toString() : null,
-      ghi_chu: ghiChu,
-    };
-    if (type === CONSTANTS.CREATE) {
-      const apiResponse = await createDanhSachThucTap(dataRequest);
-      if (apiResponse) {
-        getDataDanhSachThucTap();
-        handleShowModal(false);
-        toast(CONSTANTS.SUCCESS, 'Thêm mới đợt thực tập thành công');
-      }
-    }
-
-    if (type === CONSTANTS.UPDATE) {
-      dataRequest._id = state.userSelected._id;
-      const apiResponse = await updateDanhSachThucTap(dataRequest);
-      if (apiResponse) {
-        const docs = danhsachthuctap.docs.map(doc => {
-          if (doc._id === apiResponse._id) {
-            doc = apiResponse;
-          }
-          return doc;
-        });
-        setDanhsachthuctap(Object.assign({}, danhsachthuctap, { docs }));
-        handleShowModal(false);
-        toast(CONSTANTS.SUCCESS, 'Chỉnh sửa thông tin đợt thực tập thành công');
-      }
-    }
-  }
+//   async function createAndModifyDanhSachThucTap(type, dataForm) {
+//     const { tenThuctap, ghiChu, thoiGianBatDau, namHoc } = dataForm;
+//     const dataRequest = {
+//       ten_thuc_tap: tenThuctap,
+//       namhoc_id: namHoc,
+//       thoi_gian_bat_dau: thoiGianBatDau ? thoiGianBatDau.toString() : null,
+//       ghi_chu: ghiChu,
+//     };
+//     if (type === CONSTANTS.CREATE) {
+//       const apiResponse = await createDanhSachThucTap(dataRequest);
+//       if (apiResponse) {
+//         getDataDanhSachThucTap();
+//         handleShowModal(false);
+//         toast(CONSTANTS.SUCCESS, 'Thêm mới đợt thực tập thành công');
+//       }
+//     }
+//
+//     if (type === CONSTANTS.UPDATE) {
+//       dataRequest._id = state.userSelected._id;
+//       const apiResponse = await updateDanhSachThucTap(dataRequest);
+//       if (apiResponse) {
+//         const docs = danhsachthuctap.docs.map(doc => {
+//           if (doc._id === apiResponse._id) {
+//             doc = apiResponse;
+//           }
+//           return doc;
+//         });
+//         setDanhsachthuctap(Object.assign({}, danhsachthuctap, { docs }));
+//         handleShowModal(false);
+//         toast(CONSTANTS.SUCCESS, 'Chỉnh sửa thông tin đợt thực tập thành công');
+//       }
+//     }
+//   }
 
 
   function handleChangePagination(current, pageSize) {
@@ -195,18 +196,18 @@ function DanhSachThucTap({ isLoading, namhocList, ...props }) {
 
       <AddNewButton
         disabled={isLoading}
-        linkTo={URL.MENU.DOT_THUC_TAP_ADD} label={'Thêm mới'}
+        linkTo={URL.MENU.DOT_THUC_TAP} label={'Thêm mới'}
       />
       <Loading active={isLoading}>
         <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
       </Loading>
-      <ThemSuaDanhSachThucTap
-        type={!!state.userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE}
-        isModalVisible={state.isShowModal}
-        handleOk={createAndModifyDanhSachThucTap}
-        handleCancel={() => handleShowModal(false)}
-        userSelected={state.userSelected}
-      />
+      {/*<ThemSuaDanhSachThucTap*/}
+      {/*  type={!!state.userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE}*/}
+      {/*  isModalVisible={state.isShowModal}*/}
+      {/*  handleOk={createAndModifyDanhSachThucTap}*/}
+      {/*  handleCancel={() => handleShowModal(false)}*/}
+      {/*  userSelected={state.userSelected}*/}
+      {/*/>*/}
     </div>
   );
 }

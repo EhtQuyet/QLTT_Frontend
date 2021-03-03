@@ -23,7 +23,7 @@ export const URL = {
     DANH_SACH_THUC_TAP: '/danh-sach-thuc-tap',
     DOT_THUC_TAP: '/chi-tiet-dot_thuc_tap',
     DOT_THUC_TAP_ID: '/chi-tiet-dot_thuc_tap/{0}',
-    DOT_THUC_TAP_ADD: '/chi-tiet-dot_thuc_tap/add',
+    DOT_THUC_TAP_ADD: '/chi-tiet-dot_thuc_tap/create',
 
   },
 

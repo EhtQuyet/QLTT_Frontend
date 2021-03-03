@@ -21,6 +21,8 @@ export const API = {
 
   DANH_SACH_THUC_TAP: '/api/danhsachthuctap',
   DANH_SACH_THUC_TAP_ID: '/api/danhsachthuctap/{0}',
+  LOP_THUC_TAP: '/api/lopthuctap',
+  LOP_THUC_TAP_ID: '/api/lopthuctap/{0}',
 
   KHOA_HOC: 'api/khoahoc',
   KHOA_HOC_ID: 'api/khoahoc/{0}',
