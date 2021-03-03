@@ -4,7 +4,6 @@ export const URL = {
     USER: '/user',
 
     DANH_MUC_QUAN_LY: '/danh-muc-quan-ly',
-    QUAN_LY_THUC_TAP: '/quan-ly-thuc-tap',
     GIAO_VIEN: '/giao-vien',
 
     // Sinh vien
@@ -13,7 +12,6 @@ export const URL = {
     BO_MON: '/bo-mon',
     DIA_DIEM_THUC_TAP: '/dia-diem-thuc-tap',
     NAM_HOC: '/nam-hoc',
-    DANH_SACH_THUC_TAP: '/danh-sach-thuc-tap',
     LOP_HOC: '/lop-hoc',
     KHOA_HOC: '/khoa-hoc',
 
@@ -21,6 +19,11 @@ export const URL = {
     DE_TAI_TTTN: '/de-tai-thuc-tap-tot-nghiep',
     DANG_KY_DE_TAI: '/dang-ky-de-tai',
     DANG_KY_DE_TAI_ID: '/dang-ky-de-tai/{0}',
+
+    DANH_SACH_THUC_TAP: '/danh-sach-thuc-tap',
+    DOT_THUC_TAP: '/chi-tiet-dot_thuc_tap',
+    DOT_THUC_TAP_ID: '/chi-tiet-dot_thuc_tap/{0}',
+    DOT_THUC_TAP_ADD: '/chi-tiet-dot_thuc_tap/add',
 
   },
 

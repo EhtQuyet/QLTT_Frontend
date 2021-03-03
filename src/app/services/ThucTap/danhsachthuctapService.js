@@ -1,27 +1,27 @@
 import axios from 'axios';
 import { API } from '@api';
-import { message } from 'antd';
-import { convertParam, getMessageError, renderMessageError } from '@app/common/functionCommons';
-import { CONSTANTS } from '@constants';
+import { convertParam, renderMessageError } from '@app/common/functionCommons';
 
 export function createDanhSachThucTap(data) {
-  return axios.post(`${API.DANH_SACH_THUC_TAP}`, data)
+  return axios.post(API.DANH_SACH_THUC_TAP, data)
     .then(response => {
-      if (response.status === 200) return response.data?.data;
+      if (response.status === 200) {
+        return response?.data?.data;
+      }
       return null;
     })
-    .catch((err) => {
+    .catch(err => {
       renderMessageError(err);
       return null;
     });
 }
 
-export function getAllDanhSachThucTap(currentPage = 1, totalDocs = 0, query, loading = true) {
+
+export function getAllDanhSachThucTap(currentPage = 1, totalDocs = 0, query) {
   const params = convertParam(query, '&');
-  const config = { loading };
-  return axios.get(`${API.DANH_SACH_THUC_TAP}?page=${currentPage}&limit=${totalDocs}${params}`, config)
+  return axios.get(`${API.DANH_SACH_THUC_TAP}?page=${currentPage}&limit=${totalDocs}${params}`)
     .then(response => {
-      if (response.status === 200 && Array.isArray(response.data?.data?.docs)) return response.data.data;
+      if (response.status === 200) return response?.data?.data;
       return null;
     })
     .catch((err) => {
@@ -42,13 +42,27 @@ export function updateDanhSachThucTap(data) {
     });
 }
 
-export function deleteDanhSachThucTap(detaiId) {
-  return axios.delete(API.DANH_SACH_THUC_TAP_ID.format(detaiId))
+export function deleteDanhSachThucTap(id) {
+  return axios.delete(API.DANH_SACH_THUC_TAP_ID.format(id))
     .then(response => {
-      if (response.status === 200) return response?.data?.data;
+      if (response.status === 200) return response?.data;
       return null;
     })
     .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
+
+export function getDotthuctapByID(id) {
+  return axios.get(API.DANH_SACH_THUC_TAP_ID.format(id))
+    .then(response => {
+      if (response.status === 200 && response.data && response.data.data) {
+        return response.data.data;
+      }
+      return null;
+    })
+    .catch(err => {
       renderMessageError(err);
       return null;
     });

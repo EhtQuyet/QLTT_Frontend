@@ -38,6 +38,7 @@ export function* saga() {
         _id: doc._id,
         name: doc.nam_hoc,
       }));
+      console.log('namhoc', namhocList);
       yield put(actions.setNamHoc(namhocList));
     }
   });

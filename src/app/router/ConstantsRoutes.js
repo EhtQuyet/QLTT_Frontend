@@ -29,7 +29,9 @@ const DangKyDeTai = lazy(() => import('@containers/DangKyDeTaiTTTN/DangKyDeTai')
 const ThemFile = lazy(() => import('@containers/QuanLyDanhMuc/QuanLySinhVienTTTN/ThemFile'));
 const DiaDiemThucTap = lazy(()=> import('@containers/QuanLyDanhMuc/QuanLyDiaDiemThucTap/DiaDiemThucTap'))
 const NamHoc = lazy(()=> import('@containers/QuanLyDanhMuc/QuanLyNamHoc/NamHoc'))
+
 const DanhSachThucTap = lazy(()=> import('@containers/ThucTap/DanhSachThucTap/DanhSachThucTap'))
+const DotThucTap = lazy(()=> import('@containers/ThucTap/DotThucTap/DotThucTap'))
 
 
 
@@ -72,11 +74,11 @@ export const ConstantsRoutes = [
   },
   {
     path: URL.MENU.QUAN_LY_THUC_TAP,
-    menuName: 'Quản lý đợt thực tập',
+    menuName: 'Quản lý thực tập',
     icon: <UnorderedListOutlined/>,
     children: [
       
-      { path: URL.MENU.DANH_SACH_THUC_TAP, menuName: 'Danh sách đợt thực tập', component: DanhSachThucTap, icon: <GroupOutlined/> },
+      { path: URL.MENU.DANH_SACH_THUC_TAP, menuName: 'Danh sách thực tập', component: DanhSachThucTap, icon: <GroupOutlined/> },
 
     ],
   },
@@ -95,6 +97,16 @@ export const ConstantsRoutes = [
 
   { path: URL.MY_INFO, breadcrumbName: 'Thông tin cá nhân', component: MyInfo },
   { path: URL.FILE_SINH_VIEN, component: ThemFile },
+  {
+    path: `${URL.MENU.DOT_THUC_TAP}/:id`,
+    breadcrumbName: 'Chi tiết đợt thực tập',
+    component: DotThucTap,
+  },
+  {
+    path: URL.MENU.DOT_THUC_TAP_ADD,
+    breadcrumbName: 'Thêm mới đợt thực tập',
+    component: DotThucTap,
+  },
 ];
 
 
