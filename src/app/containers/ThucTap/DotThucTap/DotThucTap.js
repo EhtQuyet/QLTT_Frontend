@@ -35,13 +35,14 @@ import {
 } from '@app/services/ThucTap/lopthuctapService';
 import { columnIndex, toast } from '@app/common/functionCommons';
 import * as namhoc from '@app/store/ducks/namhoc.duck';
+import * as lophoc from '@app/store/ducks/lophoc.duck';
 import {
   EyeOutlined,
   PlusCircleOutlined,
   LeftCircleOutlined,
   DownCircleOutlined,
   DeleteOutlined,
-  UnorderedListOutlined
+  UnorderedListOutlined,
 } from '@ant-design/icons';
 import { debounce } from 'lodash';
 import axios from 'axios';
@@ -51,10 +52,14 @@ import Loading from '@components/Loading';
 import ThemSuaLopThucTap from '@containers/ThucTap/DotThucTap/ThemSuaLopThucTap';
 
 
-function DotThucTap({ isLoading, namhocList, ...props }) {
+function DotThucTap({ isLoading, namhocList, classmateList, ...props }) {
   const dotthuctapId = useParams()?.id;
   const [dotthuctapForm] = Form.useForm();
   const [lopthuctap, setLopThucTap] = useState(PAGINATION_INIT);
+
+  const [tablelopthuctap, setDataTableLopThucTap] = useState({
+    data: [],
+  });
   const [state, setState] = useState({
     isShowModal: false,
     userSelected: null,
@@ -65,6 +70,9 @@ function DotThucTap({ isLoading, namhocList, ...props }) {
   useEffect(() => {
     if (!namhocList?.length) {
       props.getNamHoc();
+    }
+    if (!classmateList?.length) {
+      props.getClass();
     }
     (async () => {
       await getDataLopThucTap();
@@ -98,18 +106,22 @@ function DotThucTap({ isLoading, namhocList, ...props }) {
     }
   }
 
-  const dataSource = lopthuctap.docs.map((data, index) => ({
-    key: data._id,
-    _id: data._id,
-    ghiChu: data.ghi_chu,
-    namHoc: data.namhoc_id,
-    sinhVienHocCung: data.sinhvien_hoccung_id,
-    lopThucTap: data.lophoc_id,
+  const dataSource = tablelopthuctap.data.map((data, index) => ({
+    key: index + 1,
+    ghiChu: data.ghiChu,
+    sinhVienHocCung: data.sinhVienHocCungId,
+    lopThucTap: data.lopHoc,
   }));
 
   const columns = [
     columnIndex(lopthuctap.pageSize, lopthuctap.currentPage),
 
+    {
+      title: '#',
+      dataIndex: 'key',
+      key: 'key',
+      width: 200,
+    },
     {
       title: 'Lớp',
       dataIndex: 'lopThucTap',
@@ -120,7 +132,7 @@ function DotThucTap({ isLoading, namhocList, ...props }) {
       title: 'Sinh viên học cùng',
       dataIndex: 'sinhVienHocCung',
       key: 'sinhVienHocCung',
-      render: value => value?.ten_sinh_vien,
+      // render: value => value?.ten_sinh_vien,
       width: 200,
     },
     // {
@@ -145,6 +157,7 @@ function DotThucTap({ isLoading, namhocList, ...props }) {
     },
 
     {
+      title: 'Thao  tác',
       align: 'center',
       render: (text, record, index) => {
         return <>
@@ -195,11 +208,11 @@ function DotThucTap({ isLoading, namhocList, ...props }) {
   }
 
   async function handleDelete(userSelected) {
-    // const apiResponse = await deleteDanhSachThucTap(userSelected._id);
-    // if (apiResponse) {
-    //   getDataDanhSachThucTap();
-    //   toast(CONSTANTS.SUCCESS, 'Xóa đợt thực tập thành công');
-    // }
+    const apiResponse = await deleteLopThucTap(userSelected._id);
+    if (apiResponse) {
+      getDataLopThucTap();
+      toast(CONSTANTS.SUCCESS, 'Xóa lớp thực tập thành công');
+    }
   }
 
 
@@ -243,38 +256,16 @@ function DotThucTap({ isLoading, namhocList, ...props }) {
   pagination.total = lopthuctap.totalDocs;
   pagination.pageSize = lopthuctap.pageSize;
 
-  async function createAndModifyLopThucTap(type, dataForm) {
-    const { ghiChu, sinhVienHocCung, lopHoc } = dataForm;
-    const dataRequest = {
-      lophoc_id: lopHoc,
-      sinhvien_hoccung_id: sinhVienHocCung,
-      ghi_chu: ghiChu,
-      dotthuctap_id: dotthuctapId ? dotthuctapId : '',
-    };
-    if (type === CONSTANTS.CREATE) {
-      const apiResponse = await createLopThucTap(dataRequest);
-      if (apiResponse) {
-        getDataLopThucTap();
-        handleShowModal(false);
-        toast(CONSTANTS.SUCCESS, 'Thêm mới lớp thực tập thành công');
-      }
-    }
+  async function createAndModifyLopThucTap(dataForm) {
+    console.log('dataTable', dataForm);
+    var dataSv = tablelopthuctap.data.concat(dataForm);
+    console.log(dataSv);
+    setDataTableLopThucTap({
+      data: [...dataSv],
+    });
+    console.log('tablelopthuctap', tablelopthuctap);
 
-    if (type === CONSTANTS.UPDATE) {
-      dataRequest._id = state.userSelected._id;
-      const apiResponse = await updateLopThucTap(dataRequest);
-      if (apiResponse) {
-        const docs = lopthuctap.docs.map(doc => {
-          if (doc._id === apiResponse._id) {
-            doc = apiResponse;
-          }
-          return doc;
-        });
-        setLopThucTap(Object.assign({}, lopthuctap, { docs }));
-        handleShowModal(false);
-        toast(CONSTANTS.SUCCESS, 'Chỉnh sửa thông tin lớp thực tập thành công');
-      }
-    }
+    handleShowModal(false);
   }
 
   return (
@@ -323,8 +314,8 @@ function DotThucTap({ isLoading, namhocList, ...props }) {
               autoSize={{ minRows: 3, maxRows: 5 }}
             />
           </Row>
-          <Card title={<span><UnorderedListOutlined /> Danh sách thực tập</span>}
-                extra={ <AddNewButton onClick={() => handleShowModal(true)} disabled={isLoading}/>}>
+          <Card title={<span><UnorderedListOutlined/> Danh sách thực tập</span>}
+                extra={<AddNewButton onClick={() => handleShowModal(true)} disabled={isLoading}/>}>
             {/*<Filter*/}
             {/*  dataSearch={[*/}
             {/*    {*/}
@@ -354,7 +345,6 @@ function DotThucTap({ isLoading, namhocList, ...props }) {
               <LeftCircleOutlined/><span className='ml-1'>Quay lại</span>
             </Button>
           </Card>
-
         </Form>
 
 
@@ -366,7 +356,8 @@ function DotThucTap({ isLoading, namhocList, ...props }) {
 function mapStateToProps(store) {
   const { isLoading } = store.app;
   const { namhocList } = store.namhoc;
-  return { isLoading, namhocList };
+  const { classmateList } = store.lophoc;
+  return { isLoading, namhocList, classmateList };
 }
 
-export default (connect(mapStateToProps, { ...namhoc.actions })(DotThucTap));
+export default (connect(mapStateToProps, { ...namhoc.actions, ...lophoc.actions })(DotThucTap));

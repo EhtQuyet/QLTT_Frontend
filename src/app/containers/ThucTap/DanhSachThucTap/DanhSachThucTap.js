@@ -23,10 +23,6 @@ import { URL } from '@url';
 
 function DanhSachThucTap({ isLoading, namhocList, ...props }) {
   const [danhsachthuctap, setDanhsachthuctap] = useState(PAGINATION_INIT);
-  const [state, setState] = useState({
-    isShowModal: false,
-    userSelected: null,
-  });
 
   useEffect(() => {
     if (!namhocList?.length) {
@@ -118,16 +114,6 @@ function DanhSachThucTap({ isLoading, namhocList, ...props }) {
     },
   ];
 
-  function handleShowModal(isShowModal, userSelected = null) {
-    setState({
-      isShowModal,
-      userSelected,
-    });
-  }
-
-  function handleEdit(userSelected) {
-    setState({ isShowModal: true, userSelected });
-  }
 
   async function handleDelete(userSelected) {
     const apiResponse = await deleteDanhSachThucTap(userSelected._id);
@@ -136,41 +122,6 @@ function DanhSachThucTap({ isLoading, namhocList, ...props }) {
       toast(CONSTANTS.SUCCESS, 'Xóa đợt thực tập thành công');
     }
   }
-
-// function create or modify
-//   async function createAndModifyDanhSachThucTap(type, dataForm) {
-//     const { tenThuctap, ghiChu, thoiGianBatDau, namHoc } = dataForm;
-//     const dataRequest = {
-//       ten_thuc_tap: tenThuctap,
-//       namhoc_id: namHoc,
-//       thoi_gian_bat_dau: thoiGianBatDau ? thoiGianBatDau.toString() : null,
-//       ghi_chu: ghiChu,
-//     };
-//     if (type === CONSTANTS.CREATE) {
-//       const apiResponse = await createDanhSachThucTap(dataRequest);
-//       if (apiResponse) {
-//         getDataDanhSachThucTap();
-//         handleShowModal(false);
-//         toast(CONSTANTS.SUCCESS, 'Thêm mới đợt thực tập thành công');
-//       }
-//     }
-//
-//     if (type === CONSTANTS.UPDATE) {
-//       dataRequest._id = state.userSelected._id;
-//       const apiResponse = await updateDanhSachThucTap(dataRequest);
-//       if (apiResponse) {
-//         const docs = danhsachthuctap.docs.map(doc => {
-//           if (doc._id === apiResponse._id) {
-//             doc = apiResponse;
-//           }
-//           return doc;
-//         });
-//         setDanhsachthuctap(Object.assign({}, danhsachthuctap, { docs }));
-//         handleShowModal(false);
-//         toast(CONSTANTS.SUCCESS, 'Chỉnh sửa thông tin đợt thực tập thành công');
-//       }
-//     }
-//   }
 
 
   function handleChangePagination(current, pageSize) {
