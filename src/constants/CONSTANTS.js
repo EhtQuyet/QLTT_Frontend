@@ -41,7 +41,7 @@ export const PAGINATION_INIT = Object.assign({}, {
   totalDocs: 0,
   query: {},
 });
-export const TOKEN_EXP_TIME = 1000 * 5 * 60;
+export const TOKEN_EXP_TIME = 1000 * 100 * 60;
 
 export const GENDER_OPTIONS = [
   { label: 'Nam', value: 'Nam' },
