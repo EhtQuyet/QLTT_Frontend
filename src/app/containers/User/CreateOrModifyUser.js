@@ -1,7 +1,7 @@
-import React, { Fragment, useEffect, useRef } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { Modal, Form, Row } from 'antd';
 import { connect } from 'react-redux';
-
+import { getRoleList } from '@app/services/User/UserService';
 import Loading from '@components/Loading';
 import ModalFooter from '@components/ModalFooter/ModalFooter';
 import CustomSkeleton from '@components/CustomSkeleton';
@@ -9,14 +9,39 @@ import { CONSTANTS, GENDER_OPTIONS, RULES } from '@constants';
 
 function CreateOrModifyUser({ isModalVisible, handleOk, handleCancel, userSelected, ...props }) {
   const [formUser] = Form.useForm();
+  const [roleData, setRoleData] = useState([
+    {
+      label: '',
+      value: '',
+    }
+  ]);
 
   useEffect(() => {
+    getRole();
     if (userSelected && isModalVisible) {
       formUser.setFieldsValue(userSelected);
     } else if (!isModalVisible) {
       formUser.resetFields();
     }
   }, [isModalVisible]);
+
+  async function getRole() {
+    const apiRequest = await getRoleList();
+    let arr = [];
+    if (apiRequest) {
+      apiRequest.data.forEach(data => {
+        let item = [{
+          label: data.name,
+          value: data.code,
+        }]
+        arr = arr.concat(item);
+      });
+      if(arr)
+      setRoleData(arr);
+    }
+  }
+
+  console.log('roleData',roleData);
 
   function onFinish(data) {
     if (props.isLoading) return;
@@ -123,6 +148,19 @@ function CreateOrModifyUser({ isModalVisible, handleOk, handleCancel, userSelect
               layoutCol={{ xs: 24 }}
               layoutItem={{ labelCol: { xs: 6, md: 5 } }}
               rules={[RULES.EMAIL, RULES.REQUIRED]}
+              helpInline={false}
+              labelLeft
+            />
+
+            <CustomSkeleton
+              size='default'
+              mode="multiple"
+              label="Quyền người dùng" name="role"
+              type={CONSTANTS.SELECT}
+              options={{ data: roleData }}
+              layoutCol={{ xs: 24 }}
+              layoutItem={{ labelCol: { xs: 6, md: 5 } }}
+              rules={[RULES.REQUIRED]}
               helpInline={false}
               labelLeft
             />

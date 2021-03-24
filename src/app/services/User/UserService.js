@@ -14,6 +14,18 @@ export function login(data) {
     });
 }
 
+export function getRoleList() {
+  return axios.get(API.ROLE)
+    .then(response => {
+      if (response.status === 200) return response.data;
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
+
 export function getAllUser(currentPage = 1, totalDocs = 0, query) {
   const params = convertParam(query, '&');
   return axios.get(`${API.USERS}?page=${currentPage}&limit=${totalDocs}${params}`)

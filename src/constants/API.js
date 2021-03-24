@@ -6,6 +6,7 @@ export const API = {
   UPDATE_MY_INFO: '/api/users/info',
   DE_TAI: '/api/detai',
   DE_TAI_ID: '/api/detai/{0}',
+  ROLE: '/api/roles',
 
   SINH_VIEN: 'api/sinhvien',
   SINH_VIEN_ID: 'api/sinhvien/{0}',

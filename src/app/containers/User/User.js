@@ -117,7 +117,7 @@ function User({ isLoading, ...props }) {
     {
       title: 'Tên',
       dataIndex: 'fullName',
-      key: 'name',
+      key: 'fullName',
       width: 300
     },
     {
