@@ -1,19 +1,23 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Menu } from 'antd';
-
+import logocntt from '../../../assets/images/logocntt.jpg'
 import { ConstantsRoutes } from '@app/router/ConstantsRoutes';
 import { connect } from 'react-redux';
 
 import './CustomMenu.scss';
-import logocntt from '../../../assets/images/logocntt.jpg'
-
 
 function CustomMenu({ history, siderCollapsed, isBroken, ...props }) {
   const { pathname } = history.location;
   let defaultOpenKeys = [];
 
   const menuItem = ConstantsRoutes.map((menu) => {
+    if (menu.menuGroup && !siderCollapsed) {
+      return <Menu.ItemGroup key={menu.menuGroup} title={menu.menuGroup}
+        // style={{height:'15px'}}
+        // className='py-2'
+      />;
+    }
     if (menu.menuName && !menu.children) {
       return <Menu.Item key={menu.path} icon={menu.icon}>
         <Link to={menu.path}>{menu.menuName}</Link>

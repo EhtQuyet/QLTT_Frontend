@@ -9,6 +9,7 @@ import * as giaovien from './ducks/giaovien.duck';
 import * as detai from './ducks/detai.reduck';
 import * as namhoc from './ducks/namhoc.duck';
 import * as sinhvien from './ducks/sinhvien.duck';
+import * as diadiem  from './ducks/diadiem.duck';
 
 
 export const rootReducer = combineReducers({
@@ -20,6 +21,7 @@ export const rootReducer = combineReducers({
   detai: detai.reducer,
   namhoc: namhoc.reducer,
   sinhvien: sinhvien.reducer,
+  diadiem : diadiem.reducer,
 
 });
 
@@ -33,5 +35,6 @@ export function* rootSaga() {
     detai.saga(),
     namhoc.saga(),
     sinhvien.saga(),
+    diadiem.saga(),
   ]);
 }

@@ -80,11 +80,11 @@ function SinhVienHocCung({ isModalVisible, handleOk, handleCancel, classmateList
       svhcId = selectedRows;
 
     },
-    getCheckboxProps: (record) => ({
-      disabled: record.name === 'Disabled User',
-      // Column configuration not to be checked
-      name: record.name,
-    }),
+    // getCheckboxProps: (record) => ({
+    //   disabled: record.name === 'Disabled User',
+    //   // Column configuration not to be checked
+    //   name: record.name,
+    // }),
   };
 
   // get student data from the selected class

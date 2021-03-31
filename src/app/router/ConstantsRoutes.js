@@ -29,7 +29,7 @@ const DangKyDeTai = lazy(() => import('@containers/DangKyDeTaiTTTN/DangKyDeTai')
 const ThemFile = lazy(() => import('@containers/QuanLyDanhMuc/QuanLySinhVienTTTN/ThemFile'));
 const DiaDiemThucTap = lazy(()=> import('@containers/QuanLyDanhMuc/QuanLyDiaDiemThucTap/DiaDiemThucTap'))
 const NamHoc = lazy(()=> import('@containers/QuanLyDanhMuc/QuanLyNamHoc/NamHoc'))
-const DKThucTap = lazy(()=> import('@containers/ThucTap/DangKyThucTap/DangKyThucTap'))
+const DangKyThucTap = lazy(()=> import('@containers/ThucTap/DangKyThucTap/DangKyThucTap'))
 
 const DanhSachThucTap = lazy(()=> import('@containers/ThucTap/DanhSachThucTap/DanhSachThucTap'))
 const DotThucTap = lazy(()=> import('@containers/ThucTap/DotThucTap/DotThucTap'))
@@ -55,12 +55,10 @@ export const ConstantsRoutes = [
     ],
   },
   {
-    path: URL.MENU.DK_THUC_TAP,
+    path: URL.MENU.DANG_KY_TUC_TAP,
     menuName: 'Đăng ký thực tập',
-    icon: <UserOutlined/>,
-    // children: [
-    //   { path: URL.MENU.USER, menuName: 'Đăng ký thực tập', component: DKThucTap, icon: <UserOutlined/> },
-    // ],
+    component: DangKyThucTap,
+    icon: <UnorderedListOutlined/>,
   },
   {
     path: URL.MENU.DANH_MUC_QUAN_LY,

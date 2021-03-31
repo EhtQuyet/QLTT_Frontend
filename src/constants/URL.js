@@ -5,9 +5,8 @@ export const URL = {
 
     DANH_MUC_QUAN_LY: '/danh-muc-quan-ly',
     GIAO_VIEN: '/giao-vien',
-
-    DK_THUC_TAP: '/dang-ky-thuc-tap',
-
+    QUAN_LY_THUC_TAP: '/quan-ly-thuc-tap',
+    DANG_KY_TUC_TAP: '/dang-ky-thuc-tap',
     // Sinh vien
     SINH_VIEN: '/sinh-vien',
 

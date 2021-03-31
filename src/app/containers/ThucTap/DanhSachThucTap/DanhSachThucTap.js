@@ -135,19 +135,9 @@ function DanhSachThucTap({ isLoading, namhocList, ...props }) {
   pagination.pageSize = danhsachthuctap.pageSize;
   return (
     <div>
-      <Filter
-        dataSearch={[
-          { name: 'ten_thuc_tap', label: 'Đợt thực tập', type: CONSTANTS.TEXT },
-          {
-            name: 'namhoc_id', label: 'Năm học', type: CONSTANTS.SELECT,
-            options: { data: namhocList, valueString: '_id', labelString: 'name' },
-          },
-        ]}
-        handleFilter={(query) => getDataDanhSachThucTap(1, danhsachthuctap.pageSize, query)}/>
-
       <AddNewButton
         disabled={isLoading}
-        linkTo={URL.MENU.DOT_THUC_TAP} label={'Thêm mới'}
+        linkTo={URL.MENU.DOT_THUC_TAP} label={'Tạo đợt thực tập'}
       />
       <Loading active={isLoading}>
         <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
