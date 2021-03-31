@@ -11,6 +11,9 @@ export const API = {
   SINH_VIEN: 'api/sinhvien',
   SINH_VIEN_ID: 'api/sinhvien/{0}',
 
+  DK_THUC_TAP: 'api/dangkythuctap',
+  DK_THUC_TAP_ID: 'api/dangkythuctap/{0}',
+
   BO_MON: 'api/bomon',
   BO_MON_ID: 'api/bomon/{0}',
 
