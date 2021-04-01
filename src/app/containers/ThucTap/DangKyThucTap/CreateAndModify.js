@@ -16,7 +16,6 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
       const dataField = Object.assign({}, userSelected);
       dataField.diaDiem = userSelected.diadiem_thuctap._id;
       dataField.giaoVien = userSelected.giaoien_huongdan._id;
-      console.log('userselect', userSelected);
       dkttForm.setFieldsValue(dataField);
     } else if (!isModalVisible) {
       dkttForm.resetFields();

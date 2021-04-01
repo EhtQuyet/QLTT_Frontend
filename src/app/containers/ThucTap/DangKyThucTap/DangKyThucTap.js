@@ -44,7 +44,6 @@ function DangKyThucTap({ isLoading, myInfo, teacherList, diadiemList, ...props }
     query = dkthuctap.query,
   ) {
     const apiResponse = await getAllDKTT(currentPage, pageSize, query);
-    console.log('api', apiResponse);
     if (apiResponse) {
       setDkthuctap({
         docs: apiResponse.docs,
