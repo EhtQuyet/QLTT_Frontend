@@ -119,3 +119,7 @@ export const TRANG_THAI_LABEL = {
   CHUA_DANG_KY: { label: 'Chưa đăng ký', color: '#fa541c' },
   DA_DANG_KY: { label: 'Đã đăng ký', color: '#52c41a' },
 };
+export const Role = {
+  ADMIN: 'Admin',
+  User: 'User'
+}
