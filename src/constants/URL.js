@@ -22,9 +22,9 @@ export const URL = {
     DANG_KY_DE_TAI_ID: '/dang-ky-de-tai/{0}',
 
     DANH_SACH_THUC_TAP: '/danh-sach-thuc-tap',
-    DOT_THUC_TAP: '/chi-tiet-dot_thuc_tap',
+    DOT_THUC_TAP: '/dot_thuc_tap',
     DOT_THUC_TAP_ID: '/chi-tiet-dot_thuc_tap/{0}',
-    DOT_THUC_TAP_ADD: '/chi-tiet-dot_thuc_tap/create',
+    DOT_THUC_TAP_ADD: '/tao-dot-thuc-tap',
 
   },
 

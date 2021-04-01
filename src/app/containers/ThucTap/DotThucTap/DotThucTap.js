@@ -183,16 +183,14 @@ function DotThucTap({ isLoading, namhocList, classmateList, ...props }) {
   ];
 
   async function getDataDotThucTap() {
-    if (dotthuctapId) {
-      const apiResponse = await getDotthuctapByID(dotthuctapId);
-      if (apiResponse) {
-        dotthuctapForm.setFieldsValue({
-          dotThucTap: apiResponse.ten_thuc_tap,
-          namHoc: apiResponse.namhoc_id,
-          thoiGianBatDau: apiResponse.thoi_gian_bat_dau ? moment(apiResponse.thoi_gian_bat_dau) : '',
-          ghiChu: apiResponse.ghi_chu,
-        });
-      }
+    const apiResponse = await getDotthuctapByID(dotthuctapId);
+    if (apiResponse) {
+      dotthuctapForm.setFieldsValue({
+        dotThucTap: apiResponse.ten_thuc_tap,
+        namHoc: apiResponse.namhoc_id,
+        thoiGianBatDau: apiResponse.thoi_gian_bat_dau ? moment(apiResponse.thoi_gian_bat_dau) : '',
+        ghiChu: apiResponse.ghi_chu,
+      });
     }
   }
 
@@ -270,8 +268,6 @@ function DotThucTap({ isLoading, namhocList, classmateList, ...props }) {
 
   return (
     <div>
-
-      <Card bordered={true} title="Chi tiết đợt thực tập">
         <Form size='small' form={dotthuctapForm} onFinish={funcSaveData}>
           <Row gutter={15}>
             <CustomSkeleton
@@ -295,6 +291,17 @@ function DotThucTap({ isLoading, namhocList, classmateList, ...props }) {
               labelLeft
             />
             <CustomSkeleton
+              label="Lớp thực tập" name="lopHoc"
+              mode="multiple"
+              type={CONSTANTS.SELECT}
+              disabled={!isCreate}
+              rules={[RULES.REQUIRED]}
+              layoutCol={{ xs: 24 }}
+              layoutItem={{ labelCol: { xs: 6, sm: 24, md: 24, lg: 8, xl: 6, xxl: 4 } }}
+              options={{ data: classmateList, valueString: '_id', labelString: 'name' }}
+              labelLeft
+            />
+            <CustomSkeleton
               label="Thời gian bắt đầu" name="thoiGianBatDau"
               type={CONSTANTS.DATE}
               layoutCol={{ xs: 24 }}
@@ -314,28 +321,23 @@ function DotThucTap({ isLoading, namhocList, classmateList, ...props }) {
               autoSize={{ minRows: 3, maxRows: 5 }}
             />
           </Row>
-          <Card title={<span><UnorderedListOutlined/> Danh sách thực tập</span>}
-                extra={<AddNewButton onClick={() => handleShowModal(true)} disabled={isLoading}/>}>
-            {/*<Filter*/}
-            {/*  dataSearch={[*/}
-            {/*    {*/}
-            {/*      name: 'nam_hoc', label: 'Năm học', type: CONSTANTS.SELECT,*/}
-            {/*      options: { data: namhocList, valueString: '_id', labelString: 'name' },*/}
-            {/*    },*/}
-            {/*  ]}*/}
-            {/*  // handleFilter={(query) => getDataDeTai(1, detai.pageSize, query)}/>*/}
-            {/*/>*/}
-            <Loading active={isLoading}>
-              <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
-            </Loading>
-            <ThemSuaLopThucTap
-              type={!!state.userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE}
-              isModalVisible={state.isShowModal}
-              handleOk={createAndModifyLopThucTap}
-              handleCancel={() => handleShowModal(false)}
-              userSelected={state.userSelected}
-            />
-          </Card>
+          <Divider orientation="left" plain={false} className='m-0'>
+            {'Danh sách sinh viên học cùng'}
+          </Divider>
+
+          <div className='clearfix'>
+            <Button
+              size='small' type="primary" className='float-right mb-2'
+              icon={<i className='fa fa-plus mr-1'/>}
+              // onClick={() => toggleModal(true)}
+              onClick={() => handleShowModal}
+            >
+              Thêm sinh viên
+            </Button>
+          </div>
+          <Loading active={isLoading}>
+            <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
+          </Loading>
           <Card>
             <Button type="primary" htmlType="submit" className='float-right ' size='small'>
               <DownCircleOutlined/>Lưu dữ liệu
@@ -346,9 +348,6 @@ function DotThucTap({ isLoading, namhocList, classmateList, ...props }) {
             </Button>
           </Card>
         </Form>
-
-
-      </Card>
     </div>
   );
 }

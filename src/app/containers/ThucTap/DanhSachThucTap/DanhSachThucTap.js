@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Popconfirm, Table, Tag } from 'antd';
 import AddNewButton from '@AddNewButton';
-import ThemSuaDanhSachThucTap from './ThemSuaDanhSachThucTap';
+// import ChiTietDotThucTap from './ChiTietDotThucTap';
 import {
   createDanhSachThucTap,
   deleteDanhSachThucTap,
@@ -17,16 +17,20 @@ import Filter from '@components/Filter';
 import Loading from '@components/Loading';
 import { connect } from 'react-redux';
 import * as namhoc from '@app/store/ducks/namhoc.duck';
+import * as lophoc from '@app/store/ducks/lophoc.duck';
 import { PlusCircleOutlined, SendOutlined, EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { URL } from '@url';
 
-function DanhSachThucTap({ isLoading, namhocList, ...props }) {
+function DanhSachThucTap({ isLoading, namhocList, classmateList, ...props }) {
   const [danhsachthuctap, setDanhsachthuctap] = useState(PAGINATION_INIT);
 
   useEffect(() => {
     if (!namhocList?.length) {
       props.getNamHoc();
+    }
+    if (!namhocList?.length) {
+      props.getClass();
     }
     (async () => {
       await getDataDanhSachThucTap();
@@ -137,18 +141,11 @@ function DanhSachThucTap({ isLoading, namhocList, ...props }) {
     <div>
       <AddNewButton
         disabled={isLoading}
-        linkTo={URL.MENU.DOT_THUC_TAP} label={'Tạo đợt thực tập'}
+        linkTo={URL.MENU.DOT_THUC_TAP_ADD} label={'Tạo đợt thực tập'}
       />
       <Loading active={isLoading}>
         <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
       </Loading>
-      {/*<ThemSuaDanhSachThucTap*/}
-      {/*  type={!!state.userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE}*/}
-      {/*  isModalVisible={state.isShowModal}*/}
-      {/*  handleOk={createAndModifyDanhSachThucTap}*/}
-      {/*  handleCancel={() => handleShowModal(false)}*/}
-      {/*  userSelected={state.userSelected}*/}
-      {/*/>*/}
     </div>
   );
 }
@@ -157,7 +154,8 @@ function DanhSachThucTap({ isLoading, namhocList, ...props }) {
 function mapStateToProps(store) {
   const { isLoading } = store.app;
   const { namhocList } = store.namhoc;
-  return { isLoading, namhocList };
+  const { classmateList } = store.lophoc;
+  return { isLoading, namhocList, classmateList };
 }
 
-export default (connect(mapStateToProps, { ...namhoc.actions })(DanhSachThucTap));
+export default (connect(mapStateToProps, { ...namhoc.actions, ...lophoc.actions })(DanhSachThucTap));

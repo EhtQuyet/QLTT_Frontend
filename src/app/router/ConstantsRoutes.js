@@ -27,14 +27,22 @@ const LopHoc = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyLopHoc/LopHoc'
 const DeTai = lazy(() => import('@containers/QuanLyDeTaiTTTN/DeTaiTTTN'));
 const DangKyDeTai = lazy(() => import('@containers/DangKyDeTaiTTTN/DangKyDeTai'));
 const ThemFile = lazy(() => import('@containers/QuanLyDanhMuc/QuanLySinhVienTTTN/ThemFile'));
-const DiaDiemThucTap = lazy(()=> import('@containers/QuanLyDanhMuc/QuanLyDiaDiemThucTap/DiaDiemThucTap'))
-const NamHoc = lazy(()=> import('@containers/QuanLyDanhMuc/QuanLyNamHoc/NamHoc'))
-const DangKyThucTap = lazy(()=> import('@containers/ThucTap/DangKyThucTap/DangKyThucTap'))
+const DiaDiemThucTap = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyDiaDiemThucTap/DiaDiemThucTap'));
+const NamHoc = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyNamHoc/NamHoc'));
+const DangKyThucTap = lazy(() => import('@containers/ThucTap/DangKyThucTap/DangKyThucTap'));
 
-const DanhSachThucTap = lazy(()=> import('@containers/ThucTap/DanhSachThucTap/DanhSachThucTap'))
-const DotThucTap = lazy(()=> import('@containers/ThucTap/DotThucTap/DotThucTap'))
+const DanhSachThucTap = lazy(() => import('@containers/ThucTap/DanhSachThucTap/DanhSachThucTap'));
+const DotThucTap = lazy(() => import('@containers/ThucTap/DotThucTap/DotThucTap'));
 
-
+function renderIcon(icon) {
+  return <span role="img" aria-label="unordered-list" className="anticon">
+      <div className='position-absolute' style={{ top: '50%', transform: 'translateY(-50%)' }}>
+        <div className='position-relative' style={{ width: '14px', height: '14px' }}>
+          <i className={`fas fa-${icon} position-center`}/>
+        </div>
+      </div>
+    </span>;
+}
 
 export const ConstantsRoutes = [
   { isRedirect: true, exact: true, from: '/', to: URL.MENU.DASHBOARD },
@@ -43,64 +51,88 @@ export const ConstantsRoutes = [
     breadcrumbName: 'Dashboard',
     menuName: 'Dashboard',
     component: Dashboard,
-    icon: <DashboardOutlined/>,
+    icon: renderIcon('tachometer-alt'),
     exact: true,
   },
-  {
-    path: URL.MENU.USER,
-    menuName: 'Quản lý người dùng',
-    icon: <UserOutlined/>,
-    children: [
-      { path: URL.MENU.USER, menuName: 'Danh sách người dùng', component: User, icon: <UserOutlined/> },
-    ],
-  },
-  {
-    path: URL.MENU.DANG_KY_TUC_TAP,
-    menuName: 'Đăng ký thực tập',
-    component: DangKyThucTap,
-    icon: <UnorderedListOutlined/>,
-  },
+  { menuGroup: 'Quản lý người dùng' },
+  { path: URL.MENU.USER, menuName: 'Danh sách người dùng', component: User, icon: renderIcon('users') },
+  // {
+  //   path: URL.MENU.USER,
+  //   menuName: 'Quản lý người dùng',
+  //   icon: <UserOutlined/>,
+  //   children: [
+  //
+  //   ],
+  // },
+  { menuGroup: 'Quản lý danh mục' },
   {
     path: URL.MENU.DANH_MUC_QUAN_LY,
     menuName: 'Danh mục quản lý',
-    icon: <UnorderedListOutlined/>,
+    icon: renderIcon('th-list'),
     children: [
       {
         path: URL.MENU.GIAO_VIEN,
         menuName: 'Quản lý giáo viên',
         component: GiaoVien,
-        icon: <GroupOutlined/>,
-      },
-      { path: URL.MENU.SINH_VIEN, menuName: 'Quản lý sinh viên', component: SinhVien, icon: <GroupOutlined/> },
-      { path: URL.MENU.BO_MON, menuName: 'Quản lý bộ môn', component: BoMon, icon: <GroupOutlined/> },
-      { path: URL.MENU.LOP_HOC, menuName: 'Quản lý lớp học', component: LopHoc, icon: <GroupOutlined/> },
-      { path: URL.MENU.DIA_DIEM_THUC_TAP, menuName: 'Quản lý địa điểm', component: DiaDiemThucTap, icon: <GroupOutlined/> },
-      { path: URL.MENU.NAM_HOC, menuName: 'Quản lý năm học', component: NamHoc, icon: <GroupOutlined/> },
+        icon: renderIcon('chalkboard-teacher'),
 
+      },
+      {
+        path: URL.MENU.SINH_VIEN,
+        menuName: 'Quản lý sinh viên',
+        component: SinhVien,
+        icon: renderIcon('user-graduate'),
+      },
+      {
+        path: URL.MENU.BO_MON, menuName: 'Quản lý bộ môn',
+        component: BoMon,
+        icon: renderIcon('layer-group'),
+      },
+      {
+        path: URL.MENU.LOP_HOC, menuName: 'Quản lý lớp học',
+        component: LopHoc,
+        icon: renderIcon('school'),
+      },
+      {
+        path: URL.MENU.DIA_DIEM_THUC_TAP,
+        menuName: 'Quản lý địa điểm',
+        component: DiaDiemThucTap,
+        icon: renderIcon('map-marker-alt'),
+      },
+      {
+        path: URL.MENU.NAM_HOC, menuName: 'Quản lý năm học',
+        component: NamHoc,
+        icon: renderIcon('address-book'),
+      },
     ],
+  },
+  { menuGroup: 'Thực tập' },
+  {
+    path: URL.MENU.DANG_KY_TUC_TAP,
+    menuName: 'Đăng ký thực tập',
+    component: DangKyThucTap,
+    icon: renderIcon('pen-alt'),
   },
   {
-    path: URL.MENU.QUAN_LY_THUC_TAP,
-    menuName: 'Quản lý thực tập',
-    icon: <UnorderedListOutlined/>,
-    children: [
-      
-      { path: URL.MENU.DANH_SACH_THUC_TAP, menuName: 'Danh sách thực tập', component: DanhSachThucTap, icon: <GroupOutlined/> },
-
-    ],
+    path: URL.MENU.DANH_SACH_THUC_TAP,
+    menuName: 'Danh sách đợt thực tập',
+    component: DanhSachThucTap,
+    icon: renderIcon('wave-square'),
   },
+  { menuGroup: 'Đề tài thực tập' },
   {
     path: URL.MENU.DE_TAI_TTTN,
     menuName: 'Quản lý đề tài tốt nghiệp',
     component: DeTai,
-    icon: <UnorderedListOutlined/>,
+    icon: renderIcon('copy'),
   },
   {
     path: URL.MENU.DANG_KY_DE_TAI,
     menuName: 'Đăng ký đề tài tốt nghiệp',
     component: DangKyDeTai,
-    icon: <UnorderedListOutlined/>,
+    icon: renderIcon('edit'),
   },
+
 
   { path: URL.MY_INFO, breadcrumbName: 'Thông tin cá nhân', component: MyInfo },
   { path: URL.FILE_SINH_VIEN, component: ThemFile },
@@ -110,10 +142,11 @@ export const ConstantsRoutes = [
     component: DotThucTap,
   },
   {
-    path: URL.MENU.DOT_THUC_TAP,
+    path: URL.MENU.DOT_THUC_TAP_ADD,
     breadcrumbName: 'Thêm mới đợt thực tập',
     component: DotThucTap,
   },
+
 ];
 
 

@@ -14,6 +14,8 @@ $grid-breakpoints: (
 @import "~bootstrap/scss/utilities/spacing";
 @import "~bootstrap/scss/utilities/float";
 @import "~bootstrap/scss/utilities/display";
+@import "~bootstrap/scss/utilities/position";
+@import "../assets/fontawesome-5.15.2/css/all.css";
 
 
 body, html {
@@ -107,8 +109,14 @@ button:focus {
   .ant-table.ant-table-bordered > .ant-table-container {
     border: 0;
 
-    .ant-table-cell:last-child {
-      border-right: 0;
+    .ant-table-cell {
+      &:last-child {
+        border-right: 0;
+      }
+
+      .ant-tag:last-child {
+        margin-right: 0;
+      }
     }
 
     .ant-table-row:last-child .ant-table-cell {
@@ -156,5 +164,35 @@ button:focus {
 
   .ant-notification-notice-message, .ant-notification-notice-description, svg {
     color: #fff;
+  }
+}
+
+.position-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-align: justify;
+}
+
+.nodata-small .ant-table-placeholder {
+  .ant-table-cell, .ant-table-cell > .ant-table-expanded-row-fixed {
+    padding: 0 !important;
+
+    .ant-empty {
+      margin: 20px 0;
+
+      .ant-empty-image {
+        height: 30px;
+      }
+    }
   }
 }
