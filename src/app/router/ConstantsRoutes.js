@@ -54,7 +54,6 @@ export const ConstantsRoutes = [
     icon: renderIcon('tachometer-alt'),
     exact: true,
   },
-  { menuGroup: 'Quản lý người dùng' },
   { path: URL.MENU.USER, menuName: 'Danh sách người dùng', component: User, icon: renderIcon('users') },
   // {
   //   path: URL.MENU.USER,
@@ -64,7 +63,6 @@ export const ConstantsRoutes = [
   //
   //   ],
   // },
-  { menuGroup: 'Quản lý danh mục' },
   {
     path: URL.MENU.DANH_MUC_QUAN_LY,
     menuName: 'Danh mục quản lý',
@@ -106,7 +104,6 @@ export const ConstantsRoutes = [
       },
     ],
   },
-  { menuGroup: 'Thực tập' },
   {
     path: URL.MENU.DANG_KY_TUC_TAP,
     menuName: 'Đăng ký thực tập',
@@ -119,7 +116,6 @@ export const ConstantsRoutes = [
     component: DanhSachThucTap,
     icon: renderIcon('stream'),
   },
-  { menuGroup: 'Đề tài thực tập' },
   {
     path: URL.MENU.DE_TAI_TTTN,
     menuName: 'Danh sách đề tài',

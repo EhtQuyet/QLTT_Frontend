@@ -64,13 +64,15 @@ function ThemFile({ isLoading, ...props }) {
     }
   }
 
+  console.log('dataImport',dataImport);
+
   async function handleClickButtonSave(){
     if(dataImport) {
 
       dataImport.forEach( data => {
         const lopId = classmate.find(item => item.ten_lop_hoc === data['Lớp']);
         const dataRequest = {
-          ten_sinh_vien: data['Tên sinh viên'],
+          ten_sinh_vien: data['Họ và tên'],
           ma_lop_hoc: lopId._id,
           ngay_sinh: data['Ngày sinh'] ? data['Ngày sinh'].toString() : null,
           ma_sinh_vien: data['Mã sinh viên'],
@@ -91,7 +93,7 @@ function ThemFile({ isLoading, ...props }) {
 
   const dataSource = dataImport ? dataImport.map((data, index) => ({
     key: index + 1,
-    tenSinhVien: data['Tên sinh viên'] || '',
+    tenSinhVien: data['Họ và tên'] || '',
     sdt: data['Số điện thoại']|| '',
     email: data['Email'] || '',
     ngaySinh: data['Ngày sinh'] || '',
@@ -116,7 +118,7 @@ function ThemFile({ isLoading, ...props }) {
       width: 200,
     },
     {
-      title: 'Tên sinh viên',
+      title: 'Họ và tên',
       dataIndex: 'tenSinhVien',
       key: 'tenSinhVien',
       render: (text, record, index) => <div>
@@ -145,11 +147,7 @@ function ThemFile({ isLoading, ...props }) {
       key: 'sdt',
       width: 200,
     },
-    // {
-    //   align: 'center',
-    //   render: (value) => <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>,
-    //   width: 300,
-    // },
+
   ];
 
 
