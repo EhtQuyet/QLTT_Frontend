@@ -23,10 +23,8 @@ export const API = {
   NAM_HOC: 'api/namhoc',
   NAM_HOC_ID: 'api/namhoc/{0}',
 
-  DANH_SACH_THUC_TAP: '/api/danhsachthuctap',
-  DANH_SACH_THUC_TAP_ID: '/api/danhsachthuctap/{0}',
-  LOP_THUC_TAP: '/api/lopthuctap',
-  LOP_THUC_TAP_ID: '/api/lopthuctap/{0}',
+  DOT_THUC_TAP: '/api/dotthuctap',
+  DOT_THUC_TAP_ID: '/api/dotthuctap/{0}',
 
   KHOA_HOC: 'api/khoahoc',
   KHOA_HOC_ID: 'api/khoahoc/{0}',

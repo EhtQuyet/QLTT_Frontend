@@ -1,102 +1,46 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import {
-  Button,
-  Divider,
-  Form,
-  Input,
-  InputNumber,
-  Popconfirm,
-  Row,
-  Select,
-  Switch,
-  Table,
-  Tooltip,
-  Card,
-  Col,
-  Tag,
-} from 'antd';
-import moment from 'moment';
-import { Link, useParams } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
-import ActionCell from '@components/ActionCell';
-import CustomSkeleton from '@components/CustomSkeleton';
-import { URL } from '@url';
-import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT, RULES, TRANG_THAI } from '@constants';
-import {
-  createDanhSachThucTap, deleteDanhSachThucTap, getAllDanhSachThucTap,
-  getDotthuctapByID,
-  updateDanhSachThucTap,
-} from '@app/services/ThucTap/danhsachthuctapService';
-import {
-  createLopThucTap, deleteLopThucTap, getAllLopThucTap,
-  getLopThucTapByID,
-  updateLopThucTap,
-} from '@app/services/ThucTap/lopthuctapService';
-import { columnIndex, toast } from '@app/common/functionCommons';
-import * as namhoc from '@app/store/ducks/namhoc.duck';
-import * as lophoc from '@app/store/ducks/lophoc.duck';
-import {
-  EyeOutlined,
-  PlusCircleOutlined,
-  LeftCircleOutlined,
-  DownCircleOutlined,
-  DeleteOutlined,
-  UnorderedListOutlined,
-} from '@ant-design/icons';
-import { debounce } from 'lodash';
-import axios from 'axios';
-import Filter from '@components/Filter';
+import { Table } from 'antd';
 import AddNewButton from '@AddNewButton';
+import CreateAndModify from './CreateAndModify';
+import {
+  createDotThucTap,
+  deleteDotThucTap, getAllDotThucTap,
+  updateDotThucTap,
+} from '@app/services/ThucTap/dotthuctapService';
+import ActionCell from '@components/ActionCell';
+import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT } from '@constants';
+import { columnIndex, renderRowData, toast } from '@app/common/functionCommons';
+import moment from 'moment';
+import Filter from '@components/Filter';
 import Loading from '@components/Loading';
-import ThemSuaLopThucTap from '@containers/ThucTap/DotThucTap/ThemSuaLopThucTap';
+import { connect } from 'react-redux';
+import * as namhoc from '@app/store/ducks/namhoc.duck';
 
 
-function DotThucTap({ isLoading, namhocList, classmateList, ...props }) {
-  const dotthuctapId = useParams()?.id;
-  const [dotthuctapForm] = Form.useForm();
-  const [lopthuctap, setLopThucTap] = useState(PAGINATION_INIT);
-
-  const [tablelopthuctap, setDataTableLopThucTap] = useState({
-    data: [],
-  });
+function DotThucTap({ isLoading, namhocList, ...props }) {
+  const [dotthuctap, setDotthuctap] = useState(PAGINATION_INIT);
   const [state, setState] = useState({
     isShowModal: false,
     userSelected: null,
   });
-  const [isCreate, setCreate] = useState(false);
-
 
   useEffect(() => {
-    if (!namhocList?.length) {
+    if (!props?.namhocList?.length) {
       props.getNamHoc();
     }
-    if (!classmateList?.length) {
-      props.getClass();
-    }
     (async () => {
-      await getDataLopThucTap();
+      await getDataDotThucTap();
     })();
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      if (dotthuctapId) {
-        await getDataDotThucTap();
-      } else {
-        setCreate(true);
-      }
-    })();
-  }, []);
-
-  async function getDataLopThucTap(
-    currentPage = lopthuctap.currentPage,
-    pageSize = lopthuctap.pageSize,
-    query = lopthuctap.query,
+  async function getDataDotThucTap(
+    currentPage = dotthuctap.currentPage,
+    pageSize = dotthuctap.pageSize,
+    query = dotthuctap.query,
   ) {
-    const apiResponse = await getAllLopThucTap(currentPage, pageSize, query);
+    const apiResponse = await getAllDotThucTap(currentPage, pageSize, query);
     if (apiResponse) {
-      setLopThucTap({
+      setDotthuctap({
         docs: apiResponse.docs,
         totalDocs: apiResponse.totalDocs,
         pageSize: apiResponse.limit,
@@ -106,93 +50,52 @@ function DotThucTap({ isLoading, namhocList, classmateList, ...props }) {
     }
   }
 
-  const dataSource = tablelopthuctap.data.map((data, index) => ({
-    key: index + 1,
-    ghiChu: data.ghiChu,
-    sinhVienHocCung: data.sinhVienHocCungId,
-    lopThucTap: data.lopHoc,
+  const dataSource = dotthuctap.docs.map((data, index) => ({
+    key: data._id,
+    _id: data._id,
+    namHoc: data.namhoc,
+    ghiChu: data.ghi_chu,
+    thoiGianBatDau: data.thoigian_batdau,
+    thoiGianKetThuc: data.thoigian_ketthuc,
+    dotThucTap: data.ten_dot,
   }));
 
   const columns = [
-    columnIndex(lopthuctap.pageSize, lopthuctap.currentPage),
+    columnIndex(dotthuctap.pageSize, dotthuctap.currentPage),
 
     {
-      title: '#',
-      dataIndex: 'key',
-      key: 'key',
+      title: 'Năm học',
+      dataIndex: 'namHoc',
+      render: value => value?.nam_hoc,
       width: 200,
     },
     {
-      title: 'Lớp',
-      dataIndex: 'lopThucTap',
-      key: 'lopThucTap',
+      title: 'Tên đợt thực tập',
+      dataIndex: 'dotThucTap',
+      key: 'dotThucTap',
       width: 200,
     },
     {
-      title: 'Sinh viên học cùng',
-      dataIndex: 'sinhVienHocCung',
-      key: 'sinhVienHocCung',
-      // render: value => value?.ten_sinh_vien,
+      title: 'Thời gian thực tập',
+      // dataIndex: 'thoiGianBatDau',
+      render: (text, record, index) => <div>
+        {renderRowData('Bắt đầu', record?.thoiGianBatDau ? moment(record.thoiGianBatDau).format('DD/MM/YYYY') : '', '70px')}
+        {renderRowData('Kết thúc', record?.thoiGianKetThuc ? moment(record.thoiGianKetThuc).format('DD/MM/YYYY') : '', '70px')}
+      </div>,
+      align: 'center',
       width: 200,
     },
-    // {
-    //   title: 'Năm học',
-    //   dataIndex: 'namHoc',
-    //   key: 'namHoc',
-    //   render: value => value?.nam_hoc,
-    //   width: 150,
-    // },
-    // {
-    //   title: 'Thời gian bắt đầu',
-    //   dataIndex: 'thoiGianBatDau',
-    //   key: 'thoiGianBatDau',
-    //   render: value => value ? moment(value).format('DD/MM/YYYY') : '',
-    //   width: 150,
-    // },
     {
       title: 'Ghi chú',
       dataIndex: 'ghiChu',
-      key: 'ghiChu',
-      width: 300,
+      width: 200,
     },
-
     {
-      title: 'Thao  tác',
       align: 'center',
-      render: (text, record, index) => {
-        return <>
-          <div className='mt-2'>
-
-            <Tag color='blue' className='tag-action' onClick={() => handleEdit(record)}>
-              <EyeOutlined/><span className='ml-1'>Chi tiết</span>
-            </Tag>
-
-            <Popconfirm
-              title='Bạn có chắc chắn xóa lớp thực tập không?'
-              onConfirm={() => handleDelete(record)}
-              cancelText='Huỷ' okText='Xác nhận' okButtonProps={{ type: 'access' }}>
-              <Tag color='red' className='tag-action'>
-                <DeleteOutlined/><span className='ml-1'>Xóa</span>
-              </Tag>
-            </Popconfirm>
-          </div>
-        </>;
-      },
+      render: (value) => <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>,
       width: 300,
     },
   ];
-
-  async function getDataDotThucTap() {
-    const apiResponse = await getDotthuctapByID(dotthuctapId);
-    if (apiResponse) {
-      dotthuctapForm.setFieldsValue({
-        dotThucTap: apiResponse.ten_thuc_tap,
-        namHoc: apiResponse.namhoc_id,
-        thoiGianBatDau: apiResponse.thoi_gian_bat_dau ? moment(apiResponse.thoi_gian_bat_dau) : '',
-        ghiChu: apiResponse.ghi_chu,
-      });
-    }
-  }
 
   function handleShowModal(isShowModal, userSelected = null) {
     setState({
@@ -206,157 +109,87 @@ function DotThucTap({ isLoading, namhocList, classmateList, ...props }) {
   }
 
   async function handleDelete(userSelected) {
-    const apiResponse = await deleteLopThucTap(userSelected._id);
+    const apiResponse = await deleteDotThucTap(userSelected._id);
     if (apiResponse) {
-      getDataLopThucTap();
-      toast(CONSTANTS.SUCCESS, 'Xóa lớp thực tập thành công');
+      getDataDotThucTap();
+      toast(CONSTANTS.SUCCESS, 'Xóa đợt thực tập thành công');
     }
   }
 
-
-  let history = useHistory();
-
-  function backUrl() {
-    history.push(URL.MENU.DANH_SACH_THUC_TAP);
-  }
-
-
-  async function funcSaveData(data) {
-    console.log('data', data);
-    const { dotThucTap, ghiChu, thoiGianBatDau, namHoc } = data;
+// function create or modify
+  async function createAndModifyDotThucTap(type, dataForm) {
+    const { namHoc, ghiChu, thoiGianBatDau, thoiGianKetThuc, dotThucTap } = dataForm;
     const dataRequest = {
-      ten_thuc_tap: dotThucTap,
-      namhoc_id: namHoc,
-      thoi_gian_bat_dau: thoiGianBatDau ? thoiGianBatDau.toString() : null,
+      ten_dot: dotThucTap,
+      thoigian_batdau: thoiGianBatDau ? thoiGianBatDau.toString() : null,
+      thoigian_ketthuc: thoiGianKetThuc ? thoiGianKetThuc.toString() : null,
+      namhoc: namHoc,
       ghi_chu: ghiChu,
     };
-    if (isCreate) {
-      const apiResponse = await createDanhSachThucTap(dataRequest);
+    if (type === CONSTANTS.CREATE) {
+      const apiResponse = await createDotThucTap(dataRequest);
       if (apiResponse) {
+        getDataDotThucTap();
+        handleShowModal(false);
         toast(CONSTANTS.SUCCESS, 'Thêm mới đợt thực tập thành công');
       }
-    } else {
-      dataRequest._id = dotthuctapId;
-      const apiResponse = await updateDanhSachThucTap(dataRequest);
+    }
+
+    if (type === CONSTANTS.UPDATE) {
+      dataRequest._id = state.userSelected._id;
+      const apiResponse = await updateDotThucTap(dataRequest);
       if (apiResponse) {
-        toast(CONSTANTS.SUCCESS, 'Chỉnh sửa thông tin đợt thực tập thành công');
+        const docs = dotthuctap.docs.map(doc => {
+          if (doc._id === apiResponse._id) {
+            doc = apiResponse;
+          }
+          return doc;
+        });
+        setDotthuctap(Object.assign({}, dotthuctap, { docs }));
+        handleShowModal(false);
+        toast(CONSTANTS.SUCCESS, 'Chỉnh sửa thông tin đợt thực thành công');
       }
     }
   }
 
+
   function handleChangePagination(current, pageSize) {
-    getDataLopThucTap(current, pageSize);
+    getDataDotThucTap(current, pageSize);
   }
 
   const pagination = PAGINATION_CONFIG;
   pagination.onChange = handleChangePagination;
-  pagination.current = lopthuctap.currentPage;
-  pagination.total = lopthuctap.totalDocs;
-  pagination.pageSize = lopthuctap.pageSize;
-
-  async function createAndModifyLopThucTap(dataForm) {
-    console.log('dataTable', dataForm);
-    var dataSv = tablelopthuctap.data.concat(dataForm);
-    console.log(dataSv);
-    setDataTableLopThucTap({
-      data: [...dataSv],
-    });
-    console.log('tablelopthuctap', tablelopthuctap);
-
-    handleShowModal(false);
-  }
-
+  pagination.current = dotthuctap.currentPage;
+  pagination.total = dotthuctap.totalDocs;
+  pagination.pageSize = dotthuctap.pageSize;
   return (
     <div>
-        <Form size='small' form={dotthuctapForm} onFinish={funcSaveData}>
-          <Row gutter={15}>
-            <CustomSkeleton
-              label="Năm học" name="namHoc"
-              type={CONSTANTS.SELECT}
-              disabled={!isCreate}
-              rules={[RULES.REQUIRED]}
-              layoutCol={{ xs: 24 }}
-              layoutItem={{ labelCol: { xs: 6, sm: 24, md: 24, lg: 8, xl: 6, xxl: 4 } }}
-              options={{ data: namhocList, valueString: '_id', labelString: 'name' }}
-              labelLeft
-            />
+      <Filter
+        dataSearch={[
+          { name: 'ten_dot', label: 'Tên đợt thực tập', type: CONSTANTS.TEXT },
+        ]}
+        handleFilter={(query) => getDataDotThucTap(1, dotthuctap.pageSize, query)}/>
 
-            <CustomSkeleton
-              label="Đợt thực tập" name="dotThucTap"
-              type={CONSTANTS.TEXT}
-              rules={[RULES.REQUIRED]}
-              layoutCol={{ xs: 24 }}
-              layoutItem={{ labelCol: { xs: 6, sm: 24, md: 24, lg: 8, xl: 6, xxl: 4 } }}
-              // disabled={!isCreate}
-              labelLeft
-            />
-            <CustomSkeleton
-              label="Lớp thực tập" name="lopHoc"
-              mode="multiple"
-              type={CONSTANTS.SELECT}
-              disabled={!isCreate}
-              rules={[RULES.REQUIRED]}
-              layoutCol={{ xs: 24 }}
-              layoutItem={{ labelCol: { xs: 6, sm: 24, md: 24, lg: 8, xl: 6, xxl: 4 } }}
-              options={{ data: classmateList, valueString: '_id', labelString: 'name' }}
-              labelLeft
-            />
-            <CustomSkeleton
-              label="Thời gian bắt đầu" name="thoiGianBatDau"
-              type={CONSTANTS.DATE}
-              layoutCol={{ xs: 24 }}
-              rules={[RULES.REQUIRED]}
-              layoutItem={{ labelCol: { xs: 6, sm: 24, md: 24, lg: 8, xl: 6, xxl: 4 } }}
-              // disabled={!isCreate}
-              labelLeft
-            />
-
-            <CustomSkeleton
-              label="Ghi chú" name="ghiChu"
-              type={CONSTANTS.TEXT_AREA}
-              layoutCol={{ xs: 24 }}
-              layoutItem={{ labelCol: { xs: 6, sm: 24, md: 24, lg: 8, xl: 6, xxl: 4 } }}
-              // disabled={!isCreate}
-              labelLeft
-              autoSize={{ minRows: 3, maxRows: 5 }}
-            />
-          </Row>
-          <Divider orientation="left" plain={false} className='m-0'>
-            {'Danh sách sinh viên học cùng'}
-          </Divider>
-
-          <div className='clearfix'>
-            <Button
-              size='small' type="primary" className='float-right mb-2'
-              icon={<i className='fa fa-plus mr-1'/>}
-              // onClick={() => toggleModal(true)}
-              onClick={() => handleShowModal}
-            >
-              Thêm sinh viên
-            </Button>
-          </div>
-          <Loading active={isLoading}>
-            <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
-          </Loading>
-          <Card>
-            <Button type="primary" htmlType="submit" className='float-right ' size='small'>
-              <DownCircleOutlined/>Lưu dữ liệu
-            </Button>
-            <Button type="primary" danger className="float-none " size='small'
-                    onClick={() => backUrl()}>
-              <LeftCircleOutlined/><span className='ml-1'>Quay lại</span>
-            </Button>
-          </Card>
-        </Form>
+      <AddNewButton onClick={() => handleShowModal(true)} disabled={isLoading}/>
+      <Loading active={isLoading}>
+        <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
+      </Loading>
+      <CreateAndModify
+        type={!!state.userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE}
+        isModalVisible={state.isShowModal}
+        handleOk={createAndModifyDotThucTap}
+        handleCancel={() => handleShowModal(false)}
+        userSelected={state.userSelected}
+      />
     </div>
   );
 }
 
+
 function mapStateToProps(store) {
   const { isLoading } = store.app;
   const { namhocList } = store.namhoc;
-  const { classmateList } = store.lophoc;
-  return { isLoading, namhocList, classmateList };
+  return { isLoading, namhocList };
 }
 
-export default (connect(mapStateToProps, { ...namhoc.actions, ...lophoc.actions })(DotThucTap));
+export default (connect(mapStateToProps, { ...namhoc.actions })(DotThucTap));

@@ -31,7 +31,6 @@ const DiaDiemThucTap = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyDiaDie
 const NamHoc = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyNamHoc/NamHoc'));
 const DangKyThucTap = lazy(() => import('@containers/ThucTap/DangKyThucTap/DangKyThucTap'));
 
-const DanhSachThucTap = lazy(() => import('@containers/ThucTap/DanhSachThucTap/DanhSachThucTap'));
 const DotThucTap = lazy(() => import('@containers/ThucTap/DotThucTap/DotThucTap'));
 
 function renderIcon(icon) {
@@ -54,7 +53,7 @@ export const ConstantsRoutes = [
     icon: renderIcon('tachometer-alt'),
     exact: true,
   },
-  { menuGroup: 'Quản lý người dùng' },
+  // { menuGroup: 'Quản lý người dùng' },
   { path: URL.MENU.USER, menuName: 'Danh sách người dùng', component: User, icon: renderIcon('users') },
   // {
   //   path: URL.MENU.USER,
@@ -64,7 +63,7 @@ export const ConstantsRoutes = [
   //
   //   ],
   // },
-  { menuGroup: 'Quản lý danh mục' },
+  // { menuGroup: 'Quản lý danh mục' },
   {
     path: URL.MENU.DANH_MUC_QUAN_LY,
     menuName: 'Danh mục quản lý',
@@ -106,7 +105,7 @@ export const ConstantsRoutes = [
       },
     ],
   },
-  { menuGroup: 'Thực tập' },
+  // { menuGroup: 'Thực tập' },
   {
     path: URL.MENU.DANG_KY_TUC_TAP,
     menuName: 'Đăng ký thực tập',
@@ -114,12 +113,12 @@ export const ConstantsRoutes = [
     icon: renderIcon('pen-alt'),
   },
   {
-    path: URL.MENU.DANH_SACH_THUC_TAP,
+    path: URL.MENU.DOT_THUC_TAP,
     menuName: 'Danh sách đợt thực tập',
-    component: DanhSachThucTap,
+    component: DotThucTap,
     icon: renderIcon('stream'),
   },
-  { menuGroup: 'Đề tài thực tập' },
+  // { menuGroup: 'Đề tài thực tập' },
   {
     path: URL.MENU.DE_TAI_TTTN,
     menuName: 'Danh sách đề tài',
@@ -136,16 +135,7 @@ export const ConstantsRoutes = [
 
   { path: URL.MY_INFO, breadcrumbName: 'Thông tin cá nhân', component: MyInfo },
   { path: URL.FILE_SINH_VIEN, component: ThemFile },
-  {
-    path: `${URL.MENU.DOT_THUC_TAP}/:id`,
-    breadcrumbName: 'Chi tiết đợt thực tập',
-    component: DotThucTap,
-  },
-  {
-    path: URL.MENU.DOT_THUC_TAP_ADD,
-    breadcrumbName: 'Thêm mới đợt thực tập',
-    component: DotThucTap,
-  },
+
 
 ];
 

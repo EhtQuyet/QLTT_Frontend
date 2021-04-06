@@ -25,6 +25,14 @@ export function convertParam(queryObj, firstCharacter = '?') {
   });
   return query;
 }
+export function renderRowData(label, value, labelWidth = '100px') {
+  return <div className='clearfix' style={{ lineHeight: '20px' }}>
+    <strong style={{ fontSize: '12px', fontStyle: 'italic', width: labelWidth }} className='float-left'>
+      {label}:
+    </strong>
+    <div>{value}</div>
+  </div>;
+}
 
 export function convertFileName(str) {
   if (!str) return '';
