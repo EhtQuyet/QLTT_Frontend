@@ -18,8 +18,10 @@ import Loading from '@components/Loading';
 import * as giaovien from '@app/store/ducks/giaovien.duck';
 import * as diadiem from '@app/store/ducks/diadiem.duck';
 import * as user from '@app/store/ducks/user.duck';
+import * as dotthuctap from '@app/store/ducks/dotthuctap.duck';
 
-function DangKyThucTap({ isLoading, myInfo, teacherList, diadiemList, ...props }) {
+
+function DangKyThucTap({ isLoading, myInfo,dotthuctapList, teacherList, diadiemList, ...props }) {
   const [dkthuctap, setDkthuctap] = useState(PAGINATION_INIT);
   const [state, setState] = useState({
     isShowModal: false,
@@ -32,6 +34,9 @@ function DangKyThucTap({ isLoading, myInfo, teacherList, diadiemList, ...props }
     }
     if (!props?.diadiemList?.length) {
       props.getDiaDiem();
+    }
+    if (!props?.dotthuctapList?.length) {
+      props.getDotThucTap();
     }
     (async () => {
       await getData();
@@ -58,6 +63,7 @@ function DangKyThucTap({ isLoading, myInfo, teacherList, diadiemList, ...props }
   const dataSource = dkthuctap.docs.map((data, index) => ({
     key: data._id,
     _id: data._id,
+    dot_thuc_tap: data.dot_thuc_tap,
     giaoien_huongdan: data.giao_vien_huong_dan,
     sinhVien: data.sinh_vien,
     diadiem_thuctap: data.dia_diem_thuc_tap,
@@ -67,6 +73,12 @@ function DangKyThucTap({ isLoading, myInfo, teacherList, diadiemList, ...props }
 
   const columns = [
     columnIndex(dkthuctap.pageSize, dkthuctap.currentPage),
+    {
+      title: 'Đợt thực tập',
+      dataIndex: 'dot_thuc_tap',
+      render: value => value?.ten_dot,
+      width: 300,
+    },
     {
       title: 'Tên sinh viên',
       dataIndex: 'sinhVien',
@@ -129,12 +141,13 @@ function DangKyThucTap({ isLoading, myInfo, teacherList, diadiemList, ...props }
 
 // function create or modify
   async function createAndModify(type, dataForm) {
-    const { giaoVien, diemTichLuy, tinchi_tichluy, diaDiem } = dataForm;
+    const { giaoVien, diemTichLuy, tinchi_tichluy, diaDiem , dot_thuc_tap} = dataForm;
     const dataRequest = {
       giao_vien_huong_dan: giaoVien,
       dia_diem_thuc_tap: diaDiem,
       diem_tbtl: diemTichLuy,
       so_tctl: tinchi_tichluy,
+      dot_thuc_tap: dot_thuc_tap
       // sinh_vien: myInfo._id,
     };
     if (type === CONSTANTS.CREATE) {
@@ -203,7 +216,9 @@ function mapStateToProps(store) {
   const { myInfo } = store.user;
   const { teacherList } = store.giaovien;
   const { diadiemList } = store.diadiem;
-  return { isLoading, teacherList, myInfo, diadiemList };
+  const { dotthuctapList } = store.dotthuctap;
+
+  return { isLoading, teacherList, myInfo, diadiemList , dotthuctapList};
 }
 
-export default (connect(mapStateToProps, { ...user.actions, ...giaovien.actions, ...diadiem.actions })(DangKyThucTap));
+export default (connect(mapStateToProps, { ...user.actions, ...giaovien.actions, ...diadiem.actions ,...dotthuctap.actions})(DangKyThucTap));

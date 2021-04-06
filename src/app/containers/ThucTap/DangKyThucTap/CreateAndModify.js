@@ -16,6 +16,8 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
       const dataField = Object.assign({}, userSelected);
       dataField.diaDiem = userSelected.diadiem_thuctap._id;
       dataField.giaoVien = userSelected.giaoien_huongdan._id;
+      dataField.dot_thuc_tap = userSelected.dot_thuc_tap._id;
+
       dkttForm.setFieldsValue(dataField);
     } else if (!isModalVisible) {
       dkttForm.resetFields();
@@ -43,6 +45,16 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
       <Loading active={props.isLoading}>
         <Form id="formModal" form={dkttForm} size='default' onFinish={onFinish}>
           <Row gutter={15}>
+            <CustomSkeleton
+              size='default'
+              label="Đợt thực tập" name="dot_thuc_tap"
+              type={CONSTANTS.SELECT}
+              layoutCol={{ xs: 24 }}
+              layoutItem={{ labelCol: { xs: 8 } }}
+              rules={[RULES.REQUIRED]}
+              labelLeft
+              options={{ data: props.dotthuctapList, valueString: '_id', labelString: 'name' }}
+            />
             <CustomSkeleton
               size='default'
               label="Giáo viên hướng dẫn" name="giaoVien"
@@ -94,8 +106,10 @@ function mapStateToProps(store) {
   const { isLoading } = store.app;
   const { teacherList } = store.giaovien;
   const { diadiemList } = store.diadiem;
+  const { dotthuctapList } = store.dotthuctap;
 
-  return { isLoading , teacherList, diadiemList};
+
+  return { isLoading , teacherList, diadiemList, dotthuctapList};
 }
 export default (connect(mapStateToProps)(CreateAndModify));
 
