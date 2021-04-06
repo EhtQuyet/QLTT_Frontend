@@ -9,6 +9,7 @@ export const API = {
   ROLE: '/api/roles',
 
   SINH_VIEN: 'api/sinhvien',
+  SINH_VIEN_IMPORT: 'api/sinhvien/import',
   SINH_VIEN_ID: 'api/sinhvien/{0}',
 
   DK_THUC_TAP: 'api/dangkythuctap',
