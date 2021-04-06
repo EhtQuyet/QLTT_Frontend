@@ -16,6 +16,18 @@ export function createSinhVien(data) {
     });
 }
 
+export function importSinhVien(data) {
+  return axios.post(`${API.SINH_VIEN_IMPORT}`, data)
+    .then(response => {
+      if (response.status === 200) return response.data?.data;
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
+
 export function getAllSinhVien(currentPage = 1, totalDocs = 0, query, loading = true) {
   const params = convertParam(query, '&');
   const config = { loading };
