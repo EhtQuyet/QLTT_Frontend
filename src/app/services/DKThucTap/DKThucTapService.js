@@ -33,7 +33,6 @@ export function getAllDKTT(currentPage = 1, totalDocs = 0, query, loading = true
 export function getFindOne(MaSV) {
   return axios.get(API.SV_THUC_TAP_ID.format(MaSV))
     .then(response => {
-      console.log('response',response);
       if (response.status === 200 ) return response.data.data;
       return null;
     })

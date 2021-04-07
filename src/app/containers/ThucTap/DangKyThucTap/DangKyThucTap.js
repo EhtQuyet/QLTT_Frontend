@@ -47,9 +47,11 @@ function DangKyThucTap({ isLoading, myInfo,dotthuctapList, teacherList, diadiemL
 
   async function getDataInfo() {
     const apiResponse = await getFindOne(myInfo._id);
-    if(apiResponse)
+    if(apiResponse){
       setIsSig(apiResponse)
+    }
   }
+
 
   async function getData(
     currentPage = dkthuctap.currentPage,
@@ -57,7 +59,6 @@ function DangKyThucTap({ isLoading, myInfo,dotthuctapList, teacherList, diadiemL
     query = dkthuctap.query,
   ) {
     const apiResponse = await getAllDKTT(currentPage, pageSize, query);
-    console.log('apiResponse.docs',apiResponse.docs);
     if (apiResponse) {
       setDkthuctap({
         docs: apiResponse.docs,
