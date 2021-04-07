@@ -1,7 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Col, Modal, Row } from 'antd';
 import ModalFooter from '@components/ModalFooter/ModalFooter';
 import CustomSkeleton from '@components/CustomSkeleton';
+import {
+  getAllDiaDiemThucTap
+} from '@app/services/DiaDiemThucTap/diadiemthuctapService';
 import { CONSTANTS, RULES } from '@constants';
 import Form from 'antd/es/form';
 import { connect } from 'react-redux';
@@ -10,8 +13,14 @@ import Loading from '@components/Loading';
 
 function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected, ...props }) {
   const [dkttForm] = Form.useForm();
+  const [ddtt, setDdtt] = useState([])
 
   useEffect(() => {
+
+    getDDTT();
+
+    setDdtt([ ...ddtt, {_id: '####', name:'---KHÁC---'}])
+
     if (userSelected && isModalVisible) {
       const dataField = Object.assign({}, userSelected);
       dataField.diaDiem = userSelected.diadiem_thuctap._id;
@@ -25,6 +34,15 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
   function onFinish(data) {
     if (props.isLoading) return;
     handleOk(userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE, data);
+  }
+  function onValuesChange(changedValues, allValues) {
+    console.log('diaDiem', changedValues.diaDiem);
+  }
+
+  async function getDDTT()
+  {
+    const apiResponse = await getAllDiaDiemThucTap()
+    setDdtt([ ...apiResponse.docs,  {_id: '####', ten_dia_diem:'---KHÁC---'}])
   }
 
   return (
@@ -41,7 +59,10 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
       forceRender
     >
       <Loading active={props.isLoading}>
-        <Form id="formModal" form={dkttForm} size='default' onFinish={onFinish}>
+        <Form id="formModal" form={dkttForm} size='default' onFinish={onFinish}
+        onValuesChange={onValuesChange}
+
+        >
           <Row gutter={15}>
             <CustomSkeleton
               size='default'
@@ -61,7 +82,7 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
               layoutItem={{ labelCol: { xs: 8 } }}
               rules={[RULES.REQUIRED]}
               labelLeft
-              options={{ data: props.diadiemList, valueString: '_id', labelString: 'name' }}
+              options={{ data: ddtt ? ddtt : [], valueString: '_id', labelString: 'ten_dia_diem' }}
             />
             <CustomSkeleton
               size='default'

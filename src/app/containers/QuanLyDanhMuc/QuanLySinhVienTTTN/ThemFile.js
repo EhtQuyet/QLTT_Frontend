@@ -17,7 +17,7 @@ function ThemFile({ isLoading, ...props }) {
   const [file, setFile] = useState(null);
   const [classmate, setClassmate] = useState([]);
   const [dataImport, setDataImport] = useState(null);
-  const [errorImport, setErrorImport] = useState(null);
+  const [errorImport, setErrorImport] = useState([]);
 
   useEffect(() => {
 
@@ -100,7 +100,7 @@ function ThemFile({ isLoading, ...props }) {
   }
 
 
-  const dataSource = !errorImport && dataImport ? dataImport.map((data, index) => ({
+  const dataSource = errorImport.length === 0 && dataImport ? dataImport.map((data, index) => ({
     key: index + 1,
     tenSinhVien: data['Họ và tên'] || '',
     sdt: data['Số điện thoại'] || '',
@@ -112,7 +112,7 @@ function ThemFile({ isLoading, ...props }) {
     gioiTinh: data['Giới tính'] || '',
   })) : [];
 
-  const tableErr = errorImport ? errorImport.map((data, index) => ({
+  const tableErr = errorImport.length !== 0 ? errorImport.map((data, index) => ({
     key: index + 1,
     row: data.row,
     err: data.error,
@@ -149,7 +149,6 @@ function ThemFile({ isLoading, ...props }) {
       title: 'Mã lớp',
       dataIndex: 'tenLop',
       key: 'tenLop',
-      // render: value => value?.ten_lop_hoc,
       width: 200,
     },
     {
@@ -225,9 +224,9 @@ function ThemFile({ isLoading, ...props }) {
             </Button>
           </Col>}
         </Row>
-        {errorImport === null && dataImport !== null &&
+        {errorImport.length === 0 && dataImport !== null &&
         <Table dataSource={dataSource} size='small' columns={columns} bordered/>}
-        {errorImport !== null && <Table dataSource={tableErr} size='small' columns={columnErr} bordered/>}
+        {errorImport.length !== 0 && <Table dataSource={tableErr} size='small' columns={columnErr} bordered/>}
       </Loading>
 
     </div>
