@@ -30,6 +30,20 @@ export function getAllDKTT(currentPage = 1, totalDocs = 0, query, loading = true
     });
 }
 
+export function getFindOne(MaSV) {
+  return axios.get(API.SV_THUC_TAP_ID.format(MaSV))
+    .then(response => {
+      console.log('response',response);
+      if (response.status === 200 ) return response.data.data;
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
+
+
 export function updateDKTT(data) {
   return axios.put(API.DK_THUC_TAP_ID.format(data._id), data)
     .then(response => {

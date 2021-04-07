@@ -7,6 +7,7 @@ import {
   deleteDKTT,
   getAllDKTT,
   updateDKTT,
+  getFindOne,
 } from '@app/services/DKThucTap/DKThucTapService';
 import ActionCell from '@components/ActionCell';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT } from '@constants';
@@ -25,7 +26,7 @@ function DangKyThucTap({ isLoading, myInfo, teacherList, diadiemList, ...props }
     isShowModal: false,
     userSelected: null,
   });
-
+  const [isSig, setIsSig] = useState(null)
   useEffect(() => {
     if (!props?.teacherList?.length) {
       props.getTeacher();
@@ -35,8 +36,15 @@ function DangKyThucTap({ isLoading, myInfo, teacherList, diadiemList, ...props }
     }
     (async () => {
       await getData();
+      await getDataInfo();
     })();
   }, []);
+
+  async function getDataInfo() {
+    const apiResponse = await getFindOne(myInfo._id);
+    if(apiResponse)
+      setIsSig(apiResponse)
+  }
 
   async function getData(
     currentPage = dkthuctap.currentPage,
@@ -44,6 +52,7 @@ function DangKyThucTap({ isLoading, myInfo, teacherList, diadiemList, ...props }
     query = dkthuctap.query,
   ) {
     const apiResponse = await getAllDKTT(currentPage, pageSize, query);
+    console.log('apiResponse.docs',apiResponse.docs);
     if (apiResponse) {
       setDkthuctap({
         docs: apiResponse.docs,
@@ -182,7 +191,10 @@ function DangKyThucTap({ isLoading, myInfo, teacherList, diadiemList, ...props }
       {/*  ]}*/}
       {/*  handleFilter={(query) => getDataGiaoVien(1, giaovien.pageSize, query)}/>*/}
 
-      <AddNewButton onClick={() => handleShowModal(true)} disabled={isLoading}/>
+      {isSig === null && <AddNewButton label='Đăng ký' onClick={() => handleShowModal(true)} disabled={isLoading}/>}
+
+      {isSig !== null && <AddNewButton label='Chọn nhóm' onClick={() => handleShowModal(true)} disabled={isLoading}/>}
+
       <Loading active={isLoading}>
         <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
       </Loading>

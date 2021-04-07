@@ -14,6 +14,7 @@ export const API = {
 
   DK_THUC_TAP: 'api/dangkythuctap',
   DK_THUC_TAP_ID: 'api/dangkythuctap/{0}',
+  SV_THUC_TAP_ID: 'api/dangkythuctap/sv/{0}',
 
   BO_MON: 'api/bomon',
   BO_MON_ID: 'api/bomon/{0}',
