@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Col, Modal, Row } from 'antd';
 import ModalFooter from '@components/ModalFooter/ModalFooter';
 import CustomSkeleton from '@components/CustomSkeleton';
-import { CONSTANTS, GENDER_OPTIONS, RULES } from '@constants';
+import { CONSTANTS, DTT, GENDER_OPTIONS, RULES } from '@constants';
 import Form from 'antd/es/form';
 import { connect } from 'react-redux';
 import Loading from '@components/Loading';
@@ -85,6 +85,17 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
               layoutItem={{ labelCol: { xs: 8 } }}
               //rules={[RULES.REQUIRED]}
               labelLeft
+              form={dotthuctapForm}
+            />
+            <CustomSkeleton
+              size='default'
+              label="trạng thái" name="trangThai"
+              type={CONSTANTS.SELECT}
+              layoutCol={{ xs: 24 }}
+              layoutItem={{ labelCol: { xs: 8 } }}
+              options={{ data: DTT }}
+              labelLeft
+              rules={[RULES.REQUIRED]}
               form={dotthuctapForm}
             />
             <CustomSkeleton

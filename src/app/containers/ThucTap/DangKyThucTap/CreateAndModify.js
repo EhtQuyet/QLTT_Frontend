@@ -5,19 +5,27 @@ import CustomSkeleton from '@components/CustomSkeleton';
 import {
   getAllDiaDiemThucTap
 } from '@app/services/DiaDiemThucTap/diadiemthuctapService';
+import {
+  getAllDotThucTap
+} from '@app/services/DKThucTap/DKThucTapService';
 import { CONSTANTS, RULES } from '@constants';
+import { DOT_THUC_TAP, ROLE } from '../../../../constants/contans';
 import Form from 'antd/es/form';
 import { connect } from 'react-redux';
 import Loading from '@components/Loading';
+import MyInfo from '@containers/MyInfo/MyInfo';
 
 
-function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected, ...props }) {
+function CreateAndModify({ isModalVisible, handleOk, handleCancel, myInfo, userSelected, ...props }) {
   const [dkttForm] = Form.useForm();
   const [ddtt, setDdtt] = useState([])
+  const [dotTT, setDotTT] = useState([])
 
   useEffect(() => {
 
-    getDDTT();
+    getData();
+
+
 
     setDdtt([ ...ddtt, {_id: '####', name:'---KHÁC---'}])
 
@@ -38,20 +46,23 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
     handleOk(userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE, data);
   }
   function onValuesChange(changedValues, allValues) {
-    console.log('diaDiem', changedValues.diaDiem);
   }
 
-  async function getDDTT()
+  async function getData()
   {
     const apiResponse = await getAllDiaDiemThucTap()
     setDdtt([ ...apiResponse.docs,  {_id: '####', ten_dia_diem:'---KHÁC---'}])
+    const apiDotTT = await getAllDotThucTap(1,0, {trang_thai: DOT_THUC_TAP.DANG_MO})
+    setDotTT(apiDotTT.docs)
   }
+
+  console.log('MyInfo',myInfo);
 
   return (
     <Modal
       width='720px' maskClosable={false}
       closeIcon={<i className='fa fa-times'/>}
-      title={userSelected ? 'Cập nhật thông tin giáo viên' : 'Thêm mới giáo viên'}
+      title={userSelected ? 'Chỉnh sửa đang ký thực tập' : 'Đăng ký thực tập'}
       visible={isModalVisible} onCancel={props.isLoading ? null : handleCancel}
       footer={<ModalFooter
         handleClose={handleCancel}
@@ -66,6 +77,14 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
 
         >
           <Row gutter={15}>
+            { myInfo.role.includes(ROLE.GIAO_VU) && <CustomSkeleton
+              size='default'
+              label="Mã sinh viên" name="maSinhVien"
+              type={CONSTANTS.TEXT}
+              layoutCol={{ xs: 24 }}
+              layoutItem={{ labelCol: { xs: 8 } }}
+              labelLeft
+            />}
             <CustomSkeleton
               size='default'
               label="Đợt thực tập" name="dot_thuc_tap"
@@ -74,7 +93,7 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
               layoutItem={{ labelCol: { xs: 8 } }}
               rules={[RULES.REQUIRED]}
               labelLeft
-              options={{ data: props.dotthuctapList, valueString: '_id', labelString: 'name' }}
+              options={{ data: dotTT ? dotTT : [], valueString: '_id', labelString: 'ten_dot' }}
             />
             <CustomSkeleton
               size='default'

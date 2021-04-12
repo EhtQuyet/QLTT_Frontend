@@ -9,13 +9,16 @@ import {
 } from '@app/services/ThucTap/dotthuctapService';
 import ActionCell from '@components/ActionCell';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT } from '@constants';
+import { DOT_THUC_TAP } from '../../../../constants/contans';
 import { columnIndex, renderRowData, toast } from '@app/common/functionCommons';
 import moment from 'moment';
 import Filter from '@components/Filter';
 import Loading from '@components/Loading';
 import { connect } from 'react-redux';
 import * as namhoc from '@app/store/ducks/namhoc.duck';
+import { Typography, Space } from 'antd';
 
+const { Text, Link } = Typography;
 
 function DotThucTap({ isLoading, namhocList, ...props }) {
   const [dotthuctap, setDotthuctap] = useState(PAGINATION_INIT);
@@ -58,6 +61,7 @@ function DotThucTap({ isLoading, namhocList, ...props }) {
     thoiGianBatDau: data.thoigian_batdau,
     thoiGianKetThuc: data.thoigian_ketthuc,
     dotThucTap: data.ten_dot,
+    trangThai: data.trang_thai
   }));
 
   const columns = [
@@ -86,8 +90,13 @@ function DotThucTap({ isLoading, namhocList, ...props }) {
       width: 200,
     },
     {
-      title: 'Ghi chú',
-      dataIndex: 'ghiChu',
+      title: 'Trạng thái',
+      dataIndex: 'trangThai',
+      render: value => <>
+        {value === DOT_THUC_TAP.DANG_MO ? <Text type="success">Đang mở</Text>
+          : value === DOT_THUC_TAP.DA_KHOA ? <Text type="warning"> Đã khóa</Text>
+          : <Text type="danger">Đã kết thúc</Text>}
+      </>,
       width: 200,
     },
     {
@@ -118,13 +127,14 @@ function DotThucTap({ isLoading, namhocList, ...props }) {
 
 // function create or modify
   async function createAndModifyDotThucTap(type, dataForm) {
-    const { namHoc, ghiChu, thoiGianBatDau, thoiGianKetThuc, dotThucTap } = dataForm;
+    const { namHoc, ghiChu, thoiGianBatDau, thoiGianKetThuc, dotThucTap, trangThai } = dataForm;
     const dataRequest = {
       ten_dot: dotThucTap,
       thoigian_batdau: thoiGianBatDau ? thoiGianBatDau.toString() : null,
       thoigian_ketthuc: thoiGianKetThuc ? thoiGianKetThuc.toString() : null,
       namhoc: namHoc,
       ghi_chu: ghiChu,
+      trang_thai: trangThai,
     };
     if (type === CONSTANTS.CREATE) {
       const apiResponse = await createDotThucTap(dataRequest);

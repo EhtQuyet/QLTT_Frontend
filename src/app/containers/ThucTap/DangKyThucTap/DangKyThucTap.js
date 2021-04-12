@@ -9,6 +9,9 @@ import {
   updateDKTT,
   getFindOne,
 } from '@app/services/DKThucTap/DKThucTapService';
+import {
+  getAllSinhVien,
+} from '@app/services/SinhVienTTTN/sinhVienTTService';
 import ActionCell from '@components/ActionCell';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
@@ -52,7 +55,6 @@ function DangKyThucTap({ isLoading, myInfo,dotthuctapList, teacherList, diadiemL
     }
   }
 
-
   async function getData(
     currentPage = dkthuctap.currentPage,
     pageSize = dkthuctap.pageSize,
@@ -80,7 +82,6 @@ function DangKyThucTap({ isLoading, myInfo,dotthuctapList, teacherList, diadiemL
     diemTichLuy: data.diem_tbtl,
     tinchi_tichluy: data.so_tctl,
   }));
-
   const columns = [
     columnIndex(dkthuctap.pageSize, dkthuctap.currentPage),
     {
@@ -92,13 +93,13 @@ function DangKyThucTap({ isLoading, myInfo,dotthuctapList, teacherList, diadiemL
     {
       title: 'Tên sinh viên',
       dataIndex: 'sinhVien',
-      render: value => value?.full_name,
+      render: value => value?.ten_sinh_vien,
       width: 200,
     },
     {
       title: 'Mã sinh viên',
       dataIndex: 'sinhVien',
-      render: value => value?.username,
+      render: value => value?.ma_sinh_vien,
       width: 200,
     },
     {
@@ -151,18 +152,21 @@ function DangKyThucTap({ isLoading, myInfo,dotthuctapList, teacherList, diadiemL
 
 // function create or modify
   async function createAndModify(type, dataForm) {
-    const { giaoVien, diemTichLuy, tinchi_tichluy, diaDiem , dot_thuc_tap} = dataForm;
+    const { giaoVien, diemTichLuy, tinchi_tichluy, diaDiem , dot_thuc_tap, maSinhVien} = dataForm;
     const dataRequest = {
       giao_vien_huong_dan: giaoVien,
       dia_diem_thuc_tap: diaDiem,
       diem_tbtl: diemTichLuy,
       so_tctl: tinchi_tichluy,
       dot_thuc_tap: dot_thuc_tap
-      // sinh_vien: myInfo._id,
+
     };
     if (type === CONSTANTS.CREATE) {
-      dataRequest.sinh_vien = myInfo._id;
+      const sinhVien = await getAllSinhVien(1,0, {ma_sinh_vien: maSinhVien ? maSinhVien : myInfo.username});
+      dataRequest.sinh_vien = sinhVien.docs[0]._id;
+      console.log('dataRequest',dataRequest);
       const apiResponse = await createDKTT(dataRequest);
+      console.log('apiResponse',apiResponse);
       if (apiResponse) {
         getData();
         handleShowModal(false);
@@ -218,6 +222,7 @@ function DangKyThucTap({ isLoading, myInfo,dotthuctapList, teacherList, diadiemL
         handleOk={createAndModify}
         handleCancel={() => handleShowModal(false)}
         userSelected={state.userSelected}
+        myInfo={myInfo}
       />
     </div>
   );

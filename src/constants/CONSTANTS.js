@@ -43,6 +43,18 @@ export const PAGINATION_INIT = Object.assign({}, {
 });
 export const TOKEN_EXP_TIME = 1000 * 100 * 60;
 
+export const DTT = [
+  { label: 'Mở đăng ký' , value: 'DANG_MO'},
+  { label: 'Khóa đăng ký' , value: 'DA_KHOA'},
+  { label: 'Kết thúc thực tập' , value: 'KET_THUC'},
+
+]
+
+export const DDTT = [
+  { label: 'Đã xác nhận' , value: 'DA_XAC_NHAN'},
+  { label: 'Chưa xác nhận' , value: 'CHUA_XAC_NHAN'}
+]
+
 export const GENDER_OPTIONS = [
   { label: 'Nam', value: 'Nam' },
   { label: 'Nữ', value: 'Nữ' },

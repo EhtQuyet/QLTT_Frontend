@@ -15,7 +15,9 @@ import moment from 'moment';
 import Filter from '@components/Filter';
 import Loading from '@components/Loading';
 import { connect } from 'react-redux';
-
+import { DIA_DIEM_THUC_TAP } from '@src/constants/contans';
+import { Typography, Space } from 'antd';
+const { Text, Link } = Typography;
 
 function DiaDiemThucTap({ isLoading, ...props }) {
   const [diadiemthuctap, setDiadiemthuctap] = useState(PAGINATION_INIT);
@@ -54,7 +56,8 @@ function DiaDiemThucTap({ isLoading, ...props }) {
     tenDiaDiemThucTap: data.ten_dia_diem,
     diaChi: data.dia_chi,
     nguoiDaiDien: data.nguoi_dai_dien,
-    dienThoai : data.dien_thoai
+    dienThoai: data.dien_thoai,
+    trangThai: data.trang_thai,
   }));
 
   const columns = [
@@ -83,6 +86,17 @@ function DiaDiemThucTap({ isLoading, ...props }) {
       width: 300,
     },
     {
+      title: 'Trạng thái',
+      dataIndex: 'trangThai',
+      key: 'trangThai',
+      render: value => <>
+        {value === DIA_DIEM_THUC_TAP.DA_XAC_NHAN ? <Text type="success">Đã xác nhận</Text>
+          : <Text type="warning"> Chưa xác nhận</Text>
+            }
+      </>,
+      width: 300,
+    },
+    {
       align: 'center',
       render: (value) => <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>,
       width: 300,
@@ -97,6 +111,7 @@ function DiaDiemThucTap({ isLoading, ...props }) {
   }
 
   function handleEdit(userSelected) {
+    console.log('userSelected',userSelected);
     setState({ isShowModal: true, userSelected });
   }
 
@@ -104,17 +119,19 @@ function DiaDiemThucTap({ isLoading, ...props }) {
     const apiResponse = await deleteDiaDiemThucTap(userSelected._id);
     if (apiResponse) {
       getDataDiaDiemThucTap();
-      toast(CONSTANTS.SUCCESS, 'Xóa địa điểm thành công');    }
+      toast(CONSTANTS.SUCCESS, 'Xóa địa điểm thành công');
+    }
   }
 
 // function create or modify
   async function createAndModifyDiaDiemThucTap(type, dataForm) {
-    const { tenDiaDiemThucTap, diaChi, nguoiDaiDien, dienThoai } = dataForm;
+    const { tenDiaDiemThucTap, diaChi, nguoiDaiDien, dienThoai, trangThai } = dataForm;
     const dataRequest = {
       ten_dia_diem: tenDiaDiemThucTap,
       dia_chi: diaChi,
       nguoi_dai_dien: nguoiDaiDien,
       dien_thoai: dienThoai,
+      trang_thai: trangThai,
     };
     if (type === CONSTANTS.CREATE) {
       const apiResponse = await createDiaDiemThucTap(dataRequest);
