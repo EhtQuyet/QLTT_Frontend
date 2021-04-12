@@ -56,7 +56,9 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, myInfo, userS
     setDotTT(apiDotTT.docs)
   }
 
-  console.log('MyInfo',myInfo);
+  async function onChange() {
+    console.log('aaaaaaaaaaaaaaaa');
+  }
 
   return (
     <Modal
@@ -114,6 +116,7 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, myInfo, userS
               rules={[RULES.REQUIRED]}
               labelLeft
               options={{ data: ddtt ? ddtt : [], valueString: '_id', labelString: 'ten_dia_diem' }}
+              onChange={onChange}
             />
             <CustomSkeleton
               size='default'

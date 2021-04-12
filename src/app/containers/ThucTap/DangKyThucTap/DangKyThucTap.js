@@ -23,15 +23,23 @@ import * as giaovien from '@app/store/ducks/giaovien.duck';
 import * as diadiem from '@app/store/ducks/diadiem.duck';
 import * as user from '@app/store/ducks/user.duck';
 import * as dotthuctap from '@app/store/ducks/dotthuctap.duck';
+import { ROLE } from '@src/constants/contans';
 
 
-function DangKyThucTap({ isLoading, myInfo,dotthuctapList, teacherList, diadiemList, ...props }) {
+function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiemList, ...props }) {
   const [dkthuctap, setDkthuctap] = useState(PAGINATION_INIT);
   const [state, setState] = useState({
     isShowModal: false,
     userSelected: null,
   });
-  const [isSig, setIsSig] = useState(null)
+  const [isSig, setIsSig] = useState(null);
+
+  const isAdmin = myInfo.role.includes(ROLE.ADMIN);
+  const isSinhVien = myInfo.role.includes(ROLE.SINH_VIEN);
+  const isGiangVien = myInfo.role.includes(ROLE.GIANG_VIEN);
+  const isGiaoVu = myInfo.role.includes(ROLE.GIAO_VU);
+  const isBanChuNiem = myInfo.role.includes(ROLE.BAN_CHU_NHIEM);
+
   useEffect(() => {
     if (!props?.teacherList?.length) {
       props.getTeacher();
@@ -49,10 +57,10 @@ function DangKyThucTap({ isLoading, myInfo,dotthuctapList, teacherList, diadiemL
   }, []);
 
   async function getDataInfo() {
-    const apiResponse = await getFindOne(myInfo._id);
-    if(apiResponse){
-      setIsSig(apiResponse)
-    }
+    // const apiResponse = await getFindOne(myInfo._id);
+    // if (apiResponse) {
+    //   setIsSig(apiResponse);
+    // }
   }
 
   async function getData(
@@ -126,7 +134,8 @@ function DangKyThucTap({ isLoading, myInfo,dotthuctapList, teacherList, diadiemL
     },
     {
       align: 'center',
-      render: (value) => <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>,
+      // render: (value) => ((isSinhVien && value?.ma_sinh_vien === myInfo.username) || isAdmin || isGiaoVu) && <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>,
+      render: (value) => <div> {value.sinh_vien} </div>,
       width: 300,
     },
   ];
@@ -152,21 +161,19 @@ function DangKyThucTap({ isLoading, myInfo,dotthuctapList, teacherList, diadiemL
 
 // function create or modify
   async function createAndModify(type, dataForm) {
-    const { giaoVien, diemTichLuy, tinchi_tichluy, diaDiem , dot_thuc_tap, maSinhVien} = dataForm;
+    const { giaoVien, diemTichLuy, tinchi_tichluy, diaDiem, dot_thuc_tap, maSinhVien } = dataForm;
     const dataRequest = {
       giao_vien_huong_dan: giaoVien,
       dia_diem_thuc_tap: diaDiem,
       diem_tbtl: diemTichLuy,
       so_tctl: tinchi_tichluy,
-      dot_thuc_tap: dot_thuc_tap
+      dot_thuc_tap: dot_thuc_tap,
 
     };
     if (type === CONSTANTS.CREATE) {
-      const sinhVien = await getAllSinhVien(1,0, {ma_sinh_vien: maSinhVien ? maSinhVien : myInfo.username});
+      const sinhVien = await getAllSinhVien(1, 0, { ma_sinh_vien: maSinhVien ? maSinhVien : myInfo.username });
       dataRequest.sinh_vien = sinhVien.docs[0]._id;
-      console.log('dataRequest',dataRequest);
       const apiResponse = await createDKTT(dataRequest);
-      console.log('apiResponse',apiResponse);
       if (apiResponse) {
         getData();
         handleShowModal(false);
@@ -236,7 +243,7 @@ function mapStateToProps(store) {
   const { diadiemList } = store.diadiem;
   const { dotthuctapList } = store.dotthuctap;
 
-  return { isLoading, teacherList, myInfo, diadiemList , dotthuctapList};
+  return { isLoading, teacherList, myInfo, diadiemList, dotthuctapList };
 }
 
-export default (connect(mapStateToProps, { ...user.actions, ...giaovien.actions, ...diadiem.actions ,...dotthuctap.actions})(DangKyThucTap));
+export default (connect(mapStateToProps, { ...user.actions, ...giaovien.actions, ...diadiem.actions, ...dotthuctap.actions })(DangKyThucTap));
