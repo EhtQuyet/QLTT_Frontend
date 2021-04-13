@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table } from 'antd';
+import { Button, Popconfirm, Table, Tag } from 'antd';
 import AddNewButton from '@AddNewButton';
 import CreateAndModify from './CreateAndModify';
 import {
@@ -13,7 +13,7 @@ import {
   getAllSinhVien,
 } from '@app/services/SinhVienTTTN/sinhVienTTService';
 import ActionCell from '@components/ActionCell';
-import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT } from '@constants';
+import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT, TRANG_THAI } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
 import moment from 'moment';
 import { connect } from 'react-redux';
@@ -24,6 +24,8 @@ import * as diadiem from '@app/store/ducks/diadiem.duck';
 import * as user from '@app/store/ducks/user.duck';
 import * as dotthuctap from '@app/store/ducks/dotthuctap.duck';
 import { ROLE } from '@src/constants/contans';
+import { DANG_KY_THUC_TAP } from '@src/constants/contans';
+import { DeleteOutlined, EditOutlined, SendOutlined } from '@ant-design/icons';
 
 
 function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiemList, ...props }) {
@@ -53,10 +55,10 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
   }, []);
 
   async function getDataInfo() {
-    const apiResponse = await getFindOne(myInfo.username);
-    if (apiResponse) {
-      setIsSig(apiResponse);
-    }
+    // const apiResponse = await getFindOne(myInfo.username);
+    // if (apiResponse) {
+    //   setIsSig(apiResponse);
+    // }
   }
 
   console.log('sig', isSig);
@@ -87,6 +89,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
     diadiem_thuctap: data.dia_diem_thuc_tap,
     diemTichLuy: data.diem_tbtl,
     tinchi_tichluy: data.so_tctl,
+    trang_thai: data.trang_thai
   }));
   const columns = [
     columnIndex(dkthuctap.pageSize, dkthuctap.currentPage),
@@ -132,7 +135,59 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
     },
     {
       align: 'center',
-      render: (value) => <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>,
+      // render: (value) => <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>,
+      render:  (value) => {
+        const daDangKy = value.trang_thai === DANG_KY_THUC_TAP.DA_DANG_KY;
+        const daDuyet = value.trang_thai === DANG_KY_THUC_TAP.DA_DUOC_DUYET;
+        const chonGV = value.trang_thai === DANG_KY_THUC_TAP.CHON_GIANG_VIEN;
+        const gvXacNhan = value.trang_thai === DANG_KY_THUC_TAP.GV_XAC_NHAN;
+        const daChiaNhom = value.trang_thai === DANG_KY_THUC_TAP.DA_CHIA_NHOM;
+        return <>
+          {daDangKy && <div className='mt-2'>
+            <Popconfirm
+              title='Xác nhận điều kiện sinh viên thực tập'
+              onConfirm={() => handleTrangThai(value._id, DANG_KY_THUC_TAP.CHON_GIANG_VIEN)}
+              cancelText='Huỷ' okText='Xác nhận' okButtonProps={{ type: 'access' }}>
+              <Tag color='green' className='tag-action'>
+                <SendOutlined/><span className='ml-1'>Duyệt điều kiện</span>
+              </Tag>
+            </Popconfirm>
+          </div>}
+          {daDangKy && <div className='mt-2'>
+            <Popconfirm
+              title='Xác nhận sinh viên chưa đủ điều kiện thực tập'
+              onConfirm={() => handleTrangThai(value._id, DANG_KY_THUC_TAP.KHONG_DU_DIEU_KIEN)}
+              cancelText='Huỷ' okText='Xác nhận' okButtonProps={{ type: 'access' }}>
+              <Tag color='red' className='tag-action'>
+                <SendOutlined/><span className='ml-1'>Không đủ ĐK</span>
+              </Tag>
+            </Popconfirm>
+          </div>}
+
+          {chonGV && <div className='mt-2'>
+            <Popconfirm
+              title='Xác nhận hướng dẫn sinh viên'
+              onConfirm={() => handleTrangThai(value._id, DANG_KY_THUC_TAP.GV_XAC_NHAN)}
+              cancelText='Huỷ' okText='Xác nhận' okButtonProps={{ type: 'access' }}>
+              <Tag color='green' className='tag-action'>
+                <SendOutlined/><span className='ml-1'>Chấp nhận</span>
+              </Tag>
+            </Popconfirm>
+          </div>}
+          {chonGV && <div className='mt-2'>
+            <Popconfirm
+              title='Từ chối hướng dẫn sinh viên'
+              onConfirm={() => handleTrangThai(value._id, DANG_KY_THUC_TAP.DA_DANG_KY)}
+              cancelText='Huỷ' okText='Xác nhận' okButtonProps={{ type: 'access' }}>
+              <Tag color='red' className='tag-action'>
+                <SendOutlined/><span className='ml-1'>Từ chối</span>
+              </Tag>
+            </Popconfirm>
+          </div>}
+
+
+        </>;
+      },
       width: 300,
     },
   ];
@@ -197,6 +252,25 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
 
   function handleChangePagination(current, pageSize) {
     getData(current, pageSize);
+  }
+
+  async function handleTrangThai(id, trangThai) {
+    const dataRequest = {
+      _id: id,
+      trang_thai: trangThai
+    }
+
+    const apiResponse = await updateDKTT(dataRequest);
+    if (apiResponse) {
+      const docs = dkthuctap.docs.map(doc => {
+        if (doc._id === apiResponse._id) {
+          doc = apiResponse;
+        }
+        return doc;
+      });
+      setDkthuctap(Object.assign({}, dkthuctap, { docs }));
+      toast(CONSTANTS.SUCCESS, 'thành công');
+    }
   }
 
   const pagination = PAGINATION_CONFIG;
