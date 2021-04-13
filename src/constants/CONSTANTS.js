@@ -123,13 +123,18 @@ export const TRANG_THAI = {
   CHUA_DUOC_DUYET: 'CHUA_DUOC_DUYET',
   CHUA_DANG_KY: 'CHUA_DANG_KY',
   DA_DANG_KY: 'DA_DANG_KY',
+  DANG_THUC_HIEN: 'DANG_THUC_HIEN',
+  THUC_HIEN_XONG: 'THUC_HIEN_XONG'
 };
+
 
 export const TRANG_THAI_LABEL = {
   CHUA_DUOC_DUYET: { label: 'Chưa được duyệt', color: '#fa541c' },
   DA_DUOC_DUYET: { label: 'Đã được duyệt', color: '#52c41a' },
   CHUA_DANG_KY: { label: 'Chưa đăng ký', color: '#fa541c' },
   DA_DANG_KY: { label: 'Đã đăng ký', color: '#52c41a' },
+  DANG_THUC_HIEN: { label: 'Đang thực hiện', color: '#6600cc' },
+  THUC_HIEN_XONG: { label: 'Thực hiện xong', color: '#808080' },
 };
 export const Role = {
   ADMIN: 'Admin',

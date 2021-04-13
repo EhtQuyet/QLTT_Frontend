@@ -4,6 +4,7 @@ export const URL = {
     USER: '/user',
 
     DANH_MUC_QUAN_LY: '/danh-muc-quan-ly',
+    QUAN_LY_DE_TAI: '/quan-ly-de-tai',
     GIAO_VIEN: '/giao-vien',
     QUAN_LY_THUC_TAP: '/quan-ly-thuc-tap',
     DANG_KY_TUC_TAP: '/dang-ky-thuc-tap',

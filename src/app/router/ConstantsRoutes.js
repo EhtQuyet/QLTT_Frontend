@@ -114,25 +114,31 @@ export const ConstantsRoutes = [
   },
   {
     path: URL.MENU.DOT_THUC_TAP,
-    menuName: 'Danh sách đợt thực tập',
+    menuName: 'Đợt thực tập',
     component: DotThucTap,
     icon: renderIcon('stream'),
   },
+  {
+    path: URL.MENU.QUAN_LY_DE_TAI,
+    menuName: 'Quản lý đề tài thực tập',
+    icon: renderIcon('th-list'),
+    children: [
+      {
+        path: URL.MENU.DE_TAI_TTTN,
+        menuName: 'Danh sách đề tài',
+        component: DeTai,
+        icon: renderIcon('list-alt'),
+      },
+      {
+        path: URL.MENU.DANG_KY_DE_TAI,
+        menuName: 'Đăng ký đề tài',
+        component: DangKyDeTai,
+        icon: renderIcon('edit'),
+      },
+    ],
+  },
+
   // { menuGroup: 'Đề tài thực tập' },
-  {
-    path: URL.MENU.DE_TAI_TTTN,
-    menuName: 'Danh sách đề tài',
-    component: DeTai,
-    icon: renderIcon('list-alt'),
-  },
-  {
-    path: URL.MENU.DANG_KY_DE_TAI,
-    menuName: 'Đăng ký đề tài',
-    component: DangKyDeTai,
-    icon: renderIcon('edit'),
-  },
-
-
   { path: URL.MY_INFO, breadcrumbName: 'Thông tin cá nhân', component: MyInfo },
   { path: URL.FILE_SINH_VIEN, component: ThemFile },
 
