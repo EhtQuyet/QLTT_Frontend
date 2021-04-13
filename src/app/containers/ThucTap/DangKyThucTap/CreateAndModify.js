@@ -13,21 +13,20 @@ import { DOT_THUC_TAP, ROLE } from '../../../../constants/contans';
 import Form from 'antd/es/form';
 import { connect } from 'react-redux';
 import Loading from '@components/Loading';
-import MyInfo from '@containers/MyInfo/MyInfo';
 
 
-function CreateAndModify({ isModalVisible, handleOk, handleCancel, myInfo, userSelected, ...props }) {
+function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected, ...props }) {
   const [dkttForm] = Form.useForm();
-  const [ddtt, setDdtt] = useState([])
+  const [diadiemTT, setDiaDiaTT] = useState([])
   const [dotTT, setDotTT] = useState([])
-
+  const [isOtherPlace, setOtherPlace] = useState(false)
   useEffect(() => {
 
     getData();
 
 
 
-    setDdtt([ ...ddtt, {_id: '####', name:'---KHÁC---'}])
+    setDiaDiaTT([ ...diadiemTT, {_id: '####', name:'---KHÁC---'}])
 
     if (userSelected && isModalVisible) {
       const dataField = Object.assign({}, userSelected);
@@ -46,18 +45,22 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, myInfo, userS
     handleOk(userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE, data);
   }
   function onValuesChange(changedValues, allValues) {
+    if(changedValues.diaDiem === '####'){
+      setOtherPlace(true)
+    }else {
+      setOtherPlace(false)
+    }
   }
 
   async function getData()
   {
     const apiResponse = await getAllDiaDiemThucTap()
-    setDdtt([ ...apiResponse.docs,  {_id: '####', ten_dia_diem:'---KHÁC---'}])
+    setDiaDiaTT([ ...apiResponse.docs,  {_id: '####', ten_dia_diem:'---KHÁC---'}])
     const apiDotTT = await getAllDotThucTap(1,0, {trang_thai: DOT_THUC_TAP.DANG_MO})
     setDotTT(apiDotTT.docs)
   }
-
-  // const isGiaoVu = myInfo && myInfo.role.includes(ROLE.GIAO_VU);
-  // const isAdmin = myInfo && myInfo.role.includes(ROLE.ADMIN);
+  const isGiaoVu = props.myInfo && props.myInfo.role.includes(ROLE.GIAO_VU);
+  const isAdmin = props.myInfo && props.myInfo.role.includes(ROLE.ADMIN);
 
   return (
     <Modal
@@ -78,14 +81,15 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, myInfo, userS
 
         >
           <Row gutter={15}>
-            {/*{ (isAdmin || isGiaoVu) && <CustomSkeleton*/}
-            {/*  size='default'*/}
-            {/*  label="Mã sinh viên" name="maSinhVien"*/}
-            {/*  type={CONSTANTS.TEXT}*/}
-            {/*  layoutCol={{ xs: 24 }}*/}
-            {/*  layoutItem={{ labelCol: { xs: 8 } }}*/}
-            {/*  labelLeft*/}
-            {/*/>}*/}
+            { (isAdmin || isGiaoVu) && <CustomSkeleton
+              size='default'
+              label="Mã sinh viên" name="maSinhVien"
+              type={CONSTANTS.TEXT}
+              rules={[RULES.REQUIRED]}
+              layoutCol={{ xs: 24 }}
+              layoutItem={{ labelCol: { xs: 8 } }}
+              labelLeft
+            />}
             <CustomSkeleton
               size='default'
               label="Đợt thực tập" name="dot_thuc_tap"
@@ -94,6 +98,7 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, myInfo, userS
               layoutItem={{ labelCol: { xs: 8 } }}
               rules={[RULES.REQUIRED]}
               labelLeft
+              showSearch
               options={{ data: dotTT ? dotTT : [], valueString: '_id', labelString: 'ten_dot' }}
             />
             <CustomSkeleton
@@ -104,6 +109,7 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, myInfo, userS
               layoutItem={{ labelCol: { xs: 8 } }}
               rules={[RULES.REQUIRED]}
               labelLeft
+              showSearch
               options={{ data: props.teacherList, valueString: '_id', labelString: 'name' }}
             />
             <CustomSkeleton
@@ -114,8 +120,18 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, myInfo, userS
               layoutItem={{ labelCol: { xs: 8 } }}
               rules={[RULES.REQUIRED]}
               labelLeft
-              options={{ data: ddtt ? ddtt : [], valueString: '_id', labelString: 'ten_dia_diem' }}
+              showSearch
+              options={{ data: diadiemTT ? diadiemTT : [], valueString: '_id', labelString: 'ten_dia_diem' }}
             />
+            {isOtherPlace &&  <CustomSkeleton
+              size='default'
+              label="Tên địa điểm" name="tenDiaDiem"
+              type={CONSTANTS.TEXT}
+              layoutCol={{ xs: 24 }}
+              layoutItem={{ labelCol: { xs: 8 } }}
+              rules={[RULES.REQUIRED]}
+              labelLeft
+            />}
             <CustomSkeleton
               size='default'
               label="Điểm TB tích lũy" name="diemTichLuy"
@@ -148,6 +164,7 @@ function mapStateToProps(store) {
   const { teacherList } = store.giaovien;
   const { diadiemList } = store.diadiem;
   const { dotthuctapList } = store.dotthuctap;
+  // const { myInfo } = store.user;
 
 
   return { isLoading , teacherList, diadiemList, dotthuctapList};

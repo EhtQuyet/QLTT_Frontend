@@ -7,7 +7,6 @@ import {
   deleteDKTT,
   getAllDKTT,
   updateDKTT,
-  getFindOne,
 } from '@app/services/DKThucTap/DKThucTapService';
 import {
   getAllSinhVien,
@@ -15,7 +14,6 @@ import {
 import ActionCell from '@components/ActionCell';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT, TRANG_THAI } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
-import moment from 'moment';
 import { connect } from 'react-redux';
 import Filter from '@components/Filter';
 import Loading from '@components/Loading';
@@ -177,7 +175,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
           {chonGV && <div className='mt-2'>
             <Popconfirm
               title='Từ chối hướng dẫn sinh viên'
-              onConfirm={() => handleTrangThai(value._id, DANG_KY_THUC_TAP.DA_DANG_KY)}
+              onConfirm={() => handleTrangThai(value._id, DANG_KY_THUC_TAP.GV_TU_CHOI)}
               cancelText='Huỷ' okText='Xác nhận' okButtonProps={{ type: 'access' }}>
               <Tag color='red' className='tag-action'>
                 <SendOutlined/><span className='ml-1'>Từ chối</span>
@@ -295,9 +293,10 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
       {/*  ]}*/}
       {/*  handleFilter={(query) => getDataGiaoVien(1, giaovien.pageSize, query)}/>*/}
 
-      {isSig && isSig === null && <AddNewButton label='Đăng ký' onClick={() => handleShowModal(true)} disabled={isLoading}/>}
+      {/*{isSig && isSig === null && */}
+      <AddNewButton label='Đăng ký' onClick={() => handleShowModal(true)} disabled={isLoading}/>
+      {/*}*/}
 
-      {isSig && isSig !== null && <AddNewButton label='Chọn nhóm' onClick={() => handleShowModal(true)} disabled={isLoading}/>}
 
       <Loading active={isLoading}>
         { /*(isGiaoVu || isAdmin) && */   <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>}

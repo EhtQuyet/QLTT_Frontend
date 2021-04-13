@@ -7,7 +7,7 @@ function AddNewButton({ onClick, linkTo, label, disabled, loading }) {
 
 
   return <React.Fragment>
-    <div className='clearfix mb-3'>
+    <div className='clearfix mb-2'>
       {onClick && <Button
         disabled={disabled}
         loading={loading}
