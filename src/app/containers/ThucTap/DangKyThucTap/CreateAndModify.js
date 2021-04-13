@@ -132,6 +132,7 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
               rules={[RULES.REQUIRED]}
               labelLeft
             />}
+
             <CustomSkeleton
               size='default'
               label="Điểm TB tích lũy" name="diemTichLuy"
