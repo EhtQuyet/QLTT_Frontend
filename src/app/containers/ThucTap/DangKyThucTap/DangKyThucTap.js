@@ -34,11 +34,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
   });
   const [isSig, setIsSig] = useState(null);
 
-  const isAdmin = myInfo.role.includes(ROLE.ADMIN);
-  const isSinhVien = myInfo.role.includes(ROLE.SINH_VIEN);
-  const isGiangVien = myInfo.role.includes(ROLE.GIANG_VIEN);
-  const isGiaoVu = myInfo.role.includes(ROLE.GIAO_VU);
-  const isBanChuNiem = myInfo.role.includes(ROLE.BAN_CHU_NHIEM);
+
 
   useEffect(() => {
     if (!props?.teacherList?.length) {
@@ -57,11 +53,13 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
   }, []);
 
   async function getDataInfo() {
-    // const apiResponse = await getFindOne(myInfo._id);
-    // if (apiResponse) {
-    //   setIsSig(apiResponse);
-    // }
+    const apiResponse = await getFindOne(myInfo.username);
+    if (apiResponse) {
+      setIsSig(apiResponse);
+    }
   }
+
+  console.log('sig', isSig);
 
   async function getData(
     currentPage = dkthuctap.currentPage,
@@ -134,8 +132,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
     },
     {
       align: 'center',
-      // render: (value) => ((isSinhVien && value?.ma_sinh_vien === myInfo.username) || isAdmin || isGiaoVu) && <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>,
-      render: (value) => <div> {value.sinh_vien} </div>,
+      render: (value) => <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>,
       width: 300,
     },
   ];
@@ -207,8 +204,16 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
   pagination.current = dkthuctap.currentPage;
   pagination.total = dkthuctap.totalDocs;
   pagination.pageSize = dkthuctap.pageSize;
+
+  // const isAdmin = myInfo.role.includes(ROLE.ADMIN);
+  // const isSinhVien = myInfo && myInfo.role.includes(ROLE.SINH_VIEN);
+  // const isGiangVien = myInfo && myInfo.role.includes(ROLE.GIANG_VIEN);
+  // const isGiaoVu = myInfo && myInfo.role.includes(ROLE.GIAO_VU);
+  // const isBanChuNiem = myInfo && myInfo.role.includes(ROLE.BAN_CHU_NHIEM);
+
   return (
-    <div>
+    <>
+      <div>
       {/*<Filter*/}
       {/*  dataSearch={[*/}
       {/*    { name: 'ten_giao_vien', label: 'Tên giáo viên', type: CONSTANTS.TEXT },*/}
@@ -216,12 +221,14 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
       {/*  ]}*/}
       {/*  handleFilter={(query) => getDataGiaoVien(1, giaovien.pageSize, query)}/>*/}
 
-      {isSig === null && <AddNewButton label='Đăng ký' onClick={() => handleShowModal(true)} disabled={isLoading}/>}
+      {isSig && isSig === null && <AddNewButton label='Đăng ký' onClick={() => handleShowModal(true)} disabled={isLoading}/>}
 
-      {isSig !== null && <AddNewButton label='Chọn nhóm' onClick={() => handleShowModal(true)} disabled={isLoading}/>}
+      {isSig && isSig !== null && <AddNewButton label='Chọn nhóm' onClick={() => handleShowModal(true)} disabled={isLoading}/>}
 
       <Loading active={isLoading}>
-        <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
+        { /*(isGiaoVu || isAdmin) && */   <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>}
+
+        {/*{isSinhVien }*/}
       </Loading>
       <CreateAndModify
         type={!!state.userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE}
@@ -232,6 +239,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
         myInfo={myInfo}
       />
     </div>
+    </>
   );
 }
 

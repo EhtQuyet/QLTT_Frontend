@@ -36,7 +36,6 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
     }
     (async () => {
       await getDataDeTai();
-      console.log('detai', detai);
     })();
   }, []);
 

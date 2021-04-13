@@ -16,7 +16,7 @@ import Filter from '@components/Filter';
 import Loading from '@components/Loading';
 import { connect } from 'react-redux';
 import * as namhoc from '@app/store/ducks/namhoc.duck';
-import { Typography, Space } from 'antd';
+import { Typography, Space, Tag } from 'antd';
 
 const { Text, Link } = Typography;
 
@@ -93,9 +93,9 @@ function DotThucTap({ isLoading, namhocList, ...props }) {
       title: 'Trạng thái',
       dataIndex: 'trangThai',
       render: value => <>
-        {value === DOT_THUC_TAP.DANG_MO ? <Text type="success">Đang mở</Text>
-          : value === DOT_THUC_TAP.DA_KHOA ? <Text type="warning"> Đã khóa</Text>
-          : <Text type="danger">Đã kết thúc</Text>}
+        {value === DOT_THUC_TAP.DANG_MO ? <Tag color='green'>Đang mở</Tag>
+          : value === DOT_THUC_TAP.DA_KHOA ? <Tag color='gold'> Đã khóa</Tag>
+          : <Tag color='red'>Đã kết thúc</Tag>}
       </>,
       width: 200,
     },

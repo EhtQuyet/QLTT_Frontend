@@ -16,7 +16,7 @@ import Filter from '@components/Filter';
 import Loading from '@components/Loading';
 import { connect } from 'react-redux';
 import { DIA_DIEM_THUC_TAP } from '@src/constants/contans';
-import { Typography, Space } from 'antd';
+import { Typography, Space, Tag } from 'antd';
 const { Text, Link } = Typography;
 
 function DiaDiemThucTap({ isLoading, ...props }) {
@@ -90,8 +90,8 @@ function DiaDiemThucTap({ isLoading, ...props }) {
       dataIndex: 'trangThai',
       key: 'trangThai',
       render: value => <>
-        {value === DIA_DIEM_THUC_TAP.DA_XAC_NHAN ? <Text type="success">Đã xác nhận</Text>
-          : <Text type="warning"> Chưa xác nhận</Text>
+        {value === DIA_DIEM_THUC_TAP.DA_XAC_NHAN ? <Tag color='green'>Đã xác nhận</Tag>
+          : <Tag color='gold'> Chưa xác nhận</Tag>
             }
       </>,
       width: 300,

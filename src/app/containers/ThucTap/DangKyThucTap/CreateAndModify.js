@@ -56,9 +56,8 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, myInfo, userS
     setDotTT(apiDotTT.docs)
   }
 
-  async function onChange() {
-    console.log('aaaaaaaaaaaaaaaa');
-  }
+  // const isGiaoVu = myInfo && myInfo.role.includes(ROLE.GIAO_VU);
+  // const isAdmin = myInfo && myInfo.role.includes(ROLE.ADMIN);
 
   return (
     <Modal
@@ -79,14 +78,14 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, myInfo, userS
 
         >
           <Row gutter={15}>
-            { myInfo.role.includes(ROLE.GIAO_VU) && <CustomSkeleton
-              size='default'
-              label="Mã sinh viên" name="maSinhVien"
-              type={CONSTANTS.TEXT}
-              layoutCol={{ xs: 24 }}
-              layoutItem={{ labelCol: { xs: 8 } }}
-              labelLeft
-            />}
+            {/*{ (isAdmin || isGiaoVu) && <CustomSkeleton*/}
+            {/*  size='default'*/}
+            {/*  label="Mã sinh viên" name="maSinhVien"*/}
+            {/*  type={CONSTANTS.TEXT}*/}
+            {/*  layoutCol={{ xs: 24 }}*/}
+            {/*  layoutItem={{ labelCol: { xs: 8 } }}*/}
+            {/*  labelLeft*/}
+            {/*/>}*/}
             <CustomSkeleton
               size='default'
               label="Đợt thực tập" name="dot_thuc_tap"
@@ -116,7 +115,6 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, myInfo, userS
               rules={[RULES.REQUIRED]}
               labelLeft
               options={{ data: ddtt ? ddtt : [], valueString: '_id', labelString: 'ten_dia_diem' }}
-              onChange={onChange}
             />
             <CustomSkeleton
               size='default'
