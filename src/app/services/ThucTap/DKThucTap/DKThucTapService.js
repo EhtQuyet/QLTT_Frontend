@@ -4,6 +4,19 @@ import { message } from 'antd';
 import { convertParam, getMessageError, renderMessageError } from '@app/common/functionCommons';
 import { CONSTANTS } from '@constants';
 
+
+export function getFindOne(MaSV) {
+  return axios.get(API.DK_THUC_TAP_ID.format(MaSV))
+    .then(response => {
+      if (response.status === 200 ) return response.data.data;
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
+
 export function createDKTT(data) {
   return axios.post(`${API.DK_THUC_TAP}`, data)
     .then(response => {
@@ -16,24 +29,13 @@ export function createDKTT(data) {
     });
 }
 
+
 export function getAllDKTT(currentPage = 1, totalDocs = 0, query, loading = true) {
   const params = convertParam(query, '&');
   const config = { loading };
   return axios.get(`${API.DK_THUC_TAP}?page=${currentPage}&limit=${totalDocs}${params}`, config)
     .then(response => {
       if (response.status === 200 && Array.isArray(response.data?.data?.docs)) return response.data.data;
-      return null;
-    })
-    .catch((err) => {
-      renderMessageError(err);
-      return null;
-    });
-}
-
-export function getFindOne(MaSV) {
-  return axios.get(API.SV_THUC_TAP_ID.format(MaSV))
-    .then(response => {
-      if (response.status === 200 ) return response.data.data;
       return null;
     })
     .catch((err) => {
@@ -65,7 +67,6 @@ export function deleteDKTT(detaiId) {
       return null;
     });
 }
-
 export function getAllDotThucTap(currentPage = 1, totalDocs = 0, query, loading = true) {
   const params = convertParam(query, '&');
   const config = { loading };

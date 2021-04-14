@@ -39,6 +39,7 @@ export function* saga() {
         name: doc.ten_sinh_vien,
         classmate: doc.ma_lop_hoc,
         code: doc.ma_sinh_vien,
+        namecode: doc.ten_sinh_vien + ' (MSSV: ' + doc.ma_sinh_vien + ')'
       }));
       yield put(actions.setSinhVien(sinhVienList));
     }

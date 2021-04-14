@@ -10,7 +10,7 @@ import {
 } from '@app/services/GiaoVienHD/giaoVienService';
 import ActionCell from '@components/ActionCell';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT } from '@constants';
-import { columnIndex, toast } from '@app/common/functionCommons';
+import { columnIndex, renderRowData, toast } from '@app/common/functionCommons';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import Filter from '@components/Filter';
@@ -77,13 +77,13 @@ function GiaoVien({ isLoading, bomonList, teacherList, ...props }) {
       width: 200,
     },
     {
-      title: 'Tên giáo viên',
+      title: 'Giảng viên',
       dataIndex: 'tenGiaoVien',
       key: 'tenGiaoVien',
       render: (text, record, index) => <div>
-        Họ và tên: <b>{record?.tenGiaoVien}</b><br/>
-        Ngày sinh: <b>{record?.ngaySinh ? moment(record.ngaySinh).format('DD/MM/YYYY') : ''}</b><br/>
-        Giới tính: <b>{record?.gioiTinh}</b><br/>
+        {renderRowData('Họ và tên', record?.tenGiaoVien, '70px')}
+        {renderRowData('Ngày sinh', record?.ngaySinh ? moment(record.ngaySinh).format('DD/MM/YYYY') : '', '70px')}
+        {renderRowData('Giới tính', record?.gioiTinh, '70px')}
       </div>,
       width: 300,
     },

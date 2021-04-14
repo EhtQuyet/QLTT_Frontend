@@ -29,9 +29,15 @@ const DangKyDeTai = lazy(() => import('@containers/DangKyDeTaiTTTN/DangKyDeTai')
 const ThemFile = lazy(() => import('@containers/QuanLyDanhMuc/QuanLySinhVienTTTN/ThemFile'));
 const DiaDiemThucTap = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyDiaDiemThucTap/DiaDiemThucTap'));
 const NamHoc = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyNamHoc/NamHoc'));
-const DangKyThucTap = lazy(() => import('@containers/ThucTap/DangKyThucTap/DangKyThucTap'));
 
+
+const DangKyThucTap = lazy(() => import('@containers/ThucTap/DangKyThucTap/DangKyThucTap'));
 const DotThucTap = lazy(() => import('@containers/ThucTap/DotThucTap/DotThucTap'));
+
+const NhomThucTap = lazy(() => import('@containers/ThucTap/NhomThucTap/NhomThucTap'));
+const ThemNhomThucTap = lazy(() => import('@containers/ThucTap/NhomThucTap/NhomThucTapChiTiet'));
+const NhomThucTapChiTiet = lazy(() => import('@containers/ThucTap/NhomThucTap/NhomThucTapChiTiet'));
+
 
 function renderIcon(icon) {
   return <span role="img" aria-label="unordered-list" className="anticon">
@@ -107,16 +113,29 @@ export const ConstantsRoutes = [
   },
   // { menuGroup: 'Thực tập' },
   {
-    path: URL.MENU.DANG_KY_TUC_TAP,
-    menuName: 'Đăng ký thực tập',
-    component: DangKyThucTap,
-    icon: renderIcon('pen-alt'),
-  },
-  {
-    path: URL.MENU.DOT_THUC_TAP,
-    menuName: 'Đợt thực tập',
-    component: DotThucTap,
-    icon: renderIcon('stream'),
+    path: URL.MENU.QUAN_LY_THUC_TAP,
+    menuName: 'Quản lý thực tập',
+    icon: renderIcon('th-list'),
+    children: [
+      {
+        path: URL.MENU.DANG_KY_TUC_TAP,
+        menuName: 'Đăng ký thực tập',
+        component: DangKyThucTap,
+        icon: renderIcon('pen-alt'),
+      },
+      {
+        path: URL.MENU.DOT_THUC_TAP,
+        menuName: 'Đợt thực tập',
+        component: DotThucTap,
+        icon: renderIcon('stream'),
+      },
+      {
+        path: URL.MENU.NHOM_THUC_TAP,
+        menuName: 'Nhóm thực tập',
+        component: NhomThucTap,
+        icon: renderIcon('stream'),
+      },
+    ],
   },
   {
     path: URL.MENU.QUAN_LY_DE_TAI,
@@ -141,6 +160,16 @@ export const ConstantsRoutes = [
   // { menuGroup: 'Đề tài thực tập' },
   { path: URL.MY_INFO, breadcrumbName: 'Thông tin cá nhân', component: MyInfo },
   { path: URL.FILE_SINH_VIEN, component: ThemFile },
+  {
+    path: URL.MENU.ADD_NHOM_THUC_TAP,
+    breadcrumbName: 'Thêm nhóm thực tập',
+    component: ThemNhomThucTap,
+  },
+  {
+    path: `${URL.MENU.NHOM_THUC_TAP_CHI_TIET}/:id`,
+    breadcrumbName: 'Chi tiết nhóm thực tập',
+    component: NhomThucTap,
+  },
 
 
 ];

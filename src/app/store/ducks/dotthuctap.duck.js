@@ -1,6 +1,6 @@
 import { put, takeLatest } from 'redux-saga/effects';
 
-import { getAllDotThucTap } from '@app/services/ThucTap/dotthuctapService';
+import { getAllDotThucTap } from '@app/services/ThucTap/DotThucTap/dotthuctapService';
 
 export const actionTypes = {
   GetDotThucTap: 'DotThucTap/GetDotThucTap',

@@ -36,4 +36,7 @@ export const API = {
 
   LOP_HOC: 'api/lophoc',
   LOP_HOC_ID: 'api/lophoc/{0}',
+
+  NHOM_THUC_TAP: '/api/nhomthuctap',
+  NHOM_THUC_TAP_ID: '/api/nhomthuctap/{0}',
 };

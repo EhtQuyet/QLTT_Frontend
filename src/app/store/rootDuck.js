@@ -11,6 +11,7 @@ import * as namhoc from './ducks/namhoc.duck';
 import * as sinhvien from './ducks/sinhvien.duck';
 import * as diadiem  from './ducks/diadiem.duck';
 import * as dotthuctap from './ducks/dotthuctap.duck'
+import * as dkthuctap from './ducks/dkthuctap.duck'
 
 
 export const rootReducer = combineReducers({
@@ -23,7 +24,8 @@ export const rootReducer = combineReducers({
   namhoc: namhoc.reducer,
   sinhvien: sinhvien.reducer,
   diadiem : diadiem.reducer,
-  dotthuctap: dotthuctap.reducer
+  dotthuctap: dotthuctap.reducer,
+  dkthuctap: dkthuctap.reducer
 
 });
 
@@ -39,5 +41,6 @@ export function* rootSaga() {
     sinhvien.saga(),
     diadiem.saga(),
     dotthuctap.saga(),
+    dkthuctap.saga(),
   ]);
 }

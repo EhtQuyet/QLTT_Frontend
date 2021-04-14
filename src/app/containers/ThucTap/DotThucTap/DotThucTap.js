@@ -6,7 +6,7 @@ import {
   createDotThucTap,
   deleteDotThucTap, getAllDotThucTap,
   updateDotThucTap,
-} from '@app/services/ThucTap/dotthuctapService';
+} from '@app/services/ThucTap/DotThucTap/dotthuctapService';
 import ActionCell from '@components/ActionCell';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT } from '@constants';
 import { DOT_THUC_TAP } from '../../../../constants/contans';

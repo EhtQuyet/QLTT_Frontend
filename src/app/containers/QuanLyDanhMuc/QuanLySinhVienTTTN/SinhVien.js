@@ -11,7 +11,7 @@ import {
 } from '@app/services/SinhVienTTTN/sinhVienTTService';
 import ActionCell from '@components/ActionCell';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT } from '@constants';
-import { columnIndex, toast } from '@app/common/functionCommons';
+import { columnIndex, renderRowData, toast } from '@app/common/functionCommons';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -79,9 +79,9 @@ function SinhVien({ isLoading, classmateList, ...props }) {
       dataIndex: 'tenSinhVien',
       key: 'tenSinhVien',
       render: (text, record, index) => <div>
-        Họ và tên: <b>{record?.tenSinhVien}</b><br/>
-        Ngày sinh: <b>{record?.ngaySinh ? moment(record.ngaySinh).format('DD/MM/YYYY') : ''}</b><br/>
-        Giới tính: <b>{record?.gioiTinh}</b><br/>
+        {renderRowData('Họ và tên', record?.tenSinhVien, '70px')}
+        {renderRowData('Ngày sinh', record?.ngaySinh ? moment(record.ngaySinh).format('DD/MM/YYYY') : '', '70px')}
+        {renderRowData('Giới tính', record?.gioiTinh, '70px')}
       </div>,
       width: 300,
     },

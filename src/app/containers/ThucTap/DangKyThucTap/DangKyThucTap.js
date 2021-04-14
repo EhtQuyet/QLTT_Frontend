@@ -7,7 +7,7 @@ import {
   deleteDKTT,
   getAllDKTT,
   updateDKTT,
-} from '@app/services/DKThucTap/DKThucTapService';
+} from '@app/services/ThucTap/DKThucTap/DKThucTapService';
 import {
   getAllSinhVien,
 } from '@app/services/SinhVienTTTN/sinhVienTTService';
