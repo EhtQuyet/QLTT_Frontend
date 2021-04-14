@@ -52,7 +52,8 @@ export const DTT = [
 
 export const DDTT = [
   { label: 'Đã xác nhận' , value: 'DA_XAC_NHAN'},
-  { label: 'Chưa xác nhận' , value: 'CHUA_XAC_NHAN'}
+  { label: 'Chưa xác nhận' , value: 'CHUA_XAC_NHAN'},
+  { label: 'Từ chối' , value: 'TU_CHOI'}
 ]
 
 export const GENDER_OPTIONS = [

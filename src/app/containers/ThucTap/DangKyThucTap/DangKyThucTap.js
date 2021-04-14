@@ -11,6 +11,9 @@ import {
 import {
   getAllSinhVien,
 } from '@app/services/SinhVienTTTN/sinhVienTTService';
+import {
+  createDiaDiemThucTap,
+} from '@app/services/DiaDiemThucTap/diadiemthuctapService';
 import ActionCell from '@components/ActionCell';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT, TRANG_THAI } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
@@ -33,7 +36,6 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
     userSelected: null,
   });
   const [isSig, setIsSig] = useState(null);
-
 
 
   useEffect(() => {
@@ -87,7 +89,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
     diadiem_thuctap: data.dia_diem_thuc_tap,
     diemTichLuy: data.diem_tbtl,
     tinchi_tichluy: data.so_tctl,
-    trang_thai: data.trang_thai
+    trang_thai: data.trang_thai,
   }));
   const columns = [
     columnIndex(dkthuctap.pageSize, dkthuctap.currentPage),
@@ -134,7 +136,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
     {
       align: 'center',
       // render: (value) => <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>,
-      render:  (value) => {
+      render: (value) => {
         const daDangKy = value.trang_thai === DANG_KY_THUC_TAP.DA_DANG_KY;
         const daDuyet = value.trang_thai === DANG_KY_THUC_TAP.DA_DUOC_DUYET;
         const chonGV = value.trang_thai === DANG_KY_THUC_TAP.CHON_GIANG_VIEN;
@@ -211,15 +213,37 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
 
 // function create or modify
   async function createAndModify(type, dataForm) {
-    const { giaoVien, diemTichLuy, tinchi_tichluy, diaDiem, dot_thuc_tap, maSinhVien } = dataForm;
-    const dataRequest = {
-      giao_vien_huong_dan: giaoVien,
-      dia_diem_thuc_tap: diaDiem,
-      diem_tbtl: diemTichLuy,
-      so_tctl: tinchi_tichluy,
-      dot_thuc_tap: dot_thuc_tap,
-
+    const { giaoVien, diemTichLuy, tinchi_tichluy, diaDiem, dot_thuc_tap, maSinhVien, tenDiaDiem, diaChi } = dataForm;
+    console.log(diaDiem, tenDiaDiem, diaChi);
+    let dataRequest = {
+      giao_vien_huong_dan: '',
+      dia_diem_thuc_tap: '',
+      diem_tbtl: '',
+      so_tctl: '',
+      dot_thuc_tap: '',
     };
+    if (diaDiem === '####') {
+      const ddtt = {
+        ten_dia_diem: tenDiaDiem,
+        dia_chi: diaChi,
+      };
+      const apiResponse = await createDiaDiemThucTap(ddtt);
+      console.log('apiResponse', apiResponse);
+      if (apiResponse) {
+        dataRequest.giao_vien_huong_dan = giaoVien;
+        dataRequest.dia_diem_thuc_tap = apiResponse._id;
+        dataRequest.diem_tbtl = diemTichLuy;
+        dataRequest.so_tctl = tinchi_tichluy;
+        dataRequest.dot_thuc_tap = dot_thuc_tap;
+      }
+    } else {
+      dataRequest.giao_vien_huong_dan = giaoVien;
+      dataRequest.dia_diem_thuc_tap = diaDiem;
+      dataRequest.diem_tbtl = diemTichLuy;
+      dataRequest.so_tctl = tinchi_tichluy;
+      dataRequest.dot_thuc_tap = dot_thuc_tap;
+    }
+
     if (type === CONSTANTS.CREATE) {
       const sinhVien = await getAllSinhVien(1, 0, { ma_sinh_vien: maSinhVien ? maSinhVien : myInfo.username });
       dataRequest.sinh_vien = sinhVien.docs[0]._id;
@@ -255,8 +279,8 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
   async function handleTrangThai(id, trangThai) {
     const dataRequest = {
       _id: id,
-      trang_thai: trangThai
-    }
+      trang_thai: trangThai,
+    };
 
     const apiResponse = await updateDKTT(dataRequest);
     if (apiResponse) {
@@ -286,32 +310,33 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
   return (
     <>
       <div>
-      {/*<Filter*/}
-      {/*  dataSearch={[*/}
-      {/*    { name: 'ten_giao_vien', label: 'Tên giáo viên', type: CONSTANTS.TEXT },*/}
-      {/*    { name: 'ma_giao_vien', label: 'Mã giáo viên ', type: CONSTANTS.TEXT },*/}
-      {/*  ]}*/}
-      {/*  handleFilter={(query) => getDataGiaoVien(1, giaovien.pageSize, query)}/>*/}
+        {/*<Filter*/}
+        {/*  dataSearch={[*/}
+        {/*    { name: 'ten_giao_vien', label: 'Tên giáo viên', type: CONSTANTS.TEXT },*/}
+        {/*    { name: 'ma_giao_vien', label: 'Mã giáo viên ', type: CONSTANTS.TEXT },*/}
+        {/*  ]}*/}
+        {/*  handleFilter={(query) => getDataGiaoVien(1, giaovien.pageSize, query)}/>*/}
 
-      {/*{isSig && isSig === null && */}
-      <AddNewButton label='Đăng ký' onClick={() => handleShowModal(true)} disabled={isLoading}/>
-      {/*}*/}
+        {/*{isSig && isSig === null && */}
+        <AddNewButton label='Đăng ký' onClick={() => handleShowModal(true)} disabled={isLoading}/>
+        {/*}*/}
 
 
-      <Loading active={isLoading}>
-        { /*(isGiaoVu || isAdmin) && */   <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>}
+        <Loading active={isLoading}>
+          { /*(isGiaoVu || isAdmin) && */   <Table dataSource={dataSource} size='small' columns={columns}
+                                                   pagination={pagination} bordered/>}
 
-        {/*{isSinhVien }*/}
-      </Loading>
-      <CreateAndModify
-        type={!!state.userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE}
-        isModalVisible={state.isShowModal}
-        handleOk={createAndModify}
-        handleCancel={() => handleShowModal(false)}
-        userSelected={state.userSelected}
-        myInfo={myInfo}
-      />
-    </div>
+          {/*{isSinhVien }*/}
+        </Loading>
+        <CreateAndModify
+          type={!!state.userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE}
+          isModalVisible={state.isShowModal}
+          handleOk={createAndModify}
+          handleCancel={() => handleShowModal(false)}
+          userSelected={state.userSelected}
+          myInfo={myInfo}
+        />
+      </div>
     </>
   );
 }

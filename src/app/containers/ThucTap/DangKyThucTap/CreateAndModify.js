@@ -9,7 +9,7 @@ import {
   getAllDotThucTap
 } from '@app/services/ThucTap/DKThucTap/DKThucTapService';
 import { CONSTANTS, RULES } from '@constants';
-import { DOT_THUC_TAP, ROLE } from '../../../../constants/contans';
+import { DOT_THUC_TAP, DIA_DIEM_THUC_TAP, ROLE } from '../../../../constants/contans';
 import Form from 'antd/es/form';
 import { connect } from 'react-redux';
 import Loading from '@components/Loading';
@@ -23,8 +23,6 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
   useEffect(() => {
 
     getData();
-
-
 
     setDiaDiaTT([ ...diadiemTT, {_id: '####', name:'---KHÁC---'}])
 
@@ -52,9 +50,11 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
     }
   }
 
+  console.log('isOtherPlace',isOtherPlace);
+
   async function getData()
   {
-    const apiResponse = await getAllDiaDiemThucTap()
+    const apiResponse = await getAllDiaDiemThucTap(1,0,{trang_thai: DIA_DIEM_THUC_TAP.DA_XAC_NHAN})
     setDiaDiaTT([ ...apiResponse.docs,  {_id: '####', ten_dia_diem:'---KHÁC---'}])
     const apiDotTT = await getAllDotThucTap(1,0, {trang_thai: DOT_THUC_TAP.DANG_MO})
     setDotTT(apiDotTT.docs)
@@ -132,6 +132,16 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
               rules={[RULES.REQUIRED]}
               labelLeft
             />}
+            {isOtherPlace &&  <CustomSkeleton
+              size='default'
+              label="Địa chỉ" name="diaChi"
+              type={CONSTANTS.TEXT}
+              layoutCol={{ xs: 24 }}
+              layoutItem={{ labelCol: { xs: 8 } }}
+              rules={[RULES.REQUIRED]}
+              labelLeft
+            />}
+
 
             <CustomSkeleton
               size='default'

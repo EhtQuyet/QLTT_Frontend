@@ -91,7 +91,7 @@ function DiaDiemThucTap({ isLoading, ...props }) {
       key: 'trangThai',
       render: value => <>
         {value === DIA_DIEM_THUC_TAP.DA_XAC_NHAN ? <Tag color='green'>Đã xác nhận</Tag>
-          : <Tag color='gold'> Chưa xác nhận</Tag>
+          : value === DIA_DIEM_THUC_TAP.TU_CHOI ? <Tag color='red'>Từ chối</Tag> : <Tag color='gold'> Chưa xác nhận</Tag>
             }
       </>,
       width: 300,

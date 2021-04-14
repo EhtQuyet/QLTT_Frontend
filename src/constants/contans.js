@@ -16,7 +16,8 @@ export const ROLE = {
 
 export const DIA_DIEM_THUC_TAP = {
   DA_XAC_NHAN: 'DA_XAC_NHAN',
-  CHUA_XAC_NHAN: 'CHUA_XAC_NHAN'
+  CHUA_XAC_NHAN: 'CHUA_XAC_NHAN',
+  TU_CHOI: 'TU_CHOI'
 }
 export const DANG_KY_THUC_TAP = {
   DA_DANG_KY: 'DA_DANG_KY',
