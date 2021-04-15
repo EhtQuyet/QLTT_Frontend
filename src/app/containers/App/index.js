@@ -102,6 +102,7 @@ class App extends React.Component {
   render() {
     const { siderCollapsed, token } = this.props;
     const { isBroken, isShowDrawer } = this.state;
+    const  { myInfo } = this.props
 
     if (!token) return <Login/>;
     return (
@@ -147,7 +148,9 @@ class App extends React.Component {
             <div style={{ flex: 'auto' }}>
               <Content className="site-layout-background"
                        style={{ margin: '0 16px 16px 16px', padding: 16, zIndex: 1 }}>
-                <Routes/>
+                <Routes
+                  myInfo = {myInfo}
+                />
               </Content>
             </div>
 
@@ -160,8 +163,10 @@ class App extends React.Component {
 }
 
 function mapStateToProps(store) {
-  const { siderCollapsed, token } = store.app;
-  return { siderCollapsed, token };
+  const { siderCollapsed, token , } = store.app;
+  const { myInfo } = store.user;
+
+  return { siderCollapsed, token , myInfo};
 }
 
 export default (connect(mapStateToProps, { ...app.actions, ...user.actions })(withRouter(App)));

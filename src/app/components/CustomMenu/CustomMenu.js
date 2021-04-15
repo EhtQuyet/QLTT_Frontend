@@ -5,13 +5,45 @@ import logocntt from '../../../assets/images/logocntt.jpg'
 import { ConstantsRoutes } from '@app/router/ConstantsRoutes';
 import { connect } from 'react-redux';
 
-import './CustomMenu.scss';
 
-function CustomMenu({ history, siderCollapsed, isBroken, ...props }) {
+import './CustomMenu.scss';
+import * as app from '@app/store/ducks/app.duck';
+import * as user from '@app/store/ducks/user.duck';
+
+function CustomMenu({ history, myInfo, siderCollapsed, isBroken, ...props }) {
   const { pathname } = history.location;
   let defaultOpenKeys = [];
 
-  const menuItem = ConstantsRoutes.map((menu) => {
+  function isEmpty(obj) {
+    for(let key in obj) {
+      if(obj.hasOwnProperty(key))
+        return false;
+    }
+    return true;
+  }
+
+  function getMenu()
+  {
+    let routeList = []
+    if(isEmpty(myInfo.role) == false){
+      ConstantsRoutes.forEach(rt => {
+        if(rt.role.indexOf(myInfo.role)!== -1){
+          if(rt.children && Array.isArray(rt.children)){
+            let children = rt.children
+            children = children.filter(data => {
+              return data.role.indexOf(myInfo.role) !== -1
+            })
+            rt.children = children
+          }
+          routeList.push(rt)
+        }
+      })
+    }
+    return routeList
+  }
+
+
+  const menuItem = getMenu().map((menu) => {
     if (menu.menuGroup && !siderCollapsed) {
       return <Menu.ItemGroup key={menu.menuGroup} title={menu.menuGroup}
         // style={{height:'15px'}}
@@ -67,7 +99,9 @@ function CustomMenu({ history, siderCollapsed, isBroken, ...props }) {
 
 function mapStateToProps(store) {
   const { siderCollapsed, isBroken } = store.app;
-  return { siderCollapsed, isBroken };
+  const { myInfo } = store.user;
+
+  return { siderCollapsed, isBroken, myInfo };
 }
 
-export default connect(mapStateToProps)(withRouter(CustomMenu));
+export default connect(mapStateToProps,{...user.actions })(withRouter(CustomMenu));

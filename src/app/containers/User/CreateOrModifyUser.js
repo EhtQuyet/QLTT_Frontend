@@ -154,7 +154,6 @@ function CreateOrModifyUser({ isModalVisible, handleOk, handleCancel, userSelect
 
             <CustomSkeleton
               size='default'
-              mode="multiple"
               label="Quyền người dùng" name="role"
               type={CONSTANTS.SELECT}
               options={{ data: roleData }}
