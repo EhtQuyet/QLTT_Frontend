@@ -61,7 +61,7 @@ const Routes = (props) => {
           }
         })}
 
-        <Redirect to={URL.MENU.DASHBOARD}/>
+        {/*<Redirect to={URL.MENU.DASHBOARD}/>*/}
       </Switch>
     </Suspense>
   );
