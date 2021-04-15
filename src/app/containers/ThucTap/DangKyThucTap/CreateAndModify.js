@@ -7,7 +7,7 @@ import {
 } from '@app/services/DiaDiemThucTap/diadiemthuctapService';
 import {
   getAllDotThucTap
-} from '@app/services/ThucTap/DKThucTap/DKThucTapService';
+} from '@app/services/ThucTap/DotThucTap/dotthuctapService';
 import { CONSTANTS, RULES } from '@constants';
 import { DOT_THUC_TAP, DIA_DIEM_THUC_TAP, ROLE } from '../../../../constants/contans';
 import Form from 'antd/es/form';

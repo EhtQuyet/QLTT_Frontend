@@ -8,7 +8,7 @@ import { getAllSinhVien } from '@app/services/SinhVienTTTN/sinhVienTTService';
 import { columnIndex } from '@app/common/functionCommons';
 import { SearchOutlined } from '@ant-design/icons';
 import Filter from '@components/Filter';
-import { getAllDKTT } from '@app/services/ThucTap/DKThucTap/DKThucTapService';
+import { getAllDKTT } from '@app/services/ThucTap/DKThucTap/dangkythuctapService';
 import * as dkthuctap from '@app/store/ducks/dkthuctap.duck';
 
 function AddSinhVien({ isLoading, isModalVisible, handleOk, handleCancel, userSelected, gvhd, dotTT, dkthuctapList, ...props }) {
