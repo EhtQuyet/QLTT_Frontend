@@ -43,10 +43,12 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
     handleOk(userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE, data);
   }
   function onValuesChange(changedValues, allValues) {
-    if(changedValues.diaDiem === '####'){
-      setOtherPlace(true)
-    }else {
-      setOtherPlace(false)
+    if(changedValues.diaDiem) {
+      if(changedValues.diaDiem === '####'){
+        setOtherPlace(true)
+      }else {
+        setOtherPlace(false)
+      }
     }
   }
 
