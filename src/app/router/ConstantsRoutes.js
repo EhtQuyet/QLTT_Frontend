@@ -50,9 +50,9 @@ function renderIcon(icon) {
 }
 
 export const ConstantsRoutes = [
-  { isRedirect: true, exact: true, from: '/', to: URL.MENU.DASHBOARD , role : [ROLE.ADMIN,ROLE.SINH_VIEN]},
+  { isRedirect: true, exact: true, from: '/', to: URL.MENU.DASHBOARD , role : [ROLE.ADMIN,ROLE.SINH_VIEN,ROLE.GIAO_VU]},
   {
-    role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN],
+    role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
     path: URL.MENU.DASHBOARD,
     breadcrumbName: 'Dashboard',
     menuName: 'Dashboard',
@@ -72,7 +72,7 @@ export const ConstantsRoutes = [
   // },
   // { menuGroup: 'Quản lý danh mục' },
   {
-    role : [ROLE.ADMIN],
+    role : [ROLE.ADMIN,ROLE.GIAO_VU],
     path: URL.MENU.DANH_MUC_QUAN_LY,
     menuName: 'Danh mục quản lý',
     icon: renderIcon('th-list'),
@@ -82,7 +82,7 @@ export const ConstantsRoutes = [
         menuName: 'Quản lý giáo viên',
         component: GiaoVien,
         icon: renderIcon('chalkboard-teacher'),
-        role : [ROLE.ADMIN],
+        role : [ROLE.ADMIN, ROLE.GIAO_VU],
 
       },
       {
@@ -90,38 +90,38 @@ export const ConstantsRoutes = [
         menuName: 'Quản lý sinh viên',
         component: SinhVien,
         icon: renderIcon('user-graduate'),
-        role : [ROLE.ADMIN],
+        role : [ROLE.ADMIN, ROLE.GIAO_VU],
       },
       {
         path: URL.MENU.BO_MON, menuName: 'Quản lý bộ môn',
         component: BoMon,
         icon: renderIcon('layer-group'),
-        role : [ROLE.ADMIN],
+        role : [ROLE.ADMIN, ROLE.GIAO_VU],
       },
       {
         path: URL.MENU.LOP_HOC, menuName: 'Quản lý lớp học',
         component: LopHoc,
         icon: renderIcon('school'),
-        role : [ROLE.ADMIN],
+        role : [ROLE.ADMIN, ROLE.GIAO_VU],
       },
       {
         path: URL.MENU.DIA_DIEM_THUC_TAP,
         menuName: 'Quản lý địa điểm',
         component: DiaDiemThucTap,
         icon: renderIcon('map-marker-alt'),
-        role : [ROLE.ADMIN],
+        role : [ROLE.ADMIN, ROLE.GIAO_VU],
       },
       {
         path: URL.MENU.NAM_HOC, menuName: 'Quản lý năm học',
         component: NamHoc,
         icon: renderIcon('address-book'),
-        role : [ROLE.ADMIN],
+        role : [ROLE.ADMIN, ROLE.GIAO_VU],
       },
     ],
   },
   // { menuGroup: 'Thực tập' },
   {
-    role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN],
+    role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
     path: URL.MENU.QUAN_LY_THUC_TAP,
     menuName: 'Quản lý thực tập',
     icon: renderIcon('th-list'),
@@ -131,26 +131,26 @@ export const ConstantsRoutes = [
         menuName: 'Đăng ký thực tập',
         component: DangKyThucTap,
         icon: renderIcon('pen-alt'),
-        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN],
+        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
       },
       {
         path: URL.MENU.DOT_THUC_TAP,
         menuName: 'Đợt thực tập',
         component: DotThucTap,
         icon: renderIcon('stream'),
-        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN],
+        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
       },
       {
         path: URL.MENU.NHOM_THUC_TAP,
         menuName: 'Nhóm thực tập',
         component: NhomThucTap,
         icon: renderIcon('stream'),
-        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN],
+        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
       },
     ],
   },
   {
-    role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN],
+    role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
     path: URL.MENU.QUAN_LY_DE_TAI,
     menuName: 'Quản lý đề tài thực tập',
     icon: renderIcon('th-list'),
@@ -160,31 +160,32 @@ export const ConstantsRoutes = [
         menuName: 'Danh sách đề tài',
         component: DeTai,
         icon: renderIcon('list-alt'),
-        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN],
+        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
       },
       {
         path: URL.MENU.DANG_KY_DE_TAI,
         menuName: 'Đăng ký đề tài',
         component: DangKyDeTai,
         icon: renderIcon('edit'),
-        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN],
+        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
       },
     ],
   },
 
   // { menuGroup: 'Đề tài thực tập' },
-  { path: URL.MY_INFO, breadcrumbName: 'Thông tin cá nhân', component: MyInfo , role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN]},
-  { path: URL.FILE_SINH_VIEN, component: ThemFile, role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN] },
+  { path: URL.MY_INFO, breadcrumbName: 'Thông tin cá nhân', component: MyInfo , role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN,ROLE.GIAO_VU]},
+  { path: URL.FILE_SINH_VIEN, component: ThemFile, role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU] },
   {
     path: URL.MENU.ADD_NHOM_THUC_TAP,
     breadcrumbName: 'Thêm nhóm thực tập',
     component: ThemNhomThucTap,
-    role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN]  },
+    role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+  },
   {
     path: `${URL.MENU.NHOM_THUC_TAP_CHI_TIET}/:id`,
     breadcrumbName: 'Chi tiết nhóm thực tập',
     component: NhomThucTap,
-    role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN]  },
+    role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],}
 
 
 ];
