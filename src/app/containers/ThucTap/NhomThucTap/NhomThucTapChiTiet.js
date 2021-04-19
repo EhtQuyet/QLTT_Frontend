@@ -32,8 +32,10 @@ import Loading from '@components/Loading';
 import Dropzone from 'react-dropzone';
 
 
-function NhomThucTapChiTiet({ isLoading, namhocList, sinhVienList,
-                              dotthuctapList, diadiemList, teacherList, dkthuctapList, ...props }) {
+function NhomThucTapChiTiet({
+                              isLoading, namhocList, sinhVienList,
+                              dotthuctapList, diadiemList, teacherList, dkthuctapList, ...props
+                            }) {
 
   const [, updateState] = React.useState();
   const forceUpdate = React.useCallback(() => updateState({}), []);
@@ -47,7 +49,7 @@ function NhomThucTapChiTiet({ isLoading, namhocList, sinhVienList,
   const [isFinish, setFinish] = useState(false);
   const [gvId, setGVId] = useState(null);
   const [dotTTId, setDotTTId] = useState(null);
-  const [dotThucTap, setDotThucTap] = useState([]);
+  // const [dotThucTap, setDotThucTap] = useState([]);
 
   const [stateUpload, setStateUpload] = useState(false);
 
@@ -71,8 +73,6 @@ function NhomThucTapChiTiet({ isLoading, namhocList, sinhVienList,
       props.getDkThucTap();
     }
   }, []);
-  console.log('dkthuctapList', dkthuctapList);
-
 
   useEffect(() => {
     (async () => {
@@ -86,65 +86,121 @@ function NhomThucTapChiTiet({ isLoading, namhocList, sinhVienList,
   async function getDataRecord() {
     const apiResponse = await getNhomThucTapById(recordId);
     if (apiResponse) {
-      const namHoc = { value: apiResponse.nam_hoc._id, label: apiResponse.nam_hoc.nam_hoc };
-      const diaDiem = { value: apiResponse.dia_diem._id, label: apiResponse.dia_diem.ten_dia_diem };
-      const dotThucTap = { value: apiResponse.id_dotthuctap._id, label: apiResponse.id_dotthuctap.ten_dot };
-      const giangVien = { value: apiResponse.id_giangvien._id, label: apiResponse.id_giangvien.ten_giao_vien };
-      const truongNhom = { value: apiResponse.id_nhomtruong._id, label: apiResponse.id_nhomtruong.ten_sinh_vien };
+      // const namHoc = { value: apiResponse.nam_hoc._id, label: apiResponse.nam_hoc.nam_hoc };
+      // const diaDiem = { value: apiResponse.dia_diem._id, label: apiResponse.dia_diem.ten_dia_diem };
+      // const dotThucTap = { value: apiResponse.id_dotthuctap._id, label: apiResponse.id_dotthuctap.ten_dot };
+      // const giangVien = { value: apiResponse.id_giangvien._id, label: apiResponse.id_giangvien.ten_giao_vien };
+      // const truongNhom = { value: apiResponse.id_nhomtruong._id, label: apiResponse.id_nhomtruong.ten_sinh_vien };
+      const namHoc = apiResponse.nam_hoc._id
+      const diaDiem = apiResponse.dia_diem._id
+      const dotThucTap = apiResponse.id_dotthuctap._id
+      const giangVien =  apiResponse.id_giangvien._id
+      const truongNhom = apiResponse.id_nhomtruong._id
+      console.log(namHoc, diaDiem, dotThucTap, truongNhom, giangVien,);
       await form.setFieldsValue({
-        namHoc, diaDiem, dotThucTap, truongNhom,
+        namHoc, diaDiem, dotThucTap, truongNhom, giangVien,
       });
-      await handleChangeGiangVien(giangVien);
-      await handleChangeNamHoc(namHoc);
+
       handleSetStudentsDetail(apiResponse);
-      // setFinish(apiResponse.trang_thai === TRANG_THAI.THUC_HIEN_THANH_CONG);
     }
   }
 
   async function handleSetStudentsDetail(apiResponse) {
-    // const { chitiet } = apiResponse;
-    // if (!Array.isArray(chitiet)) return;
-    //
-    // const sinhvienObj = {};
-    //
-    // let studentIn = '';
-    // chitiet.forEach(detail => studentIn += `&id_sinhvien=${detail?.id_sinhvien?._id}`);
-    // const query = { idDonvi: `${form.getFieldsValue()?.donVi.value}${studentIn}` };
-    // const inventoryResponse = await getInventoryByUnit(query);
-    // inventoryResponse.forEach(item => inventoryObj[item?.id_vattu?._id] = item?.tonkho_dauky);
-    //
-    //
-    // let listDataDetail = chitiet.map(detail => {
-    //   const vatTuId = detail?.id_vattu?._id;
-    //   return {
-    //     key: detail?._id,
-    //     _id: detail?._id,
-    //     vatTuId,
-    //     tenVatTu: detail?.id_vattu?.ten_vat_tu,
-    //     serial: detail?.id_vattu?.serial,
-    //     soLo: detail?.id_vattu?.so_lo,
-    //     quanLyTheoSerial: detail?.id_vattu?.id_danh_diem?.quan_ly_theo_serial,
-    //     tinhTrangId: detail?.id_tinhtrang,
-    //     ghiChu: detail?.ghichu,
-    //     soLuong: detail?.soluong,
-    //     isDeleted: detail?.is_deleted,
-    //     tonKho: inventoryObj[vatTuId],
-    //   };
-    // });
-    // setDetailStudentsList(listDataDetail);
+    const { chitiet } = apiResponse;
+    if (!Array.isArray(chitiet)) return;
+    let listDataDetail = chitiet.map(detail => {
+      return {
+        key: detail?._id,
+        _id: detail?._id,
+        tenSinhVien: detail?.id_sinhvien,
+        maSinhVien: detail?.ma_sinh_vien,
+        so_tctl: detail?.so_tctl,
+        diem_tbtl: detail?.diem_tbtl,
+        isDeleted: detail?.is_deleted,
+      };
+    });
+    setDetailStudentsList(listDataDetail);
   }
 
-  async function handleChangeGiangVien(giangVienSelected, resetStudentsList = false) {
-    if (!giangVienSelected?.value) return;
-  }
+  // async function handleChangeGiangVien(giangVienSelected, resetStudentsList = false) {
+  //   if (!giangVienSelected?.value) return;
+  // }
 
-  async function handleChangeNamHoc(namhocSelected) {
-    if (!namhocSelected) return;
-    const apiResponse = await getAllDotThucTap(1, 0, { namhoc: namhocSelected ? namhocSelected : '' });
-  }
+  // async function handleChangeNamHoc(namhocSelected) {
+  //   if (!namhocSelected) return;
+  //   const apiResponse = await getAllDotThucTap(1, 0, { namhoc: namhocSelected ? namhocSelected : '' });
+  // }
 
   async function handleSaveData() {
-    console.log('Q');
+    if (!detailStudentsList.length) {
+      toast(CONSTANTS.WARNING, 'Nhóm không có sinh viên', TOAST_MESSAGE.ERROR.DESCRIPTION);
+      return;
+    }
+    console.log('detailStudentsList', detailStudentsList);
+    const { namHoc, diaDiem, dotThucTap, giangVien, truongNhom } = form.getFieldsValue();
+    let isError = false;
+    let details = [], messageString = '';
+    let countDetailExist = 0;
+    for (let i = 0; i < detailStudentsList.length; i++) {
+      let students = detailStudentsList[i];
+      console.log('students', students);
+      if (students._id || (!students._id && !students.isDeleted)) {
+        const dataPush = {
+          id_sinhvien: students.tenSinhVien,
+          ma_sinh_vien: students.maSinhVien,
+          so_tctl: students.so_tctl,
+          diem_tbtl: students.diem_tbtl,
+        };
+        if (students._id) {
+          dataPush._id = students._id;
+        }
+        if (students.isDeleted) {
+          dataPush.is_deleted = true;
+        } else {
+          countDetailExist += 1;
+        }
+        details = [...details, dataPush];
+      }
+    }
+
+    if (!countDetailExist) {
+      messageString = 'Không có danh sách sinh viên';
+    }
+
+    if (isError || !countDetailExist) {
+      toast(CONSTANTS.WARNING, messageString, TOAST_MESSAGE.ERROR.DESCRIPTION);
+      return;
+    }
+
+    const dataRequest = {
+      nam_hoc: namHoc,
+      id_dotthuctap: dotThucTap,
+      id_giangvien: giangVien,
+      id_nhomtruong: truongNhom,
+      dia_diem: diaDiem,
+      chitiet: details,
+    };
+
+    let apiResponse;
+    if (!recordId) {
+      // create
+      messageString = 'Tạo mới nhóm thực tập thành công';
+      apiResponse = await createNhomThucTap(dataRequest);
+    } else {
+      // update
+      messageString = 'Cập nhật nhóm thực tập thành công';
+      dataRequest._id = recordId;
+      apiResponse = await updateNhomThucTap(dataRequest);
+    }
+    if (apiResponse) {
+      toast(CONSTANTS.SUCCESS, messageString);
+      if (!recordId) {
+        props.history.push(URL.MENU.NHOM_THUC_TAP_CHI_TIET_ID.format(apiResponse._id));
+      } else {
+        handleSetStudentsDetail(apiResponse);
+        setFormEdited(false);
+      }
+    }
   }
 
 
@@ -177,14 +233,14 @@ function NhomThucTapChiTiet({ isLoading, namhocList, sinhVienList,
     return <ActionCell
       value={row} labelDelete={null} confirmDelete={false}
       allowEdit={false}
-      disabledDelete={isLoading  || !row.tenSinhVien}
+      disabledDelete={isLoading || !row.tenSinhVien}
       handleDelete={() => handleDeleteRow(row.keyIndex)}
     />;
   }
 
   const columns = [
     { title: 'Mã sinh viên', dataIndex: 'maSinhVien', width: 200 },
-    { title: 'Tên sinh viên', dataIndex: 'tenSinhVien', render: value => value?.ten_sinh_vien, width: 200 },
+    { title: 'Tên sinh viên', dataIndex: 'tenSinhVien',render: value => value?.ten_sinh_vien, width: 200 },
     { title: 'Tín chỉ tích lũy', dataIndex: 'so_tctl', width: 200 },
     { title: 'Điểm TB tích lũy', dataIndex: 'diem_tbtl', width: 200 },
     { align: 'center', render: formatCellAction, width: 80 },
@@ -201,7 +257,7 @@ function NhomThucTapChiTiet({ isLoading, namhocList, sinhVienList,
 
   async function onValuesChange(changedValues, allValues) {
     if (changedValues.namHoc) {
-      await handleChangeNamHoc(changedValues.namHoc);
+
     }
     if (changedValues.giangVien) {
       setGVId(changedValues.giangVien);
@@ -217,7 +273,7 @@ function NhomThucTapChiTiet({ isLoading, namhocList, sinhVienList,
   function addGroupStudent(studentsListSelected) {
     let detailGroupStudentNew = [...detailStudentsList];
 
-    studentsListSelected.forEach(students => {
+    studentsListSelected.forEach( students => {
       const dataPush = {
         isDeleted: false,
         key: detailGroupStudentNew.length,
@@ -230,7 +286,6 @@ function NhomThucTapChiTiet({ isLoading, namhocList, sinhVienList,
 
       detailGroupStudentNew = [...detailGroupStudentNew, dataPush];
     });
-    console.log('detailGroupStudentNew', detailGroupStudentNew);
     setDetailStudentsList(detailGroupStudentNew);
     toggleModal(false);
     if (!isFormEdited) {
@@ -306,7 +361,7 @@ function NhomThucTapChiTiet({ isLoading, namhocList, sinhVienList,
             layoutCol={{ xs: 24, lg: 15 }}
             layoutItem={{ labelCol: { xs: 6, sm: 24, md: 8, lg: 8, xl: 8, xxl: 8 } }}
             rules={[RULES.REQUIRED]}
-            options={{ data: sinhVienList, valueString: '_id', labelString: 'namecode' }}
+            options={{ data: sinhVienList, valueString: '_id', labelString: 'name' }}
             disabled={isLoading}
             showInputLabel={isFinish}
             labelLeft/>
@@ -381,7 +436,7 @@ function mapStateToProps(store) {
   const { dotthuctapList } = store.dotthuctap;
   const { dkthuctapList } = store.dkthuctap;
 
-  return { isLoading, dotthuctapList, diadiemList, namhocList, sinhVienList, teacherList , dkthuctapList};
+  return { isLoading, dotthuctapList, diadiemList, namhocList, sinhVienList, teacherList, dkthuctapList };
 }
 
 const actions = {

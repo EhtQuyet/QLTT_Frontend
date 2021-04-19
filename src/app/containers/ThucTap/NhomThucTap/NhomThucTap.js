@@ -9,8 +9,8 @@ import ActionCell from '@components/ActionCell';
 import Loading from '@components/Loading';
 import AddNewButton from '@AddNewButton';
 
-
-function NhomThucTap({ isLoading, ...props }) {
+function NhomThucTap({ isLoading, namhocList, sinhVienList,
+                       dotthuctapList, diadiemList, teacherList, dkthuctapList, ...props }) {
 
   const [listAllRecord, setAllRecord] = useState(PAGINATION_INIT);
 
@@ -32,7 +32,7 @@ function NhomThucTap({ isLoading, ...props }) {
     item.dotThucTap = item.id_dotthuctap;
     item.giangVien = item.id_giangvien;
     item.diaDiem = item.dia_diem;
-    item.truongNhom = item.nhom_truong;
+    item.truongNhom = item.id_nhomtruong;
     item.namHoc = item.nam_hoc;
     return item;
   });
@@ -111,7 +111,12 @@ function NhomThucTap({ isLoading, ...props }) {
         <Table bordered size='small'
                dataSource={dataSource}
                columns={columns}
-               pagination={false}
+               expandable={{
+                 expandedRowRender: (record) => {
+                   console.log('record', record);
+                 },
+               }}
+               scroll={{ x: 'max-content' }}
         />
       </Loading>
     </div>
@@ -121,7 +126,14 @@ function NhomThucTap({ isLoading, ...props }) {
 
 function mapStateToProps(store) {
   const { isLoading } = store.app;
-  return { isLoading };
+  const { teacherList } = store.giaovien;
+  const { sinhVienList } = store.sinhvien;
+  const { namhocList } = store.namhoc;
+  const { diadiemList } = store.diadiem;
+  const { dotthuctapList } = store.dotthuctap;
+  const { dkthuctapList } = store.dkthuctap;
+
+  return { isLoading, dotthuctapList, diadiemList, namhocList, sinhVienList, teacherList, dkthuctapList };
 }
 
 export default (connect(mapStateToProps)(NhomThucTap));

@@ -7,7 +7,8 @@ import {
   deleteDKTT,
   getAllDKTT,
   updateDKTT,
-} from '@app/services/ThucTap/DKThucTap/DKThucTapService';
+  getById
+} from '@app/services/ThucTap/DKThucTap/dangkythuctapService';
 import {
   getAllSinhVien,
 } from '@app/services/SinhVienTTTN/sinhVienTTService';
@@ -55,7 +56,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
   }, []);
 
   async function getDataInfo() {
-    // const apiResponse = await getFindOne(myInfo.username);
+    // const apiResponse = await getById(myInfo.username);
     // if (apiResponse) {
     //   setIsSig(apiResponse);
     // }

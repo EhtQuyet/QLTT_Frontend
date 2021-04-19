@@ -1,6 +1,6 @@
 import { put, takeLatest } from 'redux-saga/effects';
 
-import { getAllDKTT } from '@app/services/ThucTap/DkThucTap/DKThucTapService';
+import { getAllDKTT } from '@app/services/ThucTap/DKThucTap/dangkythuctapService';
 
 export const actionTypes = {
   GetDkThucTap: 'DkThucTap/GetDkThucTap',
