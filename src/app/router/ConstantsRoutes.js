@@ -185,7 +185,7 @@ export const ConstantsRoutes = [
   {
     path: `${URL.MENU.NHOM_THUC_TAP_CHI_TIET}/:id`,
     breadcrumbName: 'Chi tiết nhóm thực tập',
-    component: NhomThucTap,
+    component: NhomThucTapChiTiet,
     role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],}
 
 
