@@ -59,13 +59,11 @@ function NhomThucTap({
 
   async function getDataAllRecord() {
     const apiResponse = await getAllNhomThucTap();
-    console.log('apiResponse', apiResponse);
     if (apiResponse) {
       setAllRecord(apiResponse);
     }
 
     const apiDetail = await getAllNhomThucTapChiTiet();
-    console.log('apiDetail', apiDetail);
     setDetailRecord(apiDetail.docs);
 
   }
@@ -160,19 +158,27 @@ function NhomThucTap({
                expandable={{
                  expandedRowRender: (record) => {
                    return <>
-                     <List
-                       style={{ width: '40%', marginLeft: '30%' }}
-                       header={<Title level={4} align="middle"><Text code>Danh sách sinh viên thuộc nhóm thực tập</Text></Title>}
-                       dataSource={dataDetail[record._id]}
-                       renderItem={item => (
-                         <List.Item>
-                           <Title level={5} style={{ marginLeft: 50 }}>
-                             <Text>Họ và tên: </Text> {item.id_sinhvien.ten_sinh_vien} (
-                             MSSV: {item.id_sinhvien.ma_sinh_vien})
-                           </Title>
-                         </List.Item>
-                       )}
-                     />
+                     <Row>
+                       <Col className='mt-2'>
+                         <Title level={4} align="middle"><Text code>Danh sách sinh viên thuộc nhóm thực
+                           tập</Text></Title>
+                       </Col>
+                       <Col>
+                         <List
+                           dataSource={dataDetail[record._id]}
+                           renderItem={item => (
+                             <List.Item>
+                               <Title level={5} style={{ marginLeft: 50 }}>
+                                 <Text>Họ và tên: </Text> {item.id_sinhvien.ten_sinh_vien} (
+                                 MSSV: {item.id_sinhvien.ma_sinh_vien})
+                               </Title>
+                             </List.Item>
+                           )}
+                         />
+                       </Col>
+
+                     </Row>
+
                    </>;
                    console.log('dataDetail[record._id]', dataDetail[record._id]);
                  },
