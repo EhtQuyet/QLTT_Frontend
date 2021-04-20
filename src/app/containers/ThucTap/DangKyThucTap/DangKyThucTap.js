@@ -66,8 +66,6 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
     // }
   }
 
-  console.log('sig', isSig);
-
   async function getData(
     currentPage = dkthuctap.currentPage,
     pageSize = dkthuctap.pageSize,
@@ -140,7 +138,6 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
     },
     {
       align: 'center',
-      // render: (value) => <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>,
       render: (value) => {
         const daDangKy = value.trang_thai === DANG_KY_THUC_TAP.DA_DANG_KY;
         const daDuyet = value.trang_thai === DANG_KY_THUC_TAP.DA_DUOC_DUYET;
@@ -148,7 +145,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
         const gvXacNhan = value.trang_thai === DANG_KY_THUC_TAP.GV_XAC_NHAN;
         const daChiaNhom = value.trang_thai === DANG_KY_THUC_TAP.DA_CHIA_NHOM;
         return <>
-          {daDangKy && <div className='mt-2'>
+          {daDangKy && isGiaoVu && <div className='mt-2'>
             <Popconfirm
               title='Xác nhận điều kiện sinh viên thực tập'
               onConfirm={() => handleTrangThai(value._id, DANG_KY_THUC_TAP.CHON_GIANG_VIEN)}
@@ -158,7 +155,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
               </Tag>
             </Popconfirm>
           </div>}
-          {daDangKy && <div className='mt-2'>
+          {daDangKy && isGiaoVu && <div className='mt-2'>
             <Popconfirm
               title='Xác nhận sinh viên chưa đủ điều kiện thực tập'
               onConfirm={() => handleTrangThai(value._id, DANG_KY_THUC_TAP.KHONG_DU_DIEU_KIEN)}
@@ -169,7 +166,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
             </Popconfirm>
           </div>}
 
-          {chonGV && <div className='mt-2'>
+          {chonGV && isGiangVien &&  myInfo.username === value.giaoien_huongdan.ma_giao_vien &&  <div className='mt-2'>
             <Popconfirm
               title='Xác nhận hướng dẫn sinh viên'
               onConfirm={() => handleTrangThai(value._id, DANG_KY_THUC_TAP.GV_XAC_NHAN)}
@@ -179,7 +176,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
               </Tag>
             </Popconfirm>
           </div>}
-          {chonGV && <div className='mt-2'>
+          {chonGV && isGiangVien && myInfo.username === value.giaoien_huongdan.ma_giao_vien && <div className='mt-2'>
             <Popconfirm
               title='Từ chối hướng dẫn sinh viên'
               onConfirm={() => handleTrangThai(value._id, DANG_KY_THUC_TAP.GV_TU_CHOI)}
@@ -189,7 +186,9 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
               </Tag>
             </Popconfirm>
           </div>}
-
+          {console.log('value',value)}
+          {console.log('myInfo',myInfo)}
+          {(value.sinhVien.ma_sinh_vien === myInfo.username || isGiaoVu || isAdmin) && <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>}
 
         </>;
       },
@@ -233,7 +232,6 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
         dia_chi: diaChi,
       };
       const apiResponse = await createDiaDiemThucTap(ddtt);
-      console.log('apiResponse', apiResponse);
       if (apiResponse) {
         dataRequest.giao_vien_huong_dan = giaoVien;
         dataRequest.dia_diem_thuc_tap = apiResponse._id;
@@ -306,11 +304,11 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
   pagination.total = dkthuctap.totalDocs;
   pagination.pageSize = dkthuctap.pageSize;
 
-  // const isAdmin = myInfo.role.includes(ROLE.ADMIN);
-  // const isSinhVien = myInfo && myInfo.role.includes(ROLE.SINH_VIEN);
-  // const isGiangVien = myInfo && myInfo.role.includes(ROLE.GIANG_VIEN);
-  // const isGiaoVu = myInfo && myInfo.role.includes(ROLE.GIAO_VU);
-  // const isBanChuNiem = myInfo && myInfo.role.includes(ROLE.BAN_CHU_NHIEM);
+  const isAdmin = myInfo.role.includes(ROLE.ADMIN);
+  const isSinhVien = myInfo && myInfo.role.includes(ROLE.SINH_VIEN);
+  const isGiangVien = myInfo && myInfo.role.includes(ROLE.GIANG_VIEN);
+  const isGiaoVu = myInfo && myInfo.role.includes(ROLE.GIAO_VU);
+  const isBanChuNiem = myInfo && myInfo.role.includes(ROLE.BAN_CHU_NHIEM);
 
   return (
     <>
