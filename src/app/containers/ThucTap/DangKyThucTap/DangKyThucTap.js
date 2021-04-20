@@ -188,7 +188,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
           </div>}
           {console.log('value',value)}
           {console.log('myInfo',myInfo)}
-          {(value.sinhVien.ma_sinh_vien === myInfo.username || isGiaoVu) && <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>}
+          {(value.sinhVien.ma_sinh_vien === myInfo.username || isGiaoVu || isAdmin) && <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>}
 
         </>;
       },

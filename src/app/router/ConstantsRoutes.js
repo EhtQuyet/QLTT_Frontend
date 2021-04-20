@@ -15,6 +15,7 @@ import {
   DiffOutlined,
   SnippetsOutlined,
   ArrowsAltOutlined,
+  UsergroupAddOutlined
 } from '@ant-design/icons';
 
 const Dashboard = lazy(() => import('@containers/Dashboard/Dashboard'));
@@ -57,7 +58,7 @@ export const ConstantsRoutes = [
     breadcrumbName: 'Dashboard',
     menuName: 'Dashboard',
     component: Dashboard,
-    icon: renderIcon('tachometer-alt'),
+    icon: renderIcon('chart-pie'),
     exact: true,
   },
   // { menuGroup: 'Quản lý người dùng' },
@@ -75,7 +76,7 @@ export const ConstantsRoutes = [
     role : [ROLE.ADMIN,ROLE.GIAO_VU],
     path: URL.MENU.DANH_MUC_QUAN_LY,
     menuName: 'Danh mục quản lý',
-    icon: renderIcon('th-list'),
+    icon: renderIcon('list-ul'),
     children: [
       {
         path: URL.MENU.GIAO_VIEN,
@@ -124,7 +125,7 @@ export const ConstantsRoutes = [
     role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
     path: URL.MENU.QUAN_LY_THUC_TAP,
     menuName: 'Quản lý thực tập',
-    icon: renderIcon('th-list'),
+    icon: renderIcon('business-time'),
     children: [
       {
         path: URL.MENU.DANG_KY_TUC_TAP,
@@ -137,14 +138,14 @@ export const ConstantsRoutes = [
         path: URL.MENU.DOT_THUC_TAP,
         menuName: 'Đợt thực tập',
         component: DotThucTap,
-        icon: renderIcon('stream'),
+        icon: renderIcon('calendar-alt'),
         role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
       },
       {
         path: URL.MENU.NHOM_THUC_TAP,
         menuName: 'Nhóm thực tập',
         component: NhomThucTap,
-        icon: renderIcon('stream'),
+        icon: <UsergroupAddOutlined />,
         role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
       },
     ],
@@ -153,7 +154,7 @@ export const ConstantsRoutes = [
     role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
     path: URL.MENU.QUAN_LY_DE_TAI,
     menuName: 'Quản lý đề tài thực tập',
-    icon: renderIcon('th-list'),
+    icon: renderIcon('file-signature'),
     children: [
       {
         path: URL.MENU.DE_TAI_TTTN,
