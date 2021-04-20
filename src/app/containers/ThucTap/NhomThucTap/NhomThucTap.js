@@ -8,6 +8,13 @@ import { columnIndex, formatDateTime, toast } from '@app/common/functionCommons'
 import ActionCell from '@components/ActionCell';
 import Loading from '@components/Loading';
 import AddNewButton from '@AddNewButton';
+import { getAllGiaoVien } from '@app/services/GiaoVienHD/giaoVienService';
+import * as namhoc from '@app/store/ducks/namhoc.duck';
+import * as sinhvien from '@app/store/ducks/sinhvien.duck';
+import * as dotthuctap from '@app/store/ducks/dotthuctap.duck';
+import * as diadiem from '@app/store/ducks/diadiem.duck';
+import * as giaovien from '@app/store/ducks/giaovien.duck';
+import * as dkthuctap from '@app/store/ducks/dkthuctap.duck';
 
 function NhomThucTap({ isLoading, namhocList, sinhVienList,
                        dotthuctapList, diadiemList, teacherList, dkthuctapList, ...props }) {
@@ -18,6 +25,27 @@ function NhomThucTap({ isLoading, namhocList, sinhVienList,
     (async () => {
       await getDataAllRecord();
     })();
+  }, []);
+
+  useEffect(() => {
+    if (!props?.namhocList?.length) {
+      props.getNamHoc();
+    }
+    if (!props?.sinhVienList?.length) {
+      props.getSinhVien();
+    }
+    if (!props?.dotthuctapList?.length) {
+      props.getDotThucTap();
+    }
+    if (!props?.diadiemList?.length) {
+      props.getDiaDiem();
+    }
+    if (!props?.teacherList?.length) {
+      props.getTeacher();
+    }
+    if (!props?.dkthuctapList?.length) {
+      props.getDkThucTap();
+    }
   }, []);
 
   async function getDataAllRecord() {
@@ -32,7 +60,6 @@ function NhomThucTap({ isLoading, namhocList, sinhVienList,
     item.dotThucTap = item.id_dotthuctap;
     item.giangVien = item.id_giangvien;
     item.diaDiem = item.dia_diem;
-    item.truongNhom = item.id_nhomtruong;
     item.namHoc = item.nam_hoc;
     return item;
   });
@@ -69,14 +96,6 @@ function NhomThucTap({ isLoading, namhocList, sinhVienList,
       dataIndex: 'diaDiem',
       key: 'diaDiem',
       render: (text) => <div style={{ textAlign: 'left' }}>{text?.ten_dia_diem}</div>,
-      width: 200,
-    },
-    {
-      align: 'center',
-      title: 'Nhóm trưởng',
-      dataIndex: 'truongNhom',
-      key: 'truongNhom',
-      render: (text) => <div style={{ textAlign: 'left' }}>{text?.ten_sinh_vien}</div>,
       width: 200,
     },
     {
@@ -136,4 +155,12 @@ function mapStateToProps(store) {
   return { isLoading, dotthuctapList, diadiemList, namhocList, sinhVienList, teacherList, dkthuctapList };
 }
 
-export default (connect(mapStateToProps)(NhomThucTap));
+const actions = {
+  ...giaovien.actions,
+  ...sinhvien.actions,
+  ...namhoc.actions,
+  ...diadiem.actions,
+  ...dotthuctap.actions,
+  ...dkthuctap.actions,
+}
+export default (connect(mapStateToProps, actions)(NhomThucTap));
