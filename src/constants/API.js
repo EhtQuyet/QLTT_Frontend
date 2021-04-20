@@ -39,4 +39,6 @@ export const API = {
 
   NHOM_THUC_TAP: '/api/nhomthuctap',
   NHOM_THUC_TAP_ID: '/api/nhomthuctap/{0}',
+  NHOM_THUC_TAP_CHI_TIET: '/api/nhomthuctapchitiet',
+
 };

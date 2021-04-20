@@ -31,6 +31,7 @@ import * as dkthuctap from '@app/store/ducks/dkthuctap.duck';
 import Loading from '@components/Loading';
 import Dropzone from 'react-dropzone';
 import { getAllDKTT } from '@app/services/ThucTap/DKThucTap/dangkythuctapService';
+import { DOT_THUC_TAP } from '@src/constants/contans';
 
 
 function NhomThucTapChiTiet({
@@ -96,6 +97,7 @@ function NhomThucTapChiTiet({
       await form.setFieldsValue({
         namHoc, diaDiem, dotThucTap, giangVien,
       });
+      await handleChangeNamHoc(namHoc);
       handleSetStudentsDetail(apiResponse);
     }
   }
@@ -127,8 +129,9 @@ function NhomThucTapChiTiet({
   // }
   async function handleChangeNamHoc(namhocSelected, resetStudentsList = false) {
     if (!namhocSelected?.value) return;
+    console.log('dotthuctapList', dotthuctapList);
     const data = dotthuctapList.filter(item => {
-      if (item.namhoc === namhocSelected.value) return item;
+      if (item.namhoc === namhocSelected.value && item.trang_thai === DOT_THUC_TAP.DANG_MO) return item;
     });
     setDotThucTap(data);
     if (resetStudentsList) {

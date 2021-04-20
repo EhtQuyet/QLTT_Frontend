@@ -1,6 +1,10 @@
-import { getAllNhomThucTap, deletenhomThucTapById } from '@app/services/ThucTap/NhomThucTap/nhomThucTapService';
+import {
+  getAllNhomThucTap,
+  deletenhomThucTapById,
+  getAllNhomThucTapChiTiet,
+} from '@app/services/ThucTap/NhomThucTap/nhomThucTapService';
 import React, { useEffect, useState } from 'react';
-import { Table, Tag } from 'antd';
+import { Table, Tag, Card, Typography, Row, Col, List } from 'antd';
 import { URL } from '@url';
 import { CONSTANTS, PAGINATION_INIT, TRANG_THAI_LABEL } from '@constants';
 import { connect } from 'react-redux';
@@ -16,10 +20,15 @@ import * as diadiem from '@app/store/ducks/diadiem.duck';
 import * as giaovien from '@app/store/ducks/giaovien.duck';
 import * as dkthuctap from '@app/store/ducks/dkthuctap.duck';
 
-function NhomThucTap({ isLoading, namhocList, sinhVienList,
-                       dotthuctapList, diadiemList, teacherList, dkthuctapList, ...props }) {
+const { Title, Text } = Typography;
+
+function NhomThucTap({
+                       isLoading, namhocList, sinhVienList,
+                       dotthuctapList, diadiemList, teacherList, dkthuctapList, ...props
+                     }) {
 
   const [listAllRecord, setAllRecord] = useState(PAGINATION_INIT);
+  const [detailRecord, setDetailRecord] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -50,9 +59,15 @@ function NhomThucTap({ isLoading, namhocList, sinhVienList,
 
   async function getDataAllRecord() {
     const apiResponse = await getAllNhomThucTap();
+    console.log('apiResponse', apiResponse);
     if (apiResponse) {
       setAllRecord(apiResponse);
     }
+
+    const apiDetail = await getAllNhomThucTapChiTiet();
+    console.log('apiDetail', apiDetail);
+    setDetailRecord(apiDetail.docs);
+
   }
 
   const dataSource = listAllRecord.docs.map((item, index) => {
@@ -62,6 +77,18 @@ function NhomThucTap({ isLoading, namhocList, sinhVienList,
     item.diaDiem = item.dia_diem;
     item.namHoc = item.nam_hoc;
     return item;
+  });
+
+  const dataDetail = [];
+  listAllRecord.docs.forEach(doc => {
+    dataDetail[doc._id] = [];
+
+    detailRecord.forEach(item => {
+      console.log(item);
+      if (doc._id === item.id_nhomthuctap) {
+        dataDetail[doc._id] = [...dataDetail[doc._id], item];
+      }
+    });
   });
 
   const columns = [
@@ -132,7 +159,22 @@ function NhomThucTap({ isLoading, namhocList, sinhVienList,
                columns={columns}
                expandable={{
                  expandedRowRender: (record) => {
-                   console.log('record', record);
+                   return <>
+                     <List
+                       style={{ width: '40%', marginLeft: '30%' }}
+                       header={<Title level={4} align="middle"><Text code>Danh sách sinh viên thuộc nhóm thực tập</Text></Title>}
+                       dataSource={dataDetail[record._id]}
+                       renderItem={item => (
+                         <List.Item>
+                           <Title level={5} style={{ marginLeft: 50 }}>
+                             <Text>Họ và tên: </Text> {item.id_sinhvien.ten_sinh_vien} (
+                             MSSV: {item.id_sinhvien.ma_sinh_vien})
+                           </Title>
+                         </List.Item>
+                       )}
+                     />
+                   </>;
+                   console.log('dataDetail[record._id]', dataDetail[record._id]);
                  },
                }}
                scroll={{ x: 'max-content' }}
@@ -162,5 +204,5 @@ const actions = {
   ...diadiem.actions,
   ...dotthuctap.actions,
   ...dkthuctap.actions,
-}
+};
 export default (connect(mapStateToProps, actions)(NhomThucTap));

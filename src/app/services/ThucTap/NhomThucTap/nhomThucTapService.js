@@ -42,6 +42,20 @@ export function getAllNhomThucTap(currentPage = 1, totalDocs = 0, query, loading
     });
 }
 
+export function getAllNhomThucTapChiTiet(currentPage = 1, totalDocs = 0, query, loading = true) {
+  const params = convertParam(query, '&');
+  const config = { loading };
+  return axios.get(`${API.NHOM_THUC_TAP_CHI_TIET}?page=${currentPage}&limit=${totalDocs}${params}`, config)
+    .then(response => {
+      if (response.status === 200 && Array.isArray(response.data?.data?.docs)) return response.data.data;
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
+
 export function updateNhomThucTap(data) {
   return axios.put(API.NHOM_THUC_TAP_ID.format(data._id), data)
     .then(response => {

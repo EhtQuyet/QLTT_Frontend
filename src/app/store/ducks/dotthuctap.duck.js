@@ -37,7 +37,8 @@ export function* saga() {
       const dotthuctapList = dataResponse.docs.map(doc => ({
         _id: doc._id,
         name: doc.ten_dot,
-        namhoc: doc.namhoc._id
+        namhoc: doc.namhoc,
+        trang_thai: doc.trang_thai
       }));
       yield put(actions.setDotThucTap(dotthuctapList));
     }

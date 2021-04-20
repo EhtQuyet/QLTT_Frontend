@@ -32,7 +32,6 @@ export const actions = {
 export function* saga() {
   yield takeLatest(actionTypes.GetDkThucTap, function* getCalUnitSaga(data) {
     const dataResponse = yield getAllDKTT();
-    console.log(dataResponse);
     if (dataResponse) {
       const dkthuctapList = dataResponse.docs.map(doc => ({
         _id: doc._id,
