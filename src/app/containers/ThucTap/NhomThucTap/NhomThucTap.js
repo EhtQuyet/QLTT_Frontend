@@ -8,9 +8,16 @@ import { columnIndex, formatDateTime, toast } from '@app/common/functionCommons'
 import ActionCell from '@components/ActionCell';
 import Loading from '@components/Loading';
 import AddNewButton from '@AddNewButton';
+import { getAllGiaoVien } from '@app/services/GiaoVienHD/giaoVienService';
+import * as namhoc from '@app/store/ducks/namhoc.duck';
+import * as sinhvien from '@app/store/ducks/sinhvien.duck';
+import * as dotthuctap from '@app/store/ducks/dotthuctap.duck';
+import * as diadiem from '@app/store/ducks/diadiem.duck';
+import * as giaovien from '@app/store/ducks/giaovien.duck';
+import * as dkthuctap from '@app/store/ducks/dkthuctap.duck';
 
-
-function NhomThucTap({ isLoading, ...props }) {
+function NhomThucTap({ isLoading, namhocList, sinhVienList,
+                       dotthuctapList, diadiemList, teacherList, dkthuctapList, ...props }) {
 
   const [listAllRecord, setAllRecord] = useState(PAGINATION_INIT);
 
@@ -18,6 +25,27 @@ function NhomThucTap({ isLoading, ...props }) {
     (async () => {
       await getDataAllRecord();
     })();
+  }, []);
+
+  useEffect(() => {
+    if (!props?.namhocList?.length) {
+      props.getNamHoc();
+    }
+    if (!props?.sinhVienList?.length) {
+      props.getSinhVien();
+    }
+    if (!props?.dotthuctapList?.length) {
+      props.getDotThucTap();
+    }
+    if (!props?.diadiemList?.length) {
+      props.getDiaDiem();
+    }
+    if (!props?.teacherList?.length) {
+      props.getTeacher();
+    }
+    if (!props?.dkthuctapList?.length) {
+      props.getDkThucTap();
+    }
   }, []);
 
   async function getDataAllRecord() {
@@ -32,7 +60,6 @@ function NhomThucTap({ isLoading, ...props }) {
     item.dotThucTap = item.id_dotthuctap;
     item.giangVien = item.id_giangvien;
     item.diaDiem = item.dia_diem;
-    item.truongNhom = item.nhom_truong;
     item.namHoc = item.nam_hoc;
     return item;
   });
@@ -73,14 +100,6 @@ function NhomThucTap({ isLoading, ...props }) {
     },
     {
       align: 'center',
-      title: 'Nhóm trưởng',
-      dataIndex: 'truongNhom',
-      key: 'truongNhom',
-      render: (text) => <div style={{ textAlign: 'left' }}>{text?.ten_sinh_vien}</div>,
-      width: 200,
-    },
-    {
-      align: 'center',
       render: (text, record, index) => <>
         <ActionCell
           value={record}
@@ -111,7 +130,12 @@ function NhomThucTap({ isLoading, ...props }) {
         <Table bordered size='small'
                dataSource={dataSource}
                columns={columns}
-               pagination={false}
+               expandable={{
+                 expandedRowRender: (record) => {
+                   console.log('record', record);
+                 },
+               }}
+               scroll={{ x: 'max-content' }}
         />
       </Loading>
     </div>
@@ -121,7 +145,22 @@ function NhomThucTap({ isLoading, ...props }) {
 
 function mapStateToProps(store) {
   const { isLoading } = store.app;
-  return { isLoading };
+  const { teacherList } = store.giaovien;
+  const { sinhVienList } = store.sinhvien;
+  const { namhocList } = store.namhoc;
+  const { diadiemList } = store.diadiem;
+  const { dotthuctapList } = store.dotthuctap;
+  const { dkthuctapList } = store.dkthuctap;
+
+  return { isLoading, dotthuctapList, diadiemList, namhocList, sinhVienList, teacherList, dkthuctapList };
 }
 
-export default (connect(mapStateToProps)(NhomThucTap));
+const actions = {
+  ...giaovien.actions,
+  ...sinhvien.actions,
+  ...namhoc.actions,
+  ...diadiem.actions,
+  ...dotthuctap.actions,
+  ...dkthuctap.actions,
+}
+export default (connect(mapStateToProps, actions)(NhomThucTap));

@@ -1,6 +1,6 @@
 import { put, takeLatest } from 'redux-saga/effects';
 
-import { getAllDKTT } from '@app/services/ThucTap/DkThucTap/DKThucTapService';
+import { getAllDKTT } from '@app/services/ThucTap/DKThucTap/dangkythuctapService';
 
 export const actionTypes = {
   GetDkThucTap: 'DkThucTap/GetDkThucTap',
@@ -32,6 +32,7 @@ export const actions = {
 export function* saga() {
   yield takeLatest(actionTypes.GetDkThucTap, function* getCalUnitSaga(data) {
     const dataResponse = yield getAllDKTT();
+    console.log(dataResponse);
     if (dataResponse) {
       const dkthuctapList = dataResponse.docs.map(doc => ({
         _id: doc._id,
@@ -42,7 +43,9 @@ export function* saga() {
         svID: doc.sinh_vien._id,
         sinhvien: doc.sinh_vien,
         so_tctl: doc.so_tctl,
-        diem_tbtl: doc.diem_tbtl
+        diem_tbtl: doc.diem_tbtl,
+        diadiem: doc.dia_diem_thuc_tap,
+        diadiem_id: doc.dia_diem_thuc_tap._id
       }));
       yield put(actions.setDkThucTap(dkthuctapList));
     }
