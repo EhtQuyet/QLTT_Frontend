@@ -56,12 +56,14 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
     }
   }
 
+  console.log('detai.docs',detai.docs);
+
   const dataSource = detai.docs.map((data, index) => ({
     _id: data._id,
     key: data._id,
     tenDeTai: data.ten_de_tai,
     maDeTai: data.ma_de_tai,
-    ngayTao: data?.ngay_tao,
+    ngayTao: data.created_at,
     trangThai: data.trang_thai,
     hoanThanh: data.trang_thai === TRANG_THAI.DA_DUOC_DUYET,
     giaoVien: data?.ma_giao_vien,
@@ -216,7 +218,7 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
       if (apiResponse) {
         getDataDeTai();
         handleShowModal(false);
-        toast(CONSTANTS.SUCCESS, 'Thêm mới nhân viên thành công');
+        toast(CONSTANTS.SUCCESS, 'Thêm mới đề tài thành công');
         // updateStoreStaff(type, apiResponse);
       }
     }

@@ -115,7 +115,7 @@ export const ConstantsRoutes = [
       {
         path: URL.MENU.NAM_HOC, menuName: 'Quản lý năm học',
         component: NamHoc,
-        icon: renderIcon('address-book'),
+        icon: renderIcon('calendar'),
         role : [ROLE.ADMIN, ROLE.GIAO_VU],
       },
     ],

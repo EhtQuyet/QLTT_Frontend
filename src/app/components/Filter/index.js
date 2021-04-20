@@ -148,7 +148,7 @@ function Filter({ loading, dataSearch, clearWhenChanged, onSearchChange, ...prop
         className='p-0'
         header={<Divider orientation="left" className='m-0 cursor-default'>
           <div onClick={() => setCollapse(!isCollapse)} className='cursor-pointer d-flex'>
-            <span style={{ fontSize: '14px' }} className='mr-2'>Điều kiện lọc</span>
+            <span style={{ fontSize: '14px', marginBottom: '15px' }} className='mr-2'>Lọc dữ liệu</span>
             <div>
               <i className={`fa fa-chevron-right ${isCollapse ? 'fa-rotate-90' : ''}`} aria-hidden="true"/>
             </div>

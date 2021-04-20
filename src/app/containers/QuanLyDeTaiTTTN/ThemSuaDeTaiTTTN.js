@@ -32,7 +32,7 @@ function ThemSuaDeTaiTTTN({ isModalVisible, handleOk, handleCancel, userSelected
     <Modal
       width='720px' maskClosable={false}
       closeIcon={<i className='fa fa-times'/>}
-      title={userSelected ? 'Cập nhật thông tin giảng viên' : 'Thêm mới giảng viên'}
+      title={userSelected ? 'Cập nhật thông tin đề tài' : 'Thêm mới đề tài'}
       visible={isModalVisible} onCancel={props.isLoading ? null : handleCancel}
       footer={<ModalFooter
         handleClose={handleCancel}
@@ -63,15 +63,6 @@ function ThemSuaDeTaiTTTN({ isModalVisible, handleOk, handleCancel, userSelected
               rules={[RULES.REQUIRED]}
               labelLeft
               form={detaiForm}
-            />
-            <CustomSkeleton
-              size='default'
-              label="Ngày tạo đề tài" name="ngayTao"
-              type={CONSTANTS.DATE}
-              layoutCol={{ xs: 24 }}
-              layoutItem={{ labelCol: { xs: 8 } }}
-              rules={[RULES.REQUIRED]}
-              labelLeft
             />
             <CustomSkeleton
               size='default'
