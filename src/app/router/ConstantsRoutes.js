@@ -80,7 +80,7 @@ export const ConstantsRoutes = [
     children: [
       {
         path: URL.MENU.GIAO_VIEN,
-        menuName: 'Quản lý giáo viên',
+        menuName: 'Quản lý giảng viên',
         component: GiaoVien,
         icon: renderIcon('chalkboard-teacher'),
         role : [ROLE.ADMIN, ROLE.GIAO_VU],
