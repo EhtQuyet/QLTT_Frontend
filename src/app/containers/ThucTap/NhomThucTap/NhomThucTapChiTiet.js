@@ -159,14 +159,12 @@ function NhomThucTapChiTiet({
       toast(CONSTANTS.WARNING, 'Nhóm không có sinh viên', TOAST_MESSAGE.ERROR.DESCRIPTION);
       return;
     }
-    console.log('detailStudentsList', detailStudentsList);
     const { namHoc, diaDiem, dotThucTap, giangVien, truongNhom } = form.getFieldsValue();
     let isError = false;
     let details = [], messageString = '';
     let countDetailExist = 0;
     for (let i = 0; i < detailStudentsList.length; i++) {
       let students = detailStudentsList[i];
-      console.log('students', students);
       if (students._id || (!students._id && !students.isDeleted)) {
         const dataPush = {
           id_sinhvien: students.tenSinhVien,
