@@ -52,7 +52,7 @@ function CreateOrModifyUser({ isModalVisible, handleOk, handleCancel, userSelect
     <Modal
       width='720px' maskClosable={false}
       closeIcon={<i className='fa fa-times'/>}
-      title={userSelected ? 'Cập nhật thông tin nhân viên' : 'Thêm mới nhân viên'}
+      title={userSelected ? 'Cập nhật thông tin người dùng' : 'Thêm mới người dùng'}
       visible={isModalVisible} onCancel={props.isLoading ? null : handleCancel}
       footer={<ModalFooter
         handleClose={handleCancel}

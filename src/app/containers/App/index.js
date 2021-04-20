@@ -154,7 +154,7 @@ class App extends React.Component {
               </Content>
             </div>
 
-            <Footer style={{ textAlign: 'center' }}>2020-2021 © Design by QBC form IT HDU</Footer>
+            <Footer style={{ textAlign: 'center' }}>2020-2021 © Design by IT Hong Duc University</Footer>
           </div>
         </Layout>
       </Layout>
