@@ -31,30 +31,24 @@ function AddSinhVien({ isLoading, isModalVisible, handleOk, handleCancel, userSe
   }, [isModalVisible]);
 
   async function getStudentData() {
-    // let studentsNotIn = '';
-    // console.log('detailStudentsList', props.detailStudentsList);
-    // props.detailStudentsList.forEach(detail => {
-    //   if (!detail.isDeleted) {
-    //     studentsNotIn += `&_id!=${detail.tenSinhVien._id}`;
-    //   }
-    // });
-    console.log('dkthuctapList', dkthuctapList);
-    // if (!!query.ten_sinh_vien) {
-    //   query.ten_sinh_vien = `${query.ten_sinh_vien}${studentsNotIn}`;
-    // } else {
-    //   query.ten_sinh_vien = `//i${studentsNotIn}`;
-    // }
-    // query.dot_thuc_tap = dotTTObj;
-    // query.giao_vien_huong_dan = gvhdObj;
-    // query.trang_thai = "GV_XAC_NHAN"
-    // console.log('query', query);
+    console.log('teacher', props.teacher);
+    console.log('address', props.address);
+    console.log('detailStudentsList', props.detailStudentsList);
+
     const apiResponse = dkthuctapList.filter(item => {
-      if(item.teacherId === gvhd && item.dot_thuctapId === dotTT) return item
+      if (item.teacherId === props.teacher && item.diadiem_id === props.address) return item;
     });
-    // const apiResponse = await getAllDKTT(currentPage, pageSize, query);
-    console.log('api', apiResponse);
+    console.log('apiResponse', apiResponse);
     if (apiResponse) {
-      setStudentsData(apiResponse);
+      let studentsIdList = [];
+      props.detailStudentsList.forEach(item => {
+        console.log(item);
+        if (!item.isDeleted)
+          studentsIdList = [...studentsIdList, item.tenSinhVien._id];
+      });
+      const filterer = apiResponse.filter(item => !studentsIdList.includes(item.sinhvien._id));
+      console.log('filterer', filterer);
+      setStudentsData(filterer);
     }
   }
 
@@ -84,11 +78,11 @@ function AddSinhVien({ isLoading, isModalVisible, handleOk, handleCancel, userSe
   }
 
   const dataSource = studentsData.map((item, index) => ({
-    key: index + 1,
+    key: item?._id,
     tenSinhVien: item?.sinhvien,
     maSinhVien: item?.sinhvien.ma_sinh_vien,
     so_tctl: item.so_tctl,
-    diem_tbtl: item.diem_tbtl
+    diem_tbtl: item.diem_tbtl,
   }));
 
   const columns = [

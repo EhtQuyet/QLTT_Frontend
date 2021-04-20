@@ -30,6 +30,7 @@ import * as dkthuctap from '@app/store/ducks/dkthuctap.duck';
 
 import Loading from '@components/Loading';
 import Dropzone from 'react-dropzone';
+import { getAllDKTT } from '@app/services/ThucTap/DKThucTap/dangkythuctapService';
 
 
 function NhomThucTapChiTiet({
@@ -49,10 +50,10 @@ function NhomThucTapChiTiet({
   const [isFinish, setFinish] = useState(false);
   const [gvId, setGVId] = useState(null);
   const [dotTTId, setDotTTId] = useState(null);
-  // const [dotThucTap, setDotThucTap] = useState([]);
-
+  const [dotThucTap, setDotThucTap] = useState([]);
   const [stateUpload, setStateUpload] = useState(false);
 
+  console.log(form.getFieldsValue()?.giangVien, form.getFieldsValue()?.diaDiem );
   useEffect(() => {
     if (!props?.namhocList?.length) {
       props.getNamHoc();
@@ -83,24 +84,18 @@ function NhomThucTapChiTiet({
     })();
   }, []);
 
+
   async function getDataRecord() {
     const apiResponse = await getNhomThucTapById(recordId);
+    console.log(apiResponse);
     if (apiResponse) {
-      // const namHoc = { value: apiResponse.nam_hoc._id, label: apiResponse.nam_hoc.nam_hoc };
-      // const diaDiem = { value: apiResponse.dia_diem._id, label: apiResponse.dia_diem.ten_dia_diem };
-      // const dotThucTap = { value: apiResponse.id_dotthuctap._id, label: apiResponse.id_dotthuctap.ten_dot };
-      // const giangVien = { value: apiResponse.id_giangvien._id, label: apiResponse.id_giangvien.ten_giao_vien };
-      // const truongNhom = { value: apiResponse.id_nhomtruong._id, label: apiResponse.id_nhomtruong.ten_sinh_vien };
-      const namHoc = apiResponse.nam_hoc._id
-      const diaDiem = apiResponse.dia_diem._id
-      const dotThucTap = apiResponse.id_dotthuctap._id
-      const giangVien =  apiResponse.id_giangvien._id
-      const truongNhom = apiResponse.id_nhomtruong._id
-      console.log(namHoc, diaDiem, dotThucTap, truongNhom, giangVien,);
+      const namHoc = { value: apiResponse.nam_hoc._id, label: apiResponse.nam_hoc.nam_hoc };
+      const diaDiem = { value: apiResponse.dia_diem._id, label: apiResponse.dia_diem.ten_dia_diem };
+      const dotThucTap = { value: apiResponse.id_dotthuctap._id, label: apiResponse.id_dotthuctap.ten_dot };
+      const giangVien = { value: apiResponse.id_giangvien._id, label: apiResponse.id_giangvien.ten_giao_vien };
       await form.setFieldsValue({
-        namHoc, diaDiem, dotThucTap, truongNhom, giangVien,
+        namHoc, diaDiem, dotThucTap, giangVien,
       });
-
       handleSetStudentsDetail(apiResponse);
     }
   }
@@ -130,7 +125,32 @@ function NhomThucTapChiTiet({
   //   if (!namhocSelected) return;
   //   const apiResponse = await getAllDotThucTap(1, 0, { namhoc: namhocSelected ? namhocSelected : '' });
   // }
+  async function handleChangeNamHoc(namhocSelected, resetStudentsList = false) {
+    if (!namhocSelected?.value) return;
+    const data = dotthuctapList.filter(item => {
+      if (item.namhoc === namhocSelected.value) return item;
+    });
+    setDotThucTap(data);
+    if (resetStudentsList) {
+      const studentsListNew = detailStudentsList.map(students => {
+        students.isDeleted = true;
+        return students;
+      });
+      setDetailStudentsList(studentsListNew);
+    }
+  }
+  async function handleChangeGiangVien(giangVienSelected, resetStudentsList = false) {
 
+    if (!giangVienSelected?.value) return;
+
+    if (resetStudentsList) {
+      const studentsListNew = detailStudentsList.map(students => {
+        students.isDeleted = true;
+        return students;
+      });
+      setDetailStudentsList(studentsListNew);
+    }
+  }
   async function handleSaveData() {
     if (!detailStudentsList.length) {
       toast(CONSTANTS.WARNING, 'Nhóm không có sinh viên', TOAST_MESSAGE.ERROR.DESCRIPTION);
@@ -173,11 +193,10 @@ function NhomThucTapChiTiet({
     }
 
     const dataRequest = {
-      nam_hoc: namHoc,
-      id_dotthuctap: dotThucTap,
-      id_giangvien: giangVien,
-      id_nhomtruong: truongNhom,
-      dia_diem: diaDiem,
+      nam_hoc: namHoc?.value,
+      id_dotthuctap: dotThucTap?.value,
+      id_giangvien: giangVien?.value,
+      dia_diem: diaDiem?.value,
       chitiet: details,
     };
 
@@ -240,7 +259,7 @@ function NhomThucTapChiTiet({
 
   const columns = [
     { title: 'Mã sinh viên', dataIndex: 'maSinhVien', width: 200 },
-    { title: 'Tên sinh viên', dataIndex: 'tenSinhVien',render: value => value?.ten_sinh_vien, width: 200 },
+    { title: 'Tên sinh viên', dataIndex: 'tenSinhVien', render: value => value?.ten_sinh_vien, width: 200 },
     { title: 'Tín chỉ tích lũy', dataIndex: 'so_tctl', width: 200 },
     { title: 'Điểm TB tích lũy', dataIndex: 'diem_tbtl', width: 200 },
     { align: 'center', render: formatCellAction, width: 80 },
@@ -256,27 +275,37 @@ function NhomThucTapChiTiet({
   });
 
   async function onValuesChange(changedValues, allValues) {
-    if (changedValues.namHoc) {
-
-    }
-    if (changedValues.giangVien) {
-      setGVId(changedValues.giangVien);
-    }
-    if (changedValues.dotThucTap) {
-      setDotTTId(changedValues.dotThucTap);
-    }
+    // if(allValues.dotThucTap && allValues.giangVien && allValues.diaDiem)
+    //   set
+    // if (changedValues.namHoc) {
+    //   console.log(changedValues.namHoc);
+    //   const data = dotthuctapList.filter(item => {
+    //     if (item.namhoc === changedValues.namHoc) return item;
+    //   });
+    //   setDotThucTap(data);
+    // }
+    // if (changedValues.giangVien) {
+    //   setGVId(changedValues.giangVien);
+    // }
+    // if (changedValues.dotThucTap) {
+    //   setDotTTId(changedValues.dotThucTap);
+    // }
+    // if (changedValues.diaDiem) {
+    //
+    // }
     if (!isFormEdited) {
       setFormEdited(true);
     }
   }
 
   function addGroupStudent(studentsListSelected) {
+    console.log('studentsListSelected', studentsListSelected);
     let detailGroupStudentNew = [...detailStudentsList];
 
-    studentsListSelected.forEach( students => {
+    studentsListSelected.forEach(students => {
       const dataPush = {
         isDeleted: false,
-        key: detailGroupStudentNew.length,
+        key: students.key,
         notEdited: true,
         maSinhVien: students.maSinhVien,
         tenSinhVien: students.tenSinhVien,
@@ -304,7 +333,7 @@ function NhomThucTapChiTiet({
             type={CONSTANTS.SELECT}
             layoutCol={{ xs: 24, lg: 15 }}
             layoutItem={{ labelCol: { xs: 6, sm: 24, md: 8, lg: 8, xl: 8, xxl: 8 } }}
-
+            onChange={(namhocSelected) => handleChangeNamHoc(namhocSelected, true)}
             rules={[RULES.REQUIRED]}
             options={{ data: namhocList, valueString: '_id', labelString: 'name' }}
             showSearch
@@ -320,7 +349,7 @@ function NhomThucTapChiTiet({
             layoutCol={{ xs: 24, lg: 15 }}
             layoutItem={{ labelCol: { xs: 6, sm: 24, md: 8, lg: 8, xl: 8, xxl: 8 } }}
             rules={[RULES.REQUIRED]}
-            options={{ data: dotthuctapList, valueString: '_id', labelString: 'name' }}
+            options={{ data: dotThucTap, valueString: '_id', labelString: 'name' }}
             showSearch
             disabled={isLoading}
             showInputLabel={isFinish}
@@ -335,7 +364,7 @@ function NhomThucTapChiTiet({
             layoutItem={{ labelCol: { xs: 6, sm: 24, md: 8, lg: 8, xl: 8, xxl: 8 } }}
             rules={[RULES.REQUIRED]}
             options={{ data: teacherList, valueString: '_id', labelString: 'name' }}
-            // onChange={(giangvienSelected) => handleChangeGiangVien(giangvienSelected)}
+            onChange={(giangvienSelected) => handleChangeGiangVien(giangvienSelected)}
             showSearch
             disabled={isLoading}
             showInputLabel={isFinish}
@@ -353,19 +382,9 @@ function NhomThucTapChiTiet({
             options={{ data: diadiemList, valueString: '_id', labelString: 'name' }}
             disabled={isLoading}
             showInputLabel={isFinish}
+            labelInValue
+            fullLine
             labelLeft/>
-          <CustomSkeleton
-            label='Trưởng nhóm'
-            name="truongNhom"
-            type={CONSTANTS.SELECT}
-            layoutCol={{ xs: 24, lg: 15 }}
-            layoutItem={{ labelCol: { xs: 6, sm: 24, md: 8, lg: 8, xl: 8, xxl: 8 } }}
-            rules={[RULES.REQUIRED]}
-            options={{ data: sinhVienList, valueString: '_id', labelString: 'name' }}
-            disabled={isLoading}
-            showInputLabel={isFinish}
-            labelLeft/>
-
         </Row>
         <Divider orientation="left" plain={false} className='m-0'>
           {'Danh sách sinh viên nhóm'}
@@ -377,7 +396,7 @@ function NhomThucTapChiTiet({
             size='small'
             icon={<i className='fa fa-plus mr-1'/>}
             onClick={() => toggleModal(true)}
-            disabled={isLoading || !form.getFieldsValue()?.giangVien || !form.getFieldsValue()?.dotThucTap}
+            disabled={isLoading }
           >
             Thêm sinh viên
           </Button>
@@ -392,14 +411,14 @@ function NhomThucTapChiTiet({
         </Loading>
 
         <Row className='clearfix mt-2'>
-          <CustomSkeleton
-            layoutCol={{ xs: 24, lg: 15, xl: 8, xxl: 8 }}
-            layoutItem={{ labelCol: { xs: 6, sm: 24, md: 8, lg: 8, xl: 15, xxl: 15 } }}
-            labelLeft
-          >
+          {/*<CustomSkeleton*/}
+          {/*  layoutCol={{ xs: 24, lg: 15, xl: 8, xxl: 8 }}*/}
+          {/*  layoutItem={{ labelCol: { xs: 6, sm: 24, md: 8, lg: 8, xl: 15, xxl: 15 } }}*/}
+          {/*  labelLeft*/}
+          {/*>*/}
 
-          </CustomSkeleton>
-
+          {/*</CustomSkeleton>*/}
+          <Col xs={24} lg={15} xl={8}></Col>
           {!isFinish && <Col xs={24} lg={9} xl={16}>
             <Button
               size='small' type='primary'
@@ -418,8 +437,9 @@ function NhomThucTapChiTiet({
         handleOk={(e) => addGroupStudent(e)}
         handleCancel={() => toggleModal(false)}
         detailStudentsList={detailStudentsList}
-        dotTT={dotTTId}
-        gvhd={gvId}
+        // dotThuctap={form.getFieldsValue()?.dotThucTap?.value}
+        teacher={form.getFieldsValue()?.giangVien?.value}
+        address={form.getFieldsValue()?.diaDiem?.value}
       />
 
     </>

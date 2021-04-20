@@ -3,10 +3,10 @@ import { Col, Modal, Row } from 'antd';
 import ModalFooter from '@components/ModalFooter/ModalFooter';
 import CustomSkeleton from '@components/CustomSkeleton';
 import {
-  getAllDiaDiemThucTap
+  getAllDiaDiemThucTap,
 } from '@app/services/DiaDiemThucTap/diadiemthuctapService';
 import {
-  getAllDotThucTap
+  getAllDotThucTap,
 } from '@app/services/ThucTap/DotThucTap/dotthuctapService';
 import { CONSTANTS, RULES } from '@constants';
 import { DOT_THUC_TAP, DIA_DIEM_THUC_TAP, ROLE } from '../../../../constants/contans';
@@ -15,16 +15,16 @@ import { connect } from 'react-redux';
 import Loading from '@components/Loading';
 
 
-function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected, ...props }) {
+function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected, sinhVienList, ...props }) {
   const [dkttForm] = Form.useForm();
-  const [diadiemTT, setDiaDiaTT] = useState([])
-  const [dotTT, setDotTT] = useState([])
-  const [isOtherPlace, setOtherPlace] = useState(false)
+  const [diadiemTT, setDiaDiaTT] = useState([]);
+  const [dotTT, setDotTT] = useState([]);
+  const [isOtherPlace, setOtherPlace] = useState(false);
   useEffect(() => {
 
     getData();
 
-    setDiaDiaTT([ ...diadiemTT, {_id: '####', name:'---KHÁC---'}])
+    setDiaDiaTT([...diadiemTT, { _id: '####', name: '---KHÁC---' }]);
 
     if (userSelected && isModalVisible) {
       const dataField = Object.assign({}, userSelected);
@@ -42,26 +42,28 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
     if (props.isLoading) return;
     handleOk(userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE, data);
   }
+
   function onValuesChange(changedValues, allValues) {
-    if(changedValues.diaDiem) {
-      if(changedValues.diaDiem === '####'){
-        setOtherPlace(true)
-      }else {
-        setOtherPlace(false)
+    if (changedValues.diaDiem) {
+      if (changedValues.diaDiem === '####') {
+        setOtherPlace(true);
+      } else {
+        setOtherPlace(false);
       }
     }
   }
 
-  async function getData()
-  {
-    const apiResponse = await getAllDiaDiemThucTap(1,0,{trang_thai: DIA_DIEM_THUC_TAP.DA_XAC_NHAN})
-    setDiaDiaTT([ ...apiResponse.docs,  {_id: '####', ten_dia_diem:'---KHÁC---'}])
-    const apiDotTT = await getAllDotThucTap(1,0, {trang_thai: DOT_THUC_TAP.DANG_MO})
-    setDotTT(apiDotTT.docs)
+  console.log('isOtherPlace', isOtherPlace);
+
+  async function getData() {
+    const apiResponse = await getAllDiaDiemThucTap(1, 0, { trang_thai: DIA_DIEM_THUC_TAP.DA_XAC_NHAN });
+    setDiaDiaTT([...apiResponse.docs, { _id: '####', ten_dia_diem: '---KHÁC---' }]);
+    const apiDotTT = await getAllDotThucTap(1, 0, { trang_thai: DOT_THUC_TAP.DANG_MO });
+    setDotTT(apiDotTT.docs);
   }
+
   const isGiaoVu = props.myInfo && props.myInfo.role.includes(ROLE.GIAO_VU);
   const isAdmin = props.myInfo && props.myInfo.role.includes(ROLE.ADMIN);
-
   return (
     <Modal
       width='720px' maskClosable={false}
@@ -77,18 +79,20 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
     >
       <Loading active={props.isLoading}>
         <Form id="formModal" form={dkttForm} size='default' onFinish={onFinish}
-        onValuesChange={onValuesChange}
+              onValuesChange={onValuesChange}
 
         >
           <Row gutter={15}>
-            { (isAdmin || isGiaoVu) && <CustomSkeleton
+            {(isAdmin || isGiaoVu) && <CustomSkeleton
               size='default'
               label="Mã sinh viên" name="maSinhVien"
-              type={CONSTANTS.TEXT}
+              type={CONSTANTS.SELECT}
               rules={[RULES.REQUIRED]}
               layoutCol={{ xs: 24 }}
               layoutItem={{ labelCol: { xs: 8 } }}
               labelLeft
+              showSearch
+              options={{ data: sinhVienList ? sinhVienList : [], valueString: 'code', labelString: 'namecode' }}
             />}
             <CustomSkeleton
               size='default'
@@ -123,7 +127,7 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
               showSearch
               options={{ data: diadiemTT ? diadiemTT : [], valueString: '_id', labelString: 'ten_dia_diem' }}
             />
-            {isOtherPlace &&  <CustomSkeleton
+            {isOtherPlace && <CustomSkeleton
               size='default'
               label="Tên địa điểm" name="tenDiaDiem"
               type={CONSTANTS.TEXT}
@@ -132,7 +136,7 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
               rules={[RULES.REQUIRED]}
               labelLeft
             />}
-            {isOtherPlace &&  <CustomSkeleton
+            {isOtherPlace && <CustomSkeleton
               size='default'
               label="Địa chỉ" name="diaChi"
               type={CONSTANTS.TEXT}
@@ -175,10 +179,12 @@ function mapStateToProps(store) {
   const { teacherList } = store.giaovien;
   const { diadiemList } = store.diadiem;
   const { dotthuctapList } = store.dotthuctap;
+  const { sinhVienList } = store.sinhvien;
   // const { myInfo } = store.user;
 
 
-  return { isLoading , teacherList, diadiemList, dotthuctapList};
+  return { isLoading, teacherList, diadiemList, dotthuctapList, sinhVienList };
 }
+
 export default (connect(mapStateToProps)(CreateAndModify));
 

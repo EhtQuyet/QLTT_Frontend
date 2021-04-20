@@ -25,12 +25,13 @@ import * as giaovien from '@app/store/ducks/giaovien.duck';
 import * as diadiem from '@app/store/ducks/diadiem.duck';
 import * as user from '@app/store/ducks/user.duck';
 import * as dotthuctap from '@app/store/ducks/dotthuctap.duck';
+import * as sinhvien from '@app/store/ducks/sinhvien.duck';
 import { ROLE } from '@src/constants/contans';
 import { DANG_KY_THUC_TAP } from '@src/constants/contans';
 import { DeleteOutlined, EditOutlined, SendOutlined } from '@ant-design/icons';
 
 
-function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiemList, ...props }) {
+function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiemList, sinhVienList, ...props }) {
   const [dkthuctap, setDkthuctap] = useState(PAGINATION_INIT);
   const [state, setState] = useState({
     isShowModal: false,
@@ -48,6 +49,9 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
     }
     if (!props?.dotthuctapList?.length) {
       props.getDotThucTap();
+    }
+    if (!props?.sinhVienList?.length) {
+      props.getSinhVien();
     }
     (async () => {
       await getData();
@@ -347,8 +351,16 @@ function mapStateToProps(store) {
   const { teacherList } = store.giaovien;
   const { diadiemList } = store.diadiem;
   const { dotthuctapList } = store.dotthuctap;
+  const { sinhVienList } = store.sinhvien;
 
-  return { isLoading, teacherList, myInfo, diadiemList, dotthuctapList };
+  return { isLoading, teacherList, myInfo, diadiemList, dotthuctapList, sinhVienList };
 }
 
-export default (connect(mapStateToProps, { ...user.actions, ...giaovien.actions, ...diadiem.actions, ...dotthuctap.actions })(DangKyThucTap));
+const actions = {
+  ...user.actions,
+  ...giaovien.actions,
+  ...diadiem.actions,
+  ...dotthuctap.actions,
+  ...sinhvien.actions
+}
+export default (connect(mapStateToProps, actions)(DangKyThucTap));
