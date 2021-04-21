@@ -22,6 +22,10 @@ export const URL = {
     ADD_NHOM_THUC_TAP: '/tao_nhom-thuc-tap',
     NHOM_THUC_TAP_CHI_TIET: '/chi-tiet-nhom-thuc-tap',
     NHOM_THUC_TAP_CHI_TIET_ID: '/chi-tiet-nhom-thuc-tap/{0}',
+    CHI_TIET_NHOM: '/chi-tiet-nhom',
+    CHI_TIET_NHOM_ID: '/chi-tiet-nhom/{0}',
+
+
 
     DE_TAI_TTTN: '/de-tai-thuc-tap-tot-nghiep',
     DANG_KY_DE_TAI: '/dang-ky-de-tai',

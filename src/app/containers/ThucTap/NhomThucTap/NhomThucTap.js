@@ -4,7 +4,7 @@ import {
   getAllNhomThucTapChiTiet,
 } from '@app/services/ThucTap/NhomThucTap/nhomThucTapService';
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Card, Typography, Row, Col, List } from 'antd';
+import { Table, Tag, Card, Typography, Row, Col, List, Button } from 'antd';
 import { URL } from '@url';
 import { CONSTANTS, PAGINATION_INIT, TRANG_THAI_LABEL } from '@constants';
 import { connect } from 'react-redux';
@@ -19,6 +19,8 @@ import * as dotthuctap from '@app/store/ducks/dotthuctap.duck';
 import * as diadiem from '@app/store/ducks/diadiem.duck';
 import * as giaovien from '@app/store/ducks/giaovien.duck';
 import * as dkthuctap from '@app/store/ducks/dkthuctap.duck';
+import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 
@@ -80,9 +82,7 @@ function NhomThucTap({
   const dataDetail = [];
   listAllRecord.docs.forEach(doc => {
     dataDetail[doc._id] = [];
-
     detailRecord.forEach(item => {
-      console.log(item);
       if (doc._id === item.id_nhomthuctap) {
         dataDetail[doc._id] = [...dataDetail[doc._id], item];
       }
@@ -137,6 +137,23 @@ function NhomThucTap({
     },
   ];
 
+  const columnDetails = [
+    {
+      align: 'center',
+      title: 'Họ và tên',
+      dataIndex: 'id_sinhvien',
+      render: value => value?.ten_sinh_vien,
+      width: 200,
+    },
+    {
+      align: 'center',
+      title: 'Mã sinh viên',
+      dataIndex: 'ma_sinh_vien',
+      width: 200,
+    },
+  ];
+
+
   async function handleDelete(userSelected) {
     const apiResponse = await deletenhomThucTapById(userSelected._id);
     if (apiResponse) {
@@ -159,28 +176,25 @@ function NhomThucTap({
                  expandedRowRender: (record) => {
                    return <>
                      <Row>
-                       <Col className='mt-2'>
-                         <Title level={4} align="middle"><Text code>Danh sách sinh viên thuộc nhóm thực
-                           tập</Text></Title>
-                       </Col>
-                       <Col>
-                         <List
+                       <Col xs={24} lg={16} xl={16}>
+                         <Table
+                           bordered={false} size='small'
                            dataSource={dataDetail[record._id]}
-                           renderItem={item => (
-                             <List.Item>
-                               <Title level={5} style={{ marginLeft: 50 }}>
-                                 <Text>Họ và tên: </Text> {item.id_sinhvien.ten_sinh_vien} (
-                                 MSSV: {item.id_sinhvien.ma_sinh_vien})
-                               </Title>
-                             </List.Item>
-                           )}
+                           columns={columnDetails}
+                           scroll={{ x: 'max-content' }}
+                           pagination={false}
                          />
                        </Col>
-
+                       <Col xs={24} lg={8} xl={8} align="middle">
+                         <Link to={URL.MENU.CHI_TIET_NHOM_ID.format(record._id)}>
+                           <Tag color='geekblue' className='tag-action float-right'>
+                             <EyeOutlined/><span className='ml-1'>Chi tiết nhóm</span>
+                           </Tag>
+                         </Link>
+                       </Col>
                      </Row>
 
                    </>;
-                   console.log('dataDetail[record._id]', dataDetail[record._id]);
                  },
                }}
                scroll={{ x: 'max-content' }}
