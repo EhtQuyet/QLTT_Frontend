@@ -39,6 +39,8 @@ const NhomThucTap = lazy(() => import('@containers/ThucTap/NhomThucTap/NhomThucT
 const ThemNhomThucTap = lazy(() => import('@containers/ThucTap/NhomThucTap/NhomThucTapChiTiet'));
 const NhomThucTapChiTiet = lazy(() => import('@containers/ThucTap/NhomThucTap/NhomThucTapChiTiet'));
 const ChiTiet = lazy(() => import('@containers/ThucTap/NhomThucTap/ChiTiet/ChiTiet'));
+const ReportSinhVienDKTT = lazy(() => import('@containers/ThongKe/ReportSinhVienDKTT'));
+const ReportNhomThucTap = lazy(() => import('@containers/ThongKe/ReportNhomThucTap'));
 
 
 function renderIcon(icon) {
@@ -168,6 +170,28 @@ export const ConstantsRoutes = [
         path: URL.MENU.DANG_KY_DE_TAI,
         menuName: 'Đăng ký đề tài',
         component: DangKyDeTai,
+        icon: renderIcon('edit'),
+        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+      },
+    ],
+  },
+  {
+    role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.GIAO_VU],
+    path: URL.MENU.THONG_KE,
+    menuName: 'Thống kê',
+    icon: renderIcon('file-signature'),
+    children: [
+      {
+        path: URL.MENU.THONG_KE_DKTT,
+        menuName: 'Danh sách đăng ký',
+        component: ReportSinhVienDKTT,
+        icon: renderIcon('list-alt'),
+        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+      },
+      {
+        path: URL.MENU.DANG_KY_DE_TAI,
+        menuName: 'Nhóm thực tập',
+        component: ReportNhomThucTap,
         icon: renderIcon('edit'),
         role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
       },

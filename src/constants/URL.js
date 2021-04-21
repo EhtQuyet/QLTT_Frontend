@@ -31,6 +31,10 @@ export const URL = {
     DANG_KY_DE_TAI: '/dang-ky-de-tai',
     DANG_KY_DE_TAI_ID: '/dang-ky-de-tai/{0}',
 
+    THONG_KE: '/thong-ke',
+    THONG_KE_DKTT: '/thong-ke-danh-sach-dang-ky-thuc-tap',
+    THONG_KE_NHOM_THUC_TAP: '/thong-ke-danh-sach-nhom-thuc-tap',
+
   },
 
   MY_INFO: '/my-info',
