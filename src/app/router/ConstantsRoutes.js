@@ -62,7 +62,7 @@ export const ConstantsRoutes = [
     exact: true,
   },
   // { menuGroup: 'Quản lý người dùng' },
-  { path: URL.MENU.USER, role : [ROLE.ADMIN, ROLE.GIANG_VIEN], menuName: 'Danh sách người dùng', component: User, icon: renderIcon('users') },
+  { path: URL.MENU.USER, role : [ROLE.ADMIN], menuName: 'Danh sách người dùng', component: User, icon: renderIcon('users') },
   // {
   //   path: URL.MENU.USER,
   //   menuName: 'Quản lý người dùng',
