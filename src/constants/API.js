@@ -41,4 +41,7 @@ export const API = {
   NHOM_THUC_TAP_ID: '/api/nhomthuctap/{0}',
   NHOM_THUC_TAP_CHI_TIET: '/api/nhomthuctapchitiet',
 
+  SINH_VIEN_THUC_TAP: '/api/thongkesinhvien/sv-thuc-tap',
+  DIA_DIEM_SV_THUC_TAP: '/api/thongkesinhvien/dia-diem-svtt',
+
 };
