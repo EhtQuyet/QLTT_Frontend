@@ -60,7 +60,7 @@ function UploadFile({ isModalVisible, handleCancel, handleOk, ...props }) {
     <Modal
       width='720px' maskClosable={false}
       closeIcon={<i className='fa fa-times'/>}
-      title={'Thêm mới vật tư'}
+      title={'Thêm mới file'}
       visible={isModalVisible} onCancel={disableCancel ? null : handleCancel}
       footer={<ModalFooter
         formId='formUpload'
@@ -75,7 +75,7 @@ function UploadFile({ isModalVisible, handleCancel, handleOk, ...props }) {
     >
       <div className='clearfix'>
         <div className='clearfix'>
-          <Dropzone accept=".xlsx .docs" onDrop={onDrop}>
+          <Dropzone accept=".docx" onDrop={onDrop}>
             {({ getRootProps, getInputProps }) => (
               <div {...getRootProps()} className='float-left'>
                 <input {...getInputProps()} />

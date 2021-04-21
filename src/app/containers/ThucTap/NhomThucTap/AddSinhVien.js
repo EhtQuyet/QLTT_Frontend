@@ -52,20 +52,20 @@ function AddSinhVien({ isLoading, isModalVisible, handleOk, handleCancel, userSe
     }
   }
 
-  function handleSelectSupplies(valueSelected) {
-    let suppliesListNew = [...studentsSelected];
-    let suppliesListIdNew = [...studentsSelectedId];
+  function handleSelectStudents(valueSelected) {
+    let studentsListNew = [...studentsSelected];
+    let studentsListIdNew = [...studentsSelectedId];
 
-    if (suppliesListIdNew.includes(valueSelected.tenSinhVien)) {
-      const index = suppliesListIdNew.indexOf(valueSelected.tenSinhVien);
-      suppliesListNew.splice(index, 1);
-      suppliesListIdNew.splice(index, 1);
+    if (studentsListIdNew.includes(valueSelected.tenSinhVien)) {
+      const index = studentsListIdNew.indexOf(valueSelected.tenSinhVien);
+      studentsListNew.splice(index, 1);
+      studentsListIdNew.splice(index, 1);
     } else {
-      suppliesListNew = [...suppliesListNew, valueSelected];
-      suppliesListIdNew = [...suppliesListIdNew, valueSelected.tenSinhVien];
+      studentsListNew = [...studentsListNew, valueSelected];
+      studentsListIdNew = [...studentsListIdNew, valueSelected.tenSinhVien];
     }
-    setStudentsSelected(suppliesListNew);
-    setStudentsSelectedId(suppliesListIdNew);
+    setStudentsSelected(studentsListNew);
+    setStudentsSelectedId(studentsListIdNew);
   }
 
   function onFinish() {
@@ -110,7 +110,7 @@ function AddSinhVien({ isLoading, isModalVisible, handleOk, handleCancel, userSe
       align: 'center',
       render: (value, row) => <Checkbox
         checked={studentsSelectedId.includes(row.tenSinhVien)}
-        onChange={() => handleSelectSupplies(row)}/>,
+        onChange={() => handleSelectStudents(row)}/>,
       width: 80,
     },
   ];
@@ -138,28 +138,6 @@ function AddSinhVien({ isLoading, isModalVisible, handleOk, handleCancel, userSe
       forceRender
     >
       <Form id="formModal" size='default' onFinish={onFinish}/>
-
-      {/*<Filter*/}
-      {/*  layoutCol={{ xs: 24, sm: 24, md: 12, lg: 8, xl: 8, xxl: 8 }}*/}
-      {/*  layoutItem={{ labelAlign: 'left', labelCol: { span: 8 }, wrapperCol: { span: 16 } }}*/}
-      {/*  dataSearch={[*/}
-      {/*    {*/}
-      {/*      name: 'id_danh_diem', label: 'Danh điểm', type: CONSTANTS.SELECT,*/}
-      {/*      options: { data: props.suppliesCategoryList, valueString: '_id', labelString: 'name' },*/}
-      {/*    },*/}
-      {/*    { name: 'ten_vat_tu', label: 'Tên vật tư', type: CONSTANTS.TEXT },*/}
-      {/*    { name: 'ma_vat_tu', label: 'Mã vật tư', type: CONSTANTS.TEXT },*/}
-      {/*    { name: 'serial', label: 'Serial', type: CONSTANTS.TEXT },*/}
-      {/*    // {*/}
-      {/*    //   name: 'id_nguon_cap', label: 'Nguồn cấp', type: CONSTANTS.SELECT,*/}
-      {/*    //   options: { data: props.poweredByList, valueString: '_id', labelString: 'name' },*/}
-      {/*    // },*/}
-      {/*  ]}*/}
-      {/*  handleFilter={(query) => getStudentData(1, studentsData.pageSize, query)}*/}
-      {/*  loading={isLoading}*/}
-      {/*  marginCollapsed*/}
-      {/*/>*/}
-
       <Loading active={isLoading}>
         <Table dataSource={dataSource} size='small' columns={columns}
                pagination={pagination}

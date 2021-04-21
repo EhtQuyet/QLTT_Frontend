@@ -27,15 +27,15 @@ import * as dotthuctap from '@app/store/ducks/dotthuctap.duck';
 import * as diadiem from '@app/store/ducks/diadiem.duck';
 import * as giaovien from '@app/store/ducks/giaovien.duck';
 import * as dkthuctap from '@app/store/ducks/dkthuctap.duck';
-
+import * as user from '@app/store/ducks/user.duck';
 import Loading from '@components/Loading';
 import Dropzone from 'react-dropzone';
 import { getAllDKTT } from '@app/services/ThucTap/DKThucTap/dangkythuctapService';
-import { DOT_THUC_TAP } from '@src/constants/contans';
+import { DOT_THUC_TAP, ROLE } from '@src/constants/contans';
 
 
 function NhomThucTapChiTiet({
-                              isLoading, namhocList, sinhVienList,
+                              isLoading, namhocList, sinhVienList, myInfo,
                               dotthuctapList, diadiemList, teacherList, dkthuctapList, ...props
                             }) {
 
@@ -54,7 +54,9 @@ function NhomThucTapChiTiet({
   const [dotThucTap, setDotThucTap] = useState([]);
   const [stateUpload, setStateUpload] = useState(false);
 
-  console.log(form.getFieldsValue()?.giangVien, form.getFieldsValue()?.diaDiem );
+  const isSinhVien = myInfo && myInfo.role.includes(ROLE.SINH_VIEN);
+  // console.log('isSinhVien', isSinhVien);
+
   useEffect(() => {
     if (!props?.namhocList?.length) {
       props.getNamHoc();
@@ -141,6 +143,7 @@ function NhomThucTapChiTiet({
       setDetailStudentsList(studentsListNew);
     }
   }
+
   async function handleChangeGiangVien(giangVienSelected, resetStudentsList = false) {
 
     if (!giangVienSelected?.value) return;
@@ -153,6 +156,7 @@ function NhomThucTapChiTiet({
       setDetailStudentsList(studentsListNew);
     }
   }
+
   async function handleSaveData() {
     if (!detailStudentsList.length) {
       toast(CONSTANTS.WARNING, 'Nhóm không có sinh viên', TOAST_MESSAGE.ERROR.DESCRIPTION);
@@ -396,7 +400,7 @@ function NhomThucTapChiTiet({
             size='small'
             icon={<i className='fa fa-plus mr-1'/>}
             onClick={() => toggleModal(true)}
-            disabled={isLoading }
+            disabled={isLoading}
           >
             Thêm sinh viên
           </Button>
@@ -455,8 +459,9 @@ function mapStateToProps(store) {
   const { diadiemList } = store.diadiem;
   const { dotthuctapList } = store.dotthuctap;
   const { dkthuctapList } = store.dkthuctap;
+  const { myInfo } = store.user;
 
-  return { isLoading, dotthuctapList, diadiemList, namhocList, sinhVienList, teacherList, dkthuctapList };
+  return { isLoading, dotthuctapList, diadiemList, myInfo, namhocList, sinhVienList, teacherList, dkthuctapList };
 }
 
 const actions = {
@@ -466,6 +471,8 @@ const actions = {
   ...diadiem.actions,
   ...dotthuctap.actions,
   ...dkthuctap.actions,
+  ...user.actions,
+
 };
 
 

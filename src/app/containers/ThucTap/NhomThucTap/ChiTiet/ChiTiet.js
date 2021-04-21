@@ -9,18 +9,28 @@ import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
-import { debounce } from 'lodash';
-import { Button, Divider, Form, Input, InputNumber, Popconfirm, Row, Col, Select, Switch, Table, Tooltip, Card } from 'antd';
+import {
+  Button,
+  Divider,
+  Form,
+  Input,
+  InputNumber,
+  Popconfirm,
+  Row,
+  Col,
+  Select,
+  Switch,
+  Table,
+  Tooltip,
+  Card, Checkbox,
+} from 'antd';
 import { PlusCircleOutlined, SaveFilled } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
 import { CONSTANTS, RULES, TOAST_MESSAGE, TRANG_THAI } from '@constants';
 import { URL } from '@url';
-import AddSinhVien from '../AddSinhVien';
 import ActionCell from '@components/ActionCell';
 import CustomSkeleton from '@components/CustomSkeleton';
 import { columnIndex, toast } from '@app/common/functionCommons';
-import { getAllSinhVien } from '@app/services/SinhVienTTTN/sinhVienTTService';
-import { getAllDotThucTap } from '@app/services/ThucTap/DotThucTap/dotthuctapService';
 import * as namhoc from '@app/store/ducks/namhoc.duck';
 import * as sinhvien from '@app/store/ducks/sinhvien.duck';
 import * as dotthuctap from '@app/store/ducks/dotthuctap.duck';
@@ -33,6 +43,7 @@ import Dropzone from 'react-dropzone';
 import { getAllDKTT } from '@app/services/ThucTap/DKThucTap/dangkythuctapService';
 import { DOT_THUC_TAP } from '@src/constants/contans';
 import UploadFile from './UploadFile';
+import { getAllDetai } from '@app/services/DeTaiTTTN/DeTaiService';
 
 
 function ChiTiet({
@@ -46,12 +57,10 @@ function ChiTiet({
   const [form] = Form.useForm();
   const [isFormEdited, setFormEdited] = useState(false);
   const [detailStudentsList, setDetailStudentsList] = useState([]);
-  const [isShowModal, toggleModal] = useState(false);
   const [isFinish, setFinish] = useState(false);
-  const [gvId, setGVId] = useState(null);
-  const [dotTTId, setDotTTId] = useState(null);
-  const [dotThucTap, setDotThucTap] = useState([]);
   const [stateUpload, setStateUpload] = useState(false);
+  const [deTai, setDeTai] = useState([]);
+
 
   useEffect(() => {
     if (!props?.namhocList?.length) {
@@ -88,17 +97,14 @@ function ChiTiet({
     const apiResponse = await getNhomThucTapById(recordId);
     console.log(apiResponse);
     if (apiResponse) {
-      const namHoc = { value: apiResponse.nam_hoc._id, label: apiResponse.nam_hoc.nam_hoc };
-      const diaDiem = { value: apiResponse.dia_diem._id, label: apiResponse.dia_diem.ten_dia_diem };
-      const dotThucTap = { value: apiResponse.id_dotthuctap._id, label: apiResponse.id_dotthuctap.ten_dot };
       const giangVien = { value: apiResponse.id_giangvien._id, label: apiResponse.id_giangvien.ten_giao_vien };
       await form.setFieldsValue({
-        namHoc: namHoc?.label,
-        diaDiem: diaDiem.label,
-        dotThucTap: dotThucTap.label,
         giangVien: giangVien.label,
       });
       handleSetStudentsDetail(apiResponse);
+
+      const apiDetai = await getAllDetai(1, 0, { ma_giao_vien: giangVien.value });
+      setDeTai(apiDetai.docs);
     }
   }
 
@@ -120,77 +126,100 @@ function ChiTiet({
   }
 
   async function handleSaveData() {
-    if (!detailStudentsList.length) {
-      toast(CONSTANTS.WARNING, 'Nhóm không có sinh viên', TOAST_MESSAGE.ERROR.DESCRIPTION);
-      return;
-    }
-    const { namHoc, diaDiem, dotThucTap, giangVien, truongNhom } = form.getFieldsValue();
-    let isError = false;
-    let details = [], messageString = '';
-    let countDetailExist = 0;
-    for (let i = 0; i < detailStudentsList.length; i++) {
-      let students = detailStudentsList[i];
-      if (students._id || (!students._id && !students.isDeleted)) {
-        const dataPush = {
-          id_sinhvien: students.tenSinhVien,
-          ma_sinh_vien: students.maSinhVien,
-          so_tctl: students.so_tctl,
-          diem_tbtl: students.diem_tbtl,
-        };
-        if (students._id) {
-          dataPush._id = students._id;
-        }
-        if (students.isDeleted) {
-          dataPush.is_deleted = true;
-        } else {
-          countDetailExist += 1;
-        }
-        details = [...details, dataPush];
-      }
-    }
-
-    if (!countDetailExist) {
-      messageString = 'Không có danh sách sinh viên';
-    }
-
-    if (isError || !countDetailExist) {
-      toast(CONSTANTS.WARNING, messageString, TOAST_MESSAGE.ERROR.DESCRIPTION);
-      return;
-    }
-
-    const dataRequest = {
-      nam_hoc: namHoc?.value,
-      id_dotthuctap: dotThucTap?.value,
-      id_giangvien: giangVien?.value,
-      dia_diem: diaDiem?.value,
-      chitiet: details,
-    };
-
-    let apiResponse;
-    if (!recordId) {
-      // create
-      messageString = 'Tạo mới nhóm thực tập thành công';
-      apiResponse = await createNhomThucTap(dataRequest);
-    } else {
-      // update
-      messageString = 'Cập nhật nhóm thực tập thành công';
-      dataRequest._id = recordId;
-      apiResponse = await updateNhomThucTap(dataRequest);
-    }
-    if (apiResponse) {
-      toast(CONSTANTS.SUCCESS, messageString);
-      if (!recordId) {
-        props.history.push(URL.MENU.NHOM_THUC_TAP_CHI_TIET_ID.format(apiResponse._id));
-      } else {
-        handleSetStudentsDetail(apiResponse);
-        setFormEdited(false);
-      }
-    }
+    // if (!detailStudentsList.length) {
+    //   toast(CONSTANTS.WARNING, 'Nhóm không có sinh viên', TOAST_MESSAGE.ERROR.DESCRIPTION);
+    //   return;
+    // }
+    // const { namHoc, diaDiem, dotThucTap, giangVien, truongNhom } = form.getFieldsValue();
+    // let isError = false;
+    // let details = [], messageString = '';
+    // let countDetailExist = 0;
+    // for (let i = 0; i < detailStudentsList.length; i++) {
+    //   let students = detailStudentsList[i];
+    //   if (students._id || (!students._id && !students.isDeleted)) {
+    //     const dataPush = {
+    //       id_sinhvien: students.tenSinhVien,
+    //       ma_sinh_vien: students.maSinhVien,
+    //       so_tctl: students.so_tctl,
+    //       diem_tbtl: students.diem_tbtl,
+    //     };
+    //     if (students._id) {
+    //       dataPush._id = students._id;
+    //     }
+    //     if (students.isDeleted) {
+    //       dataPush.is_deleted = true;
+    //     } else {
+    //       countDetailExist += 1;
+    //     }
+    //     details = [...details, dataPush];
+    //   }
+    // }
+    //
+    // if (!countDetailExist) {
+    //   messageString = 'Không có danh sách sinh viên';
+    // }
+    //
+    // if (isError || !countDetailExist) {
+    //   toast(CONSTANTS.WARNING, messageString, TOAST_MESSAGE.ERROR.DESCRIPTION);
+    //   return;
+    // }
+    //
+    // const dataRequest = {
+    //   nam_hoc: namHoc?.value,
+    //   id_dotthuctap: dotThucTap?.value,
+    //   id_giangvien: giangVien?.value,
+    //   dia_diem: diaDiem?.value,
+    //   chitiet: details,
+    // };
+    //
+    // let apiResponse;
+    // if (!recordId) {
+    //   // create
+    //   messageString = 'Tạo mới nhóm thực tập thành công';
+    //   apiResponse = await createNhomThucTap(dataRequest);
+    // } else {
+    //   // update
+    //   messageString = 'Cập nhật nhóm thực tập thành công';
+    //   dataRequest._id = recordId;
+    //   apiResponse = await updateNhomThucTap(dataRequest);
+    // }
+    // if (apiResponse) {
+    //   toast(CONSTANTS.SUCCESS, messageString);
+    //   if (!recordId) {
+    //     props.history.push(URL.MENU.NHOM_THUC_TAP_CHI_TIET_ID.format(apiResponse._id));
+    //   } else {
+    //     handleSetStudentsDetail(apiResponse);
+    //     setFormEdited(false);
+    //   }
+    // }
   }
 
   const columns = [
     { title: 'Mã sinh viên', dataIndex: 'maSinhVien', width: 200 },
     { title: 'Tên sinh viên', dataIndex: 'tenSinhVien', render: value => value?.ten_sinh_vien, width: 200 },
+  ];
+
+
+  const columnsDeTai = [
+    columnIndex(0, 1),
+    {
+      title: 'Mã đề tài', dataIndex: 'maDeTai',
+      width: 100,
+    },
+    {
+      title: 'Tên đề tài',
+      dataIndex: 'tenDeTai',
+      width: 200,
+    },
+    { title: 'Bộ môn', dataIndex: 'boMon', width: 200 },
+    {
+      align: 'center',
+      render: (value, row) => <Checkbox
+        // checked={studentsSelectedId.includes(row.tenSinhVien)}
+        // onChange={() => handleSelectDeTai(row)}
+      />,
+      width: 80,
+    },
   ];
 
   let dataSource = [];
@@ -202,32 +231,84 @@ function ChiTiet({
     }
   });
 
+  const dataSourceDeTai = deTai.map(item => {
+    item.key = item._id;
+    item.maDeTai = item.ma_de_tai;
+    item.tenDeTai = item.ten_de_tai;
+    item.boMon = item.ma_bo_mon.ten_bo_mon;
+    return item
+  });
+
   async function onValuesChange(changedValues, allValues) {
     if (!isFormEdited) {
       setFormEdited(true);
     }
   }
 
+  function handleSelectDeTai(valueSelected) {
+    // let suppliesListNew = [...studentsSelected];
+    // let suppliesListIdNew = [...studentsSelectedId];
+    //
+    // if (suppliesListIdNew.includes(valueSelected.tenSinhVien)) {
+    //   const index = suppliesListIdNew.indexOf(valueSelected.tenSinhVien);
+    //   suppliesListNew.splice(index, 1);
+    //   suppliesListIdNew.splice(index, 1);
+    // } else {
+    //   suppliesListNew = [...suppliesListNew, valueSelected];
+    //   suppliesListIdNew = [...suppliesListIdNew, valueSelected.tenSinhVien];
+    // }
+    // setStudentsSelected(suppliesListNew);
+    // setStudentsSelectedId(suppliesListIdNew);
+  }
+
   return (
     <>
       <Form size='small' form={form} onFinish={handleSaveData} scrollToFirstError
             onValuesChange={onValuesChange}>
-        <Loading active={isLoading} >
+        <CustomSkeleton
+          size='default'
+          label="Giảng viên hướng dẫn" name="giangVien"
+          type={CONSTANTS.LABEL}
+          layoutCol={{ xs: 24, lg: 15 }}
+          layoutItem={{ labelCol: { xs: 6, sm: 24, md: 8, lg: 8, xl: 8, xxl: 8 } }}
+          rules={[RULES.REQUIRED]}
+          labelLeft
+          form={form}
+        />
+        <Loading active={isLoading}>
           <Divider orientation="left" plain={false} className='mb-4'>
-            {'Danh sách sinh viên nhóm'}
+            {'Thông tin nhóm thực tập'}
           </Divider>
+          <Card
+            title="Danh sách sinh viên"
+          >
             <Table
               dataSource={dataSource}
               columns={columns}
               // pagination={false}
             />
+          </Card>
         </Loading>
-        <Row className='clearfix mt-2'>
-          <Col xs={24} lg={15} xl={8}>
+        <Divider orientation="left" plain={false} className='mb-4'>
+          {'Chi tiết đề tài thực tập'}
+        </Divider>
+        <Card
+          title="Danh sách đề tài"
+          extra={
             <Button size='small' className='ant-btn-purple float-right mr-2'
                     onClick={() => setStateUpload(true)}>
               <i className='fa fa-upload mr-1'/>Tải lên
-            </Button>
+            </Button>}>
+          <Table
+            dataSource={dataSourceDeTai}
+            columns={columnsDeTai}
+            // pagination={false}
+          />
+        </Card>
+
+        <Row className='clearfix mt-2'>
+          <Col xs={24} lg={15} xl={8}>
+
           </Col>
           {!isFinish && <Col xs={24} lg={9} xl={16}>
             <Button

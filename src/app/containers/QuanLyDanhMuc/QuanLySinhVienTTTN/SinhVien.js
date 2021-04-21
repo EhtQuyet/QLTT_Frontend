@@ -193,9 +193,9 @@ function SinhVien({ isLoading, classmateList, ...props }) {
         handleFilter={(query) => getDataSinhVien(1, sinhvien.pageSize, query)}/>
 
     <Link to={URL.FILE_SINH_VIEN} >
-        <Button size='small' type="primary" style={{marginLeft: '7px', marginRight: '7px'}} className='float-right'  icon={<i className='fa fa-plus mr-1'/>}>
-          Nhập file
-        </Button>
+      <Button size='small' className='ant-btn-purple float-right mr-2' style={{marginLeft: '7px', marginRight: '7px'}}>
+        <i className='fa fa-upload mr-1'/>Tải lên
+      </Button>
     </Link>
       <AddNewButton onClick={() => handleShowModal(true)} disabled={isLoading}/>
 
