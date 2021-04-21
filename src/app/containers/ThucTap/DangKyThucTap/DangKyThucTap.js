@@ -26,8 +26,7 @@ import * as diadiem from '@app/store/ducks/diadiem.duck';
 import * as user from '@app/store/ducks/user.duck';
 import * as dotthuctap from '@app/store/ducks/dotthuctap.duck';
 import * as sinhvien from '@app/store/ducks/sinhvien.duck';
-import { ROLE } from '@src/constants/contans';
-import { DANG_KY_THUC_TAP } from '@src/constants/contans';
+import { DANG_KY_THUC_TAP, ROLE } from '@src/constants/contans';
 import { DeleteOutlined, EditOutlined, SendOutlined } from '@ant-design/icons';
 
 
@@ -115,12 +114,12 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
       render: value => value?.ma_sinh_vien,
       width: 200,
     },
-    {
-      title: 'Tên giảng viên',
-      dataIndex: 'giaoien_huongdan',
-      render: value => value?.ten_giao_vien,
-      width: 200,
-    },
+    // {
+    //   title: 'Tên giảng viên',
+    //   dataIndex: 'giaoien_huongdan',
+    //   render: value => value?.ten_giao_vien,
+    //   width: 200,
+    // },
     {
       title: 'Địa điểm thực tập',
       dataIndex: 'diadiem_thuctap',
@@ -136,6 +135,21 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
       title: 'Số TCTL',
       dataIndex: 'tinchi_tichluy',
       width: 100,
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'trang_thai',
+      render: value => <>
+        {console.log('value', value)}
+        {value === DANG_KY_THUC_TAP.DA_DANG_KY ? <Tag color='lime'>Đã đăng ký</Tag>
+          : value === DANG_KY_THUC_TAP.KHONG_DU_DIEU_KIEN ? <Tag color='red'>Không đủ ĐKTT</Tag>
+            : value === DANG_KY_THUC_TAP.DU_DIEU_KIEN ? <Tag color='lime'>Đủ ĐKTT</Tag>
+              : value === DANG_KY_THUC_TAP.CHON_GIANG_VIEN ? <Tag color='lime'>Chọn giảng viên</Tag>
+                : value === DANG_KY_THUC_TAP.GV_XAC_NHAN ? <Tag color='lime' >GV xác nhận</Tag>
+                  : value === DANG_KY_THUC_TAP.GV_TU_CHOI ? <Tag color='gold'>GV từ chối</Tag>
+                    : <Tag color='green' >Đã chia nhóm</Tag>}
+      </>,
+      width: 200,
     },
     {
       align: 'center',
