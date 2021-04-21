@@ -115,7 +115,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
       width: 200,
     },
     {
-      title: 'Tên giáo viên',
+      title: 'Tên giảng viên',
       dataIndex: 'giaoien_huongdan',
       render: value => value?.ten_giao_vien,
       width: 300,

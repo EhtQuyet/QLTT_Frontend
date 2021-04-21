@@ -33,7 +33,7 @@ function ThemSuaGiaoVien({ isModalVisible, handleOk, handleCancel, userSelected,
     <Modal
       width='720px' maskClosable={false}
       closeIcon={<i className='fa fa-times'/>}
-      title={userSelected ? 'Cập nhật thông tin giáo viên' : 'Thêm mới giáo viên'}
+      title={userSelected ? 'Cập nhật thông tin giảng viên' : 'Thêm mới giảng viên'}
       visible={isModalVisible} onCancel={props.isLoading ? null : handleCancel}
       footer={<ModalFooter
         handleClose={handleCancel}
@@ -47,7 +47,7 @@ function ThemSuaGiaoVien({ isModalVisible, handleOk, handleCancel, userSelected,
           <Row gutter={15}>
             <CustomSkeleton
               size='default'
-              label="Tên giáo viên" name="tenGiaoVien"
+              label="Tên giảng viên" name="tenGiaoVien"
               type={CONSTANTS.TEXT}
               layoutCol={{ xs: 24 }}
               layoutItem={{ labelCol: { xs: 8 } }}
@@ -57,7 +57,7 @@ function ThemSuaGiaoVien({ isModalVisible, handleOk, handleCancel, userSelected,
             />
             <CustomSkeleton
               size='default'
-              label="Mã giáo viên" name="maGiaoVien"
+              label="Mã giảng viên" name="maGiaoVien"
               type={CONSTANTS.TEXT}
               layoutCol={{ xs: 24 }}
               layoutItem={{ labelCol: { xs: 8 } }}

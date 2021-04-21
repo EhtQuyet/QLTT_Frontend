@@ -95,7 +95,7 @@ function DangKyDeTai({ isLoading, bomonList, teacherList, myInfo, detaiList, ...
       width: 200,
     },
     {
-      title: 'Giáo viên hướng dẫn',
+      title: 'Giảng viên hướng dẫn',
       dataIndex: 'giaoVien',
       key: 'giaoVien',
       render: (value => value?.ten_giao_vien),
@@ -227,7 +227,7 @@ function DangKyDeTai({ isLoading, bomonList, teacherList, myInfo, detaiList, ...
         dataSearch={[
           { name: 'ten_de_tai', label: 'Tên đề tài', type: CONSTANTS.TEXT },
           {
-            name: 'ma_giao_vien', label: 'Giáo viên hướng dẫn ', type: CONSTANTS.SELECT,
+            name: 'ma_giao_vien', label: 'Giảng viên hướng dẫn ', type: CONSTANTS.SELECT,
             options: { data: teacherList, valueString: '_id', labelString: 'name' },
           },
           {

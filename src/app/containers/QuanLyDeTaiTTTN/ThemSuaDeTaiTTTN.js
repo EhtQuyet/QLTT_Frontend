@@ -32,7 +32,7 @@ function ThemSuaDeTaiTTTN({ isModalVisible, handleOk, handleCancel, userSelected
     <Modal
       width='720px' maskClosable={false}
       closeIcon={<i className='fa fa-times'/>}
-      title={userSelected ? 'Cập nhật thông tin giáo viên' : 'Thêm mới giáo viên'}
+      title={userSelected ? 'Cập nhật thông tin đề tài' : 'Thêm mới đề tài'}
       visible={isModalVisible} onCancel={props.isLoading ? null : handleCancel}
       footer={<ModalFooter
         handleClose={handleCancel}
@@ -66,15 +66,6 @@ function ThemSuaDeTaiTTTN({ isModalVisible, handleOk, handleCancel, userSelected
             />
             <CustomSkeleton
               size='default'
-              label="Ngày tạo đề tài" name="ngayTao"
-              type={CONSTANTS.DATE}
-              layoutCol={{ xs: 24 }}
-              layoutItem={{ labelCol: { xs: 8 } }}
-              rules={[RULES.REQUIRED]}
-              labelLeft
-            />
-            <CustomSkeleton
-              size='default'
               label="Bộ môn" name="boMon"
               type={CONSTANTS.SELECT}
               layoutCol={{ xs: 24 }}
@@ -85,7 +76,7 @@ function ThemSuaDeTaiTTTN({ isModalVisible, handleOk, handleCancel, userSelected
             />
             <CustomSkeleton
               size='default'
-              label="Giáo viên hướng dẫn" name="giaoVien"
+              label="Giảng viên hướng dẫn" name="giaoVien"
               type={CONSTANTS.SELECT}
               layoutCol={{ xs: 24 }}
               layoutItem={{ labelCol: { xs: 8 } }}

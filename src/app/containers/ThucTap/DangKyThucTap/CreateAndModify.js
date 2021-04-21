@@ -107,7 +107,7 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
             />
             <CustomSkeleton
               size='default'
-              label="Giáo viên hướng dẫn" name="giaoVien"
+              label="Giảng viên hướng dẫn" name="giaoVien"
               type={CONSTANTS.SELECT}
               layoutCol={{ xs: 24 }}
               layoutItem={{ labelCol: { xs: 8 } }}

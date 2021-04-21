@@ -71,7 +71,7 @@ function GiaoVien({ isLoading, bomonList, teacherList, ...props }) {
   const columns = [
     columnIndex(giaovien.pageSize, giaovien.currentPage),
     {
-      title: 'Mã giáo viên',
+      title: 'Mã giảng viên',
       dataIndex: 'maGiaoVien',
       key: 'maGiaoVien',
       width: 200,
@@ -141,7 +141,7 @@ function GiaoVien({ isLoading, bomonList, teacherList, ...props }) {
     const apiResponse = await deleteGiaoVien(userSelected._id);
     if (apiResponse) {
       getDataGiaoVien();
-      toast(CONSTANTS.SUCCESS, 'Xóa giáo viên thành công');
+      toast(CONSTANTS.SUCCESS, 'Xóa giảng viên thành công');
     }
   }
 
@@ -164,7 +164,7 @@ function GiaoVien({ isLoading, bomonList, teacherList, ...props }) {
       if (apiResponse) {
         getDataGiaoVien();
         handleShowModal(false);
-        toast(CONSTANTS.SUCCESS, 'Thêm mới giáo viên thành công');
+        toast(CONSTANTS.SUCCESS, 'Thêm mới giảng viên thành công');
       }
     }
 
@@ -180,7 +180,7 @@ function GiaoVien({ isLoading, bomonList, teacherList, ...props }) {
         });
         setGiaovien(Object.assign({}, giaovien, { docs }));
         handleShowModal(false);
-        toast(CONSTANTS.SUCCESS, 'Chỉnh sửa thông tin giáo viên thành công');
+        toast(CONSTANTS.SUCCESS, 'Chỉnh sửa thông tin giảng viên thành công');
       }
     }
   }
@@ -228,8 +228,8 @@ function GiaoVien({ isLoading, bomonList, teacherList, ...props }) {
     <div>
       <Filter
         dataSearch={[
-          { name: 'ten_giao_vien', label: 'Tên giáo viên', type: CONSTANTS.TEXT },
-          { name: 'ma_giao_vien', label: 'Mã giáo viên ', type: CONSTANTS.TEXT },
+          { name: 'ten_giao_vien', label: 'Tên giảng viên', type: CONSTANTS.TEXT },
+          { name: 'ma_giao_vien', label: 'Mã giảng viên ', type: CONSTANTS.TEXT },
         ]}
         handleFilter={(query) => getDataGiaoVien(1, giaovien.pageSize, query)}/>
 

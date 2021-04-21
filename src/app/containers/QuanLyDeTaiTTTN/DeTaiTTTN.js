@@ -56,12 +56,14 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
     }
   }
 
+  console.log('detai.docs',detai.docs);
+
   const dataSource = detai.docs.map((data, index) => ({
     _id: data._id,
     key: data._id,
     tenDeTai: data.ten_de_tai,
     maDeTai: data.ma_de_tai,
-    ngayTao: data?.ngay_tao,
+    ngayTao: data.created_at,
     trangThai: data.trang_thai,
     hoanThanh: data.trang_thai === TRANG_THAI.DA_DUOC_DUYET,
     giaoVien: data?.ma_giao_vien,
@@ -91,7 +93,7 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
       width: 200,
     },
     {
-      title: 'Giáo viên hướng dẫn',
+      title: 'Giảng viên hướng dẫn',
       dataIndex: 'giaoVien',
       key: 'giaoVien',
       render: (value => value?.ten_giao_vien),
@@ -216,7 +218,7 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
       if (apiResponse) {
         getDataDeTai();
         handleShowModal(false);
-        toast(CONSTANTS.SUCCESS, 'Thêm mới nhân viên thành công');
+        toast(CONSTANTS.SUCCESS, 'Thêm mới đề tài thành công');
         // updateStoreStaff(type, apiResponse);
       }
     }
@@ -285,7 +287,7 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
         dataSearch={[
           { name: 'ten_de_tai', label: 'Tên đề tài', type: CONSTANTS.TEXT },
           {
-            name: 'ma_giao_vien', label: 'Giáo viên hướng dẫn ', type: CONSTANTS.SELECT,
+            name: 'ma_giao_vien', label: 'giảng viên hướng dẫn ', type: CONSTANTS.SELECT,
             options: { data: teacherList, valueString: '_id', labelString: 'name' },
           },
           {
