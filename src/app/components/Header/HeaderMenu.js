@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, Route, withRouter } from 'react-router-dom';
-import { Avatar, Dropdown, Menu } from 'antd';
+import { Avatar, Dropdown, Menu, Badge } from 'antd';
 import {
   UserOutlined,
+  AlertOutlined,
 } from '@ant-design/icons';
 import { URL } from '@url';
 
@@ -27,15 +28,41 @@ function HeaderMenu({ history, ...props }) {
     </Menu>
   );
 
+  const notification = (
+    <Menu style={{maxWidth: '200px', maxHeight: '200px', wordWrap: 'break-word'}}>
+      <Menu.Item>
+          Thông báo 1
+      </Menu.Item>
+      <Menu.Item>
+          Thông báo 2
+      </Menu.Item>
+      <Menu.Item>
+          Thông báo 3
+      </Menu.Item>
+    </Menu>
+  );
+
+
   return (
-    <React.Fragment>
-      <span style={{ alignSelf: 'center', fontSize: '15px' }}>
+    <>
+      <Dropdown overlay={notification} trigger={['click']} placement="bottomRight" arrow style={{maxWidth: '200px', maxHeight: '200px'}}>
+        <div style={{  marginRight: '25px', marginLeft: '25px', paddingLeft: '10px', paddingRight: '10px'  }}>
+          <Badge size="small" style={{}} count={5}>
+            <AlertOutlined width={30} height={30} style={{fontSize: '20px'}}/>
+          </Badge>
+        </div>
+      </Dropdown>
+
+      <React.Fragment>
+
+        <span style={{ alignSelf: 'center', fontSize: '15px' }}>
         {props.myInfo.full_name}
       </span>
-      <Dropdown overlay={menu} trigger={['click']} placement="bottomRight" arrow>
-        <Avatar style={{ margin: 'auto 15px' }} icon={<UserOutlined/>}/>
-      </Dropdown>
-    </React.Fragment>
+        <Dropdown overlay={menu} trigger={['click']} placement="bottomRight" arrow>
+          <Avatar style={{ margin: 'auto 15px' }} icon={<UserOutlined/>}/>
+        </Dropdown>
+      </React.Fragment>
+    </>
   );
 }
 
@@ -46,3 +73,4 @@ function mapStateToProps(store) {
 }
 
 export default (connect(mapStateToProps, app.actions)(withRouter(HeaderMenu)));
+

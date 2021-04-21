@@ -116,7 +116,6 @@ class App extends React.Component {
           onBreakpoint={broken => this.onBreakpoint(broken)}>
           <CustomMenu/>
         </Sider>
-
         <Drawer
           placement='left'
           bodyStyle={{ padding: 0 }}
@@ -141,6 +140,7 @@ class App extends React.Component {
             })}
             <div className='pull-right' style={{ height: '100%', display: 'flex' }}>
               <HeaderMenu/>
+
             </div>
           </Header>
           <div style={{ height: 'calc(100% - 50px)', position: 'relative' }} className='custom-scrollbar flex-column'>

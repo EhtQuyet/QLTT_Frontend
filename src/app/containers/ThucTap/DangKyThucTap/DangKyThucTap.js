@@ -144,8 +144,12 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
         const chonGV = value.trang_thai === DANG_KY_THUC_TAP.CHON_GIANG_VIEN;
         const gvXacNhan = value.trang_thai === DANG_KY_THUC_TAP.GV_XAC_NHAN;
         const daChiaNhom = value.trang_thai === DANG_KY_THUC_TAP.DA_CHIA_NHOM;
+        console.log('value',value.trang_thai);
+        console.log('daDangKy',daDangKy);
+
+
         return <>
-          {daDangKy && isGiaoVu && <div className='mt-2'>
+          {daDangKy && (isGiaoVu || isAdmin) && <div className='mt-2'>
             <Popconfirm
               title='Xác nhận điều kiện sinh viên thực tập'
               onConfirm={() => handleTrangThai(value._id, DANG_KY_THUC_TAP.CHON_GIANG_VIEN)}
@@ -155,7 +159,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
               </Tag>
             </Popconfirm>
           </div>}
-          {daDangKy && isGiaoVu && <div className='mt-2'>
+          {daDangKy && (isGiaoVu || isAdmin) &&  <div className='mt-2'>
             <Popconfirm
               title='Xác nhận sinh viên chưa đủ điều kiện thực tập'
               onConfirm={() => handleTrangThai(value._id, DANG_KY_THUC_TAP.KHONG_DU_DIEU_KIEN)}
@@ -186,8 +190,6 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
               </Tag>
             </Popconfirm>
           </div>}
-          {console.log('value',value)}
-          {console.log('myInfo',myInfo)}
           {(value.sinhVien.ma_sinh_vien === myInfo.username || isGiaoVu || isAdmin) && <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>}
 
         </>;

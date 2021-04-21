@@ -134,9 +134,9 @@ function DangKyDeTai({ isLoading, bomonList, teacherList, myInfo, detaiList, ...
                 <SendOutlined/><span className='ml-1'>Đăng ký đề tài</span>
               </Tag>
             </Popconfirm>
-            <Tag color='cyan' className='tag-action' onClick={() => handleEdit(record)}>
-              <PlusCircleOutlined /><span className='ml-1'>Thêm thành viên</span>
-            </Tag>
+            {/*<Tag color='cyan' className='tag-action' onClick={() => handleEdit(record)}>*/}
+            {/*  <PlusCircleOutlined /><span className='ml-1'>Thêm thành viên</span>*/}
+            {/*</Tag>*/}
           </div>}
           {daDangKy && <div className='mt-2'>
             <Popconfirm
