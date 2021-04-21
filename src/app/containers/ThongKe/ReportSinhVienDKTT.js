@@ -86,15 +86,6 @@ function ReportSinhVienDKTT({ isLoading, namhocList, dotthuctapList, ...props })
   }
 
   function printReport() {
-    // const values = reportBySuppliesForm.getFieldsValue();
-    // const {
-    //   donVi, lyDoChuyen, diaDiemBanGiao,
-    //   donViChuyen, cmndNguoiChuyen, ngayCapCmndNguoiChuyen, noiCapCmndNguoiChuyen,
-    //   donViNhan, cmndNguoiNhan, ngayCapCmndNguoiNhan, noiCapCmndNguoiNhan,
-    // } = values;
-    // const nguoiChuyen = staffOptions.sender.find(staff => staff._id === values.nguoiChuyen);
-    // const nguoiNhan = staffOptions.receiver.find(staff => staff._id === values.nguoiNhan);
-    //
 
     let danhSach = [];
     reportData.forEach((row, index) => {
