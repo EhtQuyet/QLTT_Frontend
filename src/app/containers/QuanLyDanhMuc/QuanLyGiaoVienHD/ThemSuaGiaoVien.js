@@ -111,7 +111,7 @@ function ThemSuaGiaoVien({ isModalVisible, handleOk, handleCancel, userSelected,
               type={CONSTANTS.TEXT}
               layoutCol={{ xs: 24 }}
               layoutItem={{ labelCol: { xs: 8 } }}
-              rules={[RULES.PHONE]}
+              rules={[RULES.PHONE, RULES.REQUIRED]}
               helpInline={false}
               labelLeft
               form={giaovienForm}

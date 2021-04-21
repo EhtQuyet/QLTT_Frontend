@@ -58,7 +58,7 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
   async function getData() {
     const apiResponse = await getAllDiaDiemThucTap(1, 0, { trang_thai: DIA_DIEM_THUC_TAP.DA_XAC_NHAN });
     setDiaDiaTT([...apiResponse.docs, { _id: '####', ten_dia_diem: '---KHÁC---' }]);
-    const apiDotTT = await getAllDotThucTap(1, 0, { trang_thai: DOT_THUC_TAP.DANG_MO, namhoc: "603e027168501a22b45d0343" });
+    const apiDotTT = await getAllDotThucTap(1, 0, { trang_thai: DOT_THUC_TAP.DANG_MO});
     setDotTT(apiDotTT.docs);
   }
 
