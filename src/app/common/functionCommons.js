@@ -1,11 +1,21 @@
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
+import React from 'react';
+import moment from 'moment';
 import { isEqual, isObject, transform } from 'lodash';
 import * as toastify from 'react-toastify';
 
 import { CONSTANTS, TOAST_MESSAGE } from '@constants';
-import { notification } from 'antd';
-import React from 'react';
+
+export function cloneObj(input) {
+  return JSON.parse(JSON.stringify(input))
+}
+
+function renderQuery(queryInput, queryAdd, firstCharacter) {
+  let queryOutput = queryInput ? '&' : firstCharacter;
+  queryOutput += queryAdd;
+  return queryOutput;
+}
 
 export function convertParam(queryObj, firstCharacter = '?') {
   if (typeof queryObj !== 'object') return '';
@@ -15,23 +25,30 @@ export function convertParam(queryObj, firstCharacter = '?') {
   );
   Object.entries(sortable).forEach(([key, value]) => {
     if (value) {
-      query += query ? '&' : firstCharacter || '';
-      if (!key.includes(CONSTANTS.HIDDEN)) {
-        query += `${key}=${value}`;
-      } else {
-        query += value;
+      if (typeof value === 'string' || Array.isArray(value)) {
+        query += query ? '&' : firstCharacter || '';
+        if (!key.includes(CONSTANTS.HIDDEN)) {
+          query += `${key}=${value}`;
+        } else {
+          query += value;
+        }
+      } else if (typeof value === 'object') {
+        if (value.hasOwnProperty('lt')) {
+          query += renderQuery(query, `${key}<${value.lt}`, firstCharacter);
+        }
+        if (value.hasOwnProperty('lte')) {
+          query += renderQuery(query, `${key}<=${value.lte}`, firstCharacter);
+        }
+        if (value.hasOwnProperty('gt')) {
+          query += renderQuery(query, `${key}>${value.gt}`, firstCharacter);
+        }
+        if (value.hasOwnProperty('gte')) {
+          query += renderQuery(query, `${key}>=${value.gte}`, firstCharacter);
+        }
       }
     }
   });
   return query;
-}
-export function renderRowData(label, value, labelWidth = '100px') {
-  return <div className='clearfix' style={{ lineHeight: '20px' }}>
-    <strong style={{ fontSize: '12px', fontStyle: 'italic', width: labelWidth }} className='float-left'>
-      {label}:
-    </strong>
-    <div>{value}</div>
-  </div>;
 }
 
 export function convertFileName(str) {
@@ -54,32 +71,6 @@ export function convertFileName(str) {
   str = str.replace(/\s+/g, ' ');
   str.trim();
   return str;
-}
-
-
-export function formatDateDMY(dateInput, characters = '/') {
-  if (!dateInput) return '';
-  dateInput = new Date(dateInput);
-  const fullYear = dateInput.getFullYear();
-  return `${('0' + dateInput.getDate()).slice(-2)}` + characters
-    + `${('0' + (dateInput.getMonth() + 1)).slice(-2)}` + characters
-    + `${('000' + fullYear).slice((fullYear.toString().length > 3) ? (fullYear.toString().length * (-1)) : -4)}`;
-}
-
-export function formatDateYMD(dateInput, characters = '/') {
-  if (!dateInput) return '';
-  dateInput = new Date(dateInput);
-  const fullYear = dateInput.getFullYear();
-  return `${('000' + fullYear).slice((fullYear.toString().length > 3) ? (fullYear.toString().length * (-1)) : -4)}` + characters
-    + `${('0' + (dateInput.getMonth() + 1)).slice(-2)}` + characters
-    + `${('0' + dateInput.getDate()).slice(-2)}`;
-}
-
-export function formatTime(dateInput) {
-  if (!dateInput) return '';
-  dateInput = new Date(dateInput);
-
-  return `${('0' + dateInput.getHours()).slice(-2)}:${('0' + dateInput.getMinutes()).slice(-2)}:${('0' + dateInput.getSeconds()).slice(-2)}`;
 }
 
 export function findMax(data) {
@@ -109,6 +100,14 @@ export function setCookieToken(authToken) {
 
 export function removeCookieToken() {
   Cookies.remove('token');
+}
+
+export function checkTokenExp(authToken) {
+  if (!authToken) return;
+
+  const exp = jwtDecode(authToken).exp;
+  const now = Date.now().valueOf() / 1000;
+  return now < exp;
 }
 
 export function checkToken(authToken) {
@@ -143,35 +142,37 @@ export function renderMessageError(err, method) {
 }
 
 //
-export function toast(type, label = '', message = '') {
+export function toast(type, label = '', requiredId = false) {
   if (!type) return;
-  if (type === CONSTANTS.DESTROY) {
-    notification.destroy();
-  } else {
-    const toastifyOptions = {
-      position: 'bottom-right',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: false,
-      progress: undefined,
-    };
 
-    const toastMessage = <>
-      {TOAST_MESSAGE.ICON[type]}
-      <div
-        className='float-left d-flex'
-        style={{
-          width: '246px',
-          paddingLeft: '10px',
-          minHeight: '24px',
-        }}>
-        <label className='my-auto'>{label}</label>
-      </div>
-    </>;
-    toastify.toast[type.toLowerCase()](toastMessage, toastifyOptions);
+  const toastifyOptions = {
+    position: 'bottom-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: false,
+    progress: undefined,
+  };
+
+  if (requiredId) {
+    toastifyOptions.toastId = label;
   }
+
+  const toastMessage = <>
+    {TOAST_MESSAGE.ICON[type]}
+    <div
+      className='float-left d-flex'
+      style={{
+        width: '246px',
+        paddingLeft: '10px',
+        minHeight: '24px',
+      }}>
+      <label className='my-auto'>{label}</label>
+    </div>
+  </>;
+
+  toastify.toast[type.toLowerCase()](toastMessage, toastifyOptions);
 }
 
 export function columnIndex(pageSize, currentPage) {
@@ -189,4 +190,44 @@ export function difference(object, base) {
       result[key] = isObject(value) && isObject(base[key]) ? difference(value, base[key]) : value;
     }
   });
+}
+
+export function formatDate(dateTime) {
+  return dateTime ? moment(dateTime).format('DD/MM/YYYY') : '';
+}
+
+export function formatDateTime(dateTime) {
+  return dateTime ? moment(dateTime).format('DD/MM/YYYY HH:mm') : '';
+}
+
+export function renderRowData(label, value, labelWidth = '100px') {
+  return <div className='clearfix' style={{ lineHeight: '20px' }}>
+    <strong style={{ fontSize: '12px', fontStyle: 'italic', width: labelWidth }} className='float-left'>
+      {label}:
+    </strong>
+    <div>{value}</div>
+  </div>;
+}
+
+export function capitalizeFirstLetter(string) {
+  if (!string) return string;
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+export function formatBytes(bytes, decimals = 2) {
+  if (bytes === 0) return '0 Bytes';
+
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+export function formatQueryOneDay(time) {
+  const gte = moment(time).set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+  const lt = moment(gte).add({ days: 1 });
+  return { gte: gte.toISOString(), lt: lt.toISOString() };
 }

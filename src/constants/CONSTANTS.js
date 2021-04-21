@@ -32,6 +32,11 @@ export const CONSTANTS = {
   ERROR: 'ERROR',
   INFO: 'INFO',
   WARNING: 'WARNING',
+
+  NOT_UPLOADED: 'NOT_UPLOADED',
+  UPLOADING: 'UPLOADING',
+  UPLOADED: 'UPLOADED',
+  UPLOAD_ERROR: 'UPLOAD_ERROR',
 };
 
 export const PAGINATION_INIT = Object.assign({}, {
