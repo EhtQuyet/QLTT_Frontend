@@ -28,10 +28,11 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
 
     if (userSelected && isModalVisible) {
       const dataField = Object.assign({}, userSelected);
+
       dataField.diaDiem = userSelected.diadiem_thuctap._id;
       dataField.giaoVien = userSelected.giaoien_huongdan._id;
       dataField.dot_thuc_tap = userSelected.dot_thuc_tap._id;
-
+      dataField.maSinhVien = userSelected.sinhVien._id;
       dkttForm.setFieldsValue(dataField);
     } else if (!isModalVisible) {
       dkttForm.resetFields();
@@ -52,6 +53,7 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
       }
     }
   }
+
 
   async function getData() {
     const apiResponse = await getAllDiaDiemThucTap(1, 0, { trang_thai: DIA_DIEM_THUC_TAP.DA_XAC_NHAN });
@@ -90,7 +92,7 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
               layoutItem={{ labelCol: { xs: 8 } }}
               labelLeft
               showSearch
-              options={{ data: sinhVienList ? sinhVienList : [], valueString: 'code', labelString: 'namecode' }}
+              options={{ data: sinhVienList ? sinhVienList : [], valueString: '_id', labelString: 'namecode' }}
             />}
             <CustomSkeleton
               size='default'

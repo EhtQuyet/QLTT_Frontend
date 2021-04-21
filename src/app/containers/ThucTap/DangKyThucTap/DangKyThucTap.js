@@ -227,6 +227,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
       diem_tbtl: '',
       so_tctl: '',
       dot_thuc_tap: '',
+      sinh_vien : ''
     };
     if (diaDiem === '####') {
       const ddtt = {
@@ -240,6 +241,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
         dataRequest.diem_tbtl = diemTichLuy;
         dataRequest.so_tctl = tinchi_tichluy;
         dataRequest.dot_thuc_tap = dot_thuc_tap;
+        dataRequest.sinh_vien = maSinhVien
       }
     } else {
       dataRequest.giao_vien_huong_dan = giaoVien;
@@ -247,11 +249,13 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
       dataRequest.diem_tbtl = diemTichLuy;
       dataRequest.so_tctl = tinchi_tichluy;
       dataRequest.dot_thuc_tap = dot_thuc_tap;
+      dataRequest.sinh_vien = maSinhVien
     }
-
     if (type === CONSTANTS.CREATE) {
-      const sinhVien = await getAllSinhVien(1, 0, { ma_sinh_vien: maSinhVien ? maSinhVien : myInfo.username });
-      dataRequest.sinh_vien = sinhVien.docs[0]._id;
+      if(myInfo.role === ROLE.SINH_VIEN){
+        const sinhVien = await getAllSinhVien(1, 0, { ma_sinh_vien: maSinhVien ? maSinhVien : myInfo.username });
+        dataRequest.sinh_vien = sinhVien.docs[0]._id;
+      }
       const apiResponse = await createDKTT(dataRequest);
       if (apiResponse) {
         getData();
