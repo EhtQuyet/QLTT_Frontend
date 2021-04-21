@@ -7,7 +7,7 @@ import moment from 'moment';
 import * as namhoc from '@app/store/ducks/namhoc.duck';
 import * as dotthuctap from '@app/store/ducks/dotthuctap.duck';
 import Loading from '@components/Loading';
-import { DownloadOutlined } from '@ant-design/icons';
+import { DownloadOutlined, SearchOutlined } from '@ant-design/icons';
 import { generateDocx, loadResources } from '@app/common/generateDocx';
 import { formatDate } from '@app/common/functionCommons';
 import { getAllDKTT } from '@app/services/ThucTap/DKThucTap/dangkythuctapService';
@@ -32,11 +32,11 @@ function ReportSinhVienDKTT({ isLoading, namhocList, dotthuctapList, ...props })
   }, []);
 
   async function handleChangeNamHoc(namhocSelected) {
+
     if (!namhocSelected) return;
     const data = dotthuctapList.filter(item => {
       if (item.namhoc._id === namhocSelected) return item;
     });
-    console.log('data', data);
     setDotTT(data);
   }
 
@@ -85,6 +85,13 @@ function ReportSinhVienDKTT({ isLoading, namhocList, dotthuctapList, ...props })
     console.log('apiResponse', apiResponse.docs);
   }
 
+  async function onValuesChange(changedValues, allValues) {
+    if (changedValues.namHoc) {
+      reportBySuppliesForm.resetFields(['dotThucTap']);
+    }
+
+  }
+
   function printReport() {
 
     let danhSach = [];
@@ -101,7 +108,7 @@ function ReportSinhVienDKTT({ isLoading, namhocList, dotthuctapList, ...props })
       };
       danhSach = [...danhSach, dataPush];
     });
-    console.log('danhSach',danhSach);
+    console.log('danhSach', danhSach);
     const dataDocx = {
       danhSach,
     };
@@ -110,7 +117,9 @@ function ReportSinhVienDKTT({ isLoading, namhocList, dotthuctapList, ...props })
   }
 
   return (
-    <Form id='reportDKTT' size='small' form={reportBySuppliesForm} onFinish={handleFindStudent}>
+    <Form id='reportDKTT' size='small' form={reportBySuppliesForm} onFinish={handleFindStudent}
+          onValuesChange={onValuesChange}
+    >
       <Row gutter={0}>
         <CustomSkeleton
           label="Năm học" name="namHoc"
@@ -139,7 +148,7 @@ function ReportSinhVienDKTT({ isLoading, namhocList, dotthuctapList, ...props })
 
         <Col xs={24} xl={24} className='mb-2'>
           <Button type="primary" className='float-right' size='small' htmlType='submit'>
-            Tra cứu
+            <SearchOutlined/> Tra cứu
           </Button>
         </Col>
       </Row>
@@ -158,7 +167,7 @@ function ReportSinhVienDKTT({ isLoading, namhocList, dotthuctapList, ...props })
       <div className='clearfix mt-2'>
         <Button size='small' className='float-right' disabled={!reportData.length} type='primary'
                 onClick={printReport}>
-          <DownloadOutlined/>Tải xuống báo cáo
+          <DownloadOutlined/>Tải xuống
         </Button>
       </div>
     </Form>

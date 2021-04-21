@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
 import { debounce } from 'lodash';
-import { Button, Divider, Form, Input, InputNumber, Popconfirm, Row, Col, Select, Switch, Table, Tooltip } from 'antd';
+import { Button, Divider, Form, Input, InputNumber, Popconfirm, Row, Col, Select, Switch, Table, Tooltip, Card } from 'antd';
 import { PlusCircleOutlined, SaveFilled } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
 import { CONSTANTS, RULES, TOAST_MESSAGE, TRANG_THAI } from '@constants';
@@ -98,7 +98,6 @@ function ChiTiet({
         dotThucTap: dotThucTap.label,
         giangVien: giangVien.label,
       });
-      await handleChangeNamHoc(namHoc);
       handleSetStudentsDetail(apiResponse);
     }
   }
@@ -118,43 +117,6 @@ function ChiTiet({
       };
     });
     setDetailStudentsList(listDataDetail);
-  }
-
-  // async function handleChangeGiangVien(giangVienSelected, resetStudentsList = false) {
-  //   if (!giangVienSelected?.value) return;
-  // }
-
-  // async function handleChangeNamHoc(namhocSelected) {
-  //   if (!namhocSelected) return;
-  //   const apiResponse = await getAllDotThucTap(1, 0, { namhoc: namhocSelected ? namhocSelected : '' });
-  // }
-  async function handleChangeNamHoc(namhocSelected, resetStudentsList = false) {
-    if (!namhocSelected?.value) return;
-    console.log('dotthuctapList', dotthuctapList);
-    const data = dotthuctapList.filter(item => {
-      if (item.namhoc === namhocSelected.value && item.trang_thai === DOT_THUC_TAP.DANG_MO) return item;
-    });
-    setDotThucTap(data);
-    if (resetStudentsList) {
-      const studentsListNew = detailStudentsList.map(students => {
-        students.isDeleted = true;
-        return students;
-      });
-      setDetailStudentsList(studentsListNew);
-    }
-  }
-
-  async function handleChangeGiangVien(giangVienSelected, resetStudentsList = false) {
-
-    if (!giangVienSelected?.value) return;
-
-    if (resetStudentsList) {
-      const studentsListNew = detailStudentsList.map(students => {
-        students.isDeleted = true;
-        return students;
-      });
-      setDetailStudentsList(studentsListNew);
-    }
   }
 
   async function handleSaveData() {
@@ -226,46 +188,9 @@ function ChiTiet({
     }
   }
 
-
-  async function handleChangeDetail(key, value, index) {
-    const studentsNew = [...detailStudentsList];
-    studentsNew[index][key] = value;
-    studentsNew[index].notEdited = false;
-
-    setDetailStudentsList(studentsNew);
-    if (!isFormEdited) {
-      setFormEdited(true);
-    }
-  }
-
-  function handleDeleteRow(index) {
-    const studentsNew = detailStudentsList.map((studentsItem, studentsIndex) => {
-      if (studentsIndex === index) {
-        studentsItem.isDeleted = true;
-      }
-      return studentsItem;
-    });
-    setDetailStudentsList(studentsNew);
-    if (!isFormEdited) {
-      setFormEdited(true);
-    }
-  }
-
-
-  function formatCellAction(value, row, index) {
-    return <ActionCell
-      value={row} labelDelete={null} confirmDelete={false}
-      allowEdit={false}
-      disabledDelete={isLoading || !row.tenSinhVien}
-      handleDelete={() => handleDeleteRow(row.keyIndex)}
-    />;
-  }
-
   const columns = [
     { title: 'Mã sinh viên', dataIndex: 'maSinhVien', width: 200 },
     { title: 'Tên sinh viên', dataIndex: 'tenSinhVien', render: value => value?.ten_sinh_vien, width: 200 },
-    { title: 'Tín chỉ tích lũy', dataIndex: 'so_tctl', width: 200 },
-    { title: 'Điểm TB tích lũy', dataIndex: 'diem_tbtl', width: 200 },
   ];
 
   let dataSource = [];
@@ -283,100 +208,20 @@ function ChiTiet({
     }
   }
 
-  function addGroupStudent(studentsListSelected) {
-    console.log('studentsListSelected', studentsListSelected);
-    let detailGroupStudentNew = [...detailStudentsList];
-
-    studentsListSelected.forEach(students => {
-      const dataPush = {
-        isDeleted: false,
-        key: students.key,
-        notEdited: true,
-        maSinhVien: students.maSinhVien,
-        tenSinhVien: students.tenSinhVien,
-        so_tctl: students.so_tctl,
-        diem_tbtl: students.diem_tbtl,
-      };
-
-      detailGroupStudentNew = [...detailGroupStudentNew, dataPush];
-    });
-    setDetailStudentsList(detailGroupStudentNew);
-    toggleModal(false);
-    if (!isFormEdited) {
-      setFormEdited(true);
-    }
-  }
-
-  // console.log(form.getFieldsValue()?.giangVien);
   return (
     <>
       <Form size='small' form={form} onFinish={handleSaveData} scrollToFirstError
             onValuesChange={onValuesChange}>
-        <Row>
-          <CustomSkeleton
-            label="Năm học" name="namHoc"
-            type={CONSTANTS.LABEL}
-            layoutCol={{ xs: 24, lg: 8 }}
-            layoutItem={{ labelCol: { xs: 6, sm: 24, md: 12, lg: 12, xl: 12, xxl: 12 } }}
-            rules={[RULES.REQUIRED]}
-            showSearch
-            disabled={isLoading}
-            showInputLabel={isFinish}
-            labelLeft
-            labelInValue
-            fullLine
-          />
-          <CustomSkeleton
-            label="Đợt thực tập" name="dotThucTap"
-            type={CONSTANTS.LABEL}
-            layoutCol={{ xs: 24, lg: 8 }}
-            layoutItem={{ labelCol: { xs: 6, sm: 24, md: 12, lg: 12, xl: 12, xxl: 12 } }}
-            rules={[RULES.REQUIRED]}
-            showSearch
-            disabled={isLoading}
-            showInputLabel={isFinish}
-            labelLeft
-            labelInValue
-            fullLine
-          />
-          <CustomSkeleton
-            label="Giảng viên hướng dẫn" name="giangVien"
-            type={CONSTANTS.LABEL}
-            layoutCol={{ xs: 24, lg: 8 }}
-            layoutItem={{ labelCol: { xs: 6, sm: 24, md: 12, lg: 21, xl: 12, xxl: 12 } }}
-            rules={[RULES.REQUIRED]}
-            showSearch
-            disabled={isLoading}
-            showInputLabel={isFinish}
-            labelLeft
-            labelInValue
-            fullLine
-          />
-          <CustomSkeleton
-            label='Địa điểm'
-            name="diaDiem"
-            type={CONSTANTS.LABEL}
-            layoutCol={{ xs: 24, lg: 8 }}
-            layoutItem={{ labelCol: { xs: 6, sm: 24, md: 12, lg: 12, xl: 12, xxl: 12 } }}
-            rules={[RULES.REQUIRED]}
-            disabled={isLoading}
-            showInputLabel={isFinish}
-            labelInValue
-            fullLine
-            labelLeft/>
-        </Row>
-        <Divider orientation="left" plain={false} className='mb-4'>
-          {'Danh sách sinh viên nhóm'}
-        </Divider>
         <Loading active={isLoading} >
-          <Table
-            dataSource={dataSource}
-            columns={columns}
-            // pagination={false}
-          />
+          <Divider orientation="left" plain={false} className='mb-4'>
+            {'Danh sách sinh viên nhóm'}
+          </Divider>
+            <Table
+              dataSource={dataSource}
+              columns={columns}
+              // pagination={false}
+            />
         </Loading>
-
-
         <Row className='clearfix mt-2'>
           <Col xs={24} lg={15} xl={8}>
             <Button size='small' className='ant-btn-purple float-right mr-2'
@@ -397,15 +242,6 @@ function ChiTiet({
           </Col>}
         </Row>
       </Form>
-      <AddSinhVien
-        isModalVisible={isShowModal}
-        handleOk={(e) => addGroupStudent(e)}
-        handleCancel={() => toggleModal(false)}
-        detailStudentsList={detailStudentsList}
-        // dotThuctap={form.getFieldsValue()?.dotThucTap?.value}
-        teacher={form.getFieldsValue()?.giangVien?.value}
-        address={form.getFieldsValue()?.diaDiem?.value}
-      />
       <UploadFile
         isModalVisible={stateUpload}
         handleCancel={() => setStateUpload(false)}

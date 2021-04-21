@@ -84,6 +84,7 @@ function NhomThucTap({
     dataDetail[doc._id] = [];
     detailRecord.forEach(item => {
       if (doc._id === item.id_nhomthuctap) {
+        item.key = item._id
         dataDetail[doc._id] = [...dataDetail[doc._id], item];
       }
     });
@@ -188,7 +189,7 @@ function NhomThucTap({
                        <Col xs={24} lg={8} xl={8} align="middle">
                          <Link to={URL.MENU.CHI_TIET_NHOM_ID.format(record._id)}>
                            <Tag color='geekblue' className='tag-action float-right'>
-                             <EyeOutlined/><span className='ml-1'>Chi tiết nhóm</span>
+                             <EyeOutlined/><span className='ml-1'>Chi tiết</span>
                            </Tag>
                          </Link>
                        </Col>

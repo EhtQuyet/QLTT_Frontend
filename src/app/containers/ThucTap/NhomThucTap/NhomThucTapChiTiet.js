@@ -129,9 +129,8 @@ function NhomThucTapChiTiet({
   // }
   async function handleChangeNamHoc(namhocSelected, resetStudentsList = false) {
     if (!namhocSelected?.value) return;
-    console.log('dotthuctapList', dotthuctapList);
     const data = dotthuctapList.filter(item => {
-      if (item.namhoc === namhocSelected.value && item.trang_thai === DOT_THUC_TAP.DANG_MO) return item;
+      if (item.namhoc._id === namhocSelected.value && item.trang_thai === DOT_THUC_TAP.DANG_MO) return item;
     });
     setDotThucTap(data);
     if (resetStudentsList) {

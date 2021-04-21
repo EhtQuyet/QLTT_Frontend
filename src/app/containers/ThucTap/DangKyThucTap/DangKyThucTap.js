@@ -7,7 +7,7 @@ import {
   deleteDKTT,
   getAllDKTT,
   updateDKTT,
-  getById
+  getById,
 } from '@app/services/ThucTap/DKThucTap/dangkythuctapService';
 import {
   getAllSinhVien,
@@ -72,6 +72,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
     query = dkthuctap.query,
   ) {
     const apiResponse = await getAllDKTT(currentPage, pageSize, query);
+    console.log('apiResponse', apiResponse);
     if (apiResponse) {
       setDkthuctap({
         docs: apiResponse.docs,
@@ -118,23 +119,23 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
       title: 'Tên giảng viên',
       dataIndex: 'giaoien_huongdan',
       render: value => value?.ten_giao_vien,
-      width: 300,
+      width: 200,
     },
     {
       title: 'Địa điểm thực tập',
       dataIndex: 'diadiem_thuctap',
       render: value => value?.ten_dia_diem,
-      width: 300,
+      width: 200,
     },
     {
-      title: 'Điểm TB tích lũy',
+      title: 'Điểm TBTL',
       dataIndex: 'diemTichLuy',
-      width: 200,
+      width: 100,
     },
     {
-      title: 'Tín chỉ tích lũy',
+      title: 'Số TCTL',
       dataIndex: 'tinchi_tichluy',
-      width: 200,
+      width: 100,
     },
     {
       align: 'center',
@@ -144,12 +145,10 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
         const chonGV = value.trang_thai === DANG_KY_THUC_TAP.CHON_GIANG_VIEN;
         const gvXacNhan = value.trang_thai === DANG_KY_THUC_TAP.GV_XAC_NHAN;
         const daChiaNhom = value.trang_thai === DANG_KY_THUC_TAP.DA_CHIA_NHOM;
-        console.log('value',value.trang_thai);
-        console.log('daDangKy',daDangKy);
-
 
         return <>
-          {daDangKy && (isGiaoVu || isAdmin) && <div className='mt-2'>
+          <div className='mt-2'>
+            {daDangKy && (isGiaoVu || isAdmin) &&
             <Popconfirm
               title='Xác nhận điều kiện sinh viên thực tập'
               onConfirm={() => handleTrangThai(value._id, DANG_KY_THUC_TAP.CHON_GIANG_VIEN)}
@@ -158,8 +157,8 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
                 <SendOutlined/><span className='ml-1'>Duyệt điều kiện</span>
               </Tag>
             </Popconfirm>
-          </div>}
-          {daDangKy && (isGiaoVu || isAdmin) &&  <div className='mt-2'>
+            }
+            {daDangKy && (isGiaoVu || isAdmin) &&
             <Popconfirm
               title='Xác nhận sinh viên chưa đủ điều kiện thực tập'
               onConfirm={() => handleTrangThai(value._id, DANG_KY_THUC_TAP.KHONG_DU_DIEU_KIEN)}
@@ -168,9 +167,11 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
                 <SendOutlined/><span className='ml-1'>Không đủ ĐK</span>
               </Tag>
             </Popconfirm>
-          </div>}
+            }
+          </div>
 
-          {chonGV && isGiangVien &&  myInfo.username === value.giaoien_huongdan.ma_giao_vien &&  <div className='mt-2'>
+          <div className='mt-2'>
+            {chonGV && isGiangVien && myInfo.username === value.giaoien_huongdan.ma_giao_vien &&
             <Popconfirm
               title='Xác nhận hướng dẫn sinh viên'
               onConfirm={() => handleTrangThai(value._id, DANG_KY_THUC_TAP.GV_XAC_NHAN)}
@@ -179,8 +180,8 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
                 <SendOutlined/><span className='ml-1'>Chấp nhận</span>
               </Tag>
             </Popconfirm>
-          </div>}
-          {chonGV && isGiangVien && myInfo.username === value.giaoien_huongdan.ma_giao_vien && <div className='mt-2'>
+            }
+            {chonGV && isGiangVien && myInfo.username === value.giaoien_huongdan.ma_giao_vien &&
             <Popconfirm
               title='Từ chối hướng dẫn sinh viên'
               onConfirm={() => handleTrangThai(value._id, DANG_KY_THUC_TAP.GV_TU_CHOI)}
@@ -189,8 +190,10 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
                 <SendOutlined/><span className='ml-1'>Từ chối</span>
               </Tag>
             </Popconfirm>
-          </div>}
-          {(value.sinhVien.ma_sinh_vien === myInfo.username || isGiaoVu || isAdmin) && <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>}
+            }
+          </div>
+          {(value.sinhVien.ma_sinh_vien === myInfo.username || isGiaoVu || isAdmin) &&
+          <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>}
 
         </>;
       },
@@ -227,7 +230,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
       diem_tbtl: '',
       so_tctl: '',
       dot_thuc_tap: '',
-      sinh_vien : ''
+      sinh_vien: '',
     };
     if (diaDiem === '####') {
       const ddtt = {
@@ -241,7 +244,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
         dataRequest.diem_tbtl = diemTichLuy;
         dataRequest.so_tctl = tinchi_tichluy;
         dataRequest.dot_thuc_tap = dot_thuc_tap;
-        dataRequest.sinh_vien = maSinhVien
+        dataRequest.sinh_vien = maSinhVien;
       }
     } else {
       dataRequest.giao_vien_huong_dan = giaoVien;
@@ -249,10 +252,10 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
       dataRequest.diem_tbtl = diemTichLuy;
       dataRequest.so_tctl = tinchi_tichluy;
       dataRequest.dot_thuc_tap = dot_thuc_tap;
-      dataRequest.sinh_vien = maSinhVien
+      dataRequest.sinh_vien = maSinhVien;
     }
     if (type === CONSTANTS.CREATE) {
-      if(myInfo.role === ROLE.SINH_VIEN){
+      if (myInfo.role === ROLE.SINH_VIEN) {
         const sinhVien = await getAllSinhVien(1, 0, { ma_sinh_vien: maSinhVien ? maSinhVien : myInfo.username });
         dataRequest.sinh_vien = sinhVien.docs[0]._id;
       }
@@ -367,6 +370,6 @@ const actions = {
   ...giaovien.actions,
   ...diadiem.actions,
   ...dotthuctap.actions,
-  ...sinhvien.actions
-}
+  ...sinhvien.actions,
+};
 export default (connect(mapStateToProps, actions)(DangKyThucTap));

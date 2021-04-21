@@ -131,17 +131,17 @@ export const ConstantsRoutes = [
     icon: renderIcon('business-time'),
     children: [
       {
-        path: URL.MENU.DANG_KY_TUC_TAP,
-        menuName: 'Đăng ký thực tập',
-        component: DangKyThucTap,
-        icon: renderIcon('pen-alt'),
-        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
-      },
-      {
         path: URL.MENU.DOT_THUC_TAP,
         menuName: 'Đợt thực tập',
         component: DotThucTap,
         icon: renderIcon('calendar-alt'),
+        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+      },
+      {
+        path: URL.MENU.DANG_KY_TUC_TAP,
+        menuName: 'Đăng ký thực tập',
+        component: DangKyThucTap,
+        icon: renderIcon('pen-alt'),
         role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
       },
       {
