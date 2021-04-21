@@ -188,13 +188,13 @@ export const ConstantsRoutes = [
         icon: renderIcon('user-graduate'),
         role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
       },
-      {
-        path: URL.MENU.THONG_KE_NHOM_THUC_TAP,
-        menuName: 'Nhóm, địa điểm thực tập',
-        component: ReportNhomThucTap,
-        icon: renderIcon('user-friends'),
-        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
-      },
+      // {
+      //   path: URL.MENU.THONG_KE_NHOM_THUC_TAP,
+      //   menuName: 'Nhóm, địa điểm thực tập',
+      //   component: ReportNhomThucTap,
+      //   icon: renderIcon('user-friends'),
+      //   role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+      // },
     ],
   },
 
