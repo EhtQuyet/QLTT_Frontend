@@ -55,12 +55,20 @@ function ReportSinhVienDKTT({ isLoading, namhocList, dotthuctapList, ...props })
     { title: 'TT', dataIndex: 'key', align: 'center', width: 50 },
     { title: 'Họ và tên', dataIndex: 'tenSinhVien', align: 'center', width: 200 },
     { title: 'Mã SV', dataIndex: 'maSinhVien', align: 'center', width: 100 },
-    { title: 'Địa điểm thực tập', dataIndex: 'diaDiem', align: 'center', width: 200 },
+    {
+      title: 'Địa điểm thực tập',
+      dataIndex: 'diaDiem',
+      render: value => value?.ten_dia_diem,
+      align: 'center',
+      width: 200,
+    },
     {
       title: 'Giảng viên hướng dẫn',
       dataIndex: 'giangVien',
       render: value => value?.ten_giao_vien,
       align: 'center',
+      sorter: (a, b) => a.giangVien.ten_giao_vien.length - b.giangVien.ten_giao_vien.length,
+      sortDirections: ['descend', 'ascend'],
       width: 200,
     },
     { title: 'Điểm TBTL', dataIndex: 'diem_tbtl', align: 'center', width: 100 },
@@ -78,38 +86,36 @@ function ReportSinhVienDKTT({ isLoading, namhocList, dotthuctapList, ...props })
   }
 
   function printReport() {
-    // // const values = reportBySuppliesForm.getFieldsValue();
-    // // const {
-    // //   donVi, lyDoChuyen, diaDiemBanGiao,
-    // //   donViChuyen, cmndNguoiChuyen, ngayCapCmndNguoiChuyen, noiCapCmndNguoiChuyen,
-    // //   donViNhan, cmndNguoiNhan, ngayCapCmndNguoiNhan, noiCapCmndNguoiNhan,
-    // // } = values;
-    // // const nguoiChuyen = staffOptions.sender.find(staff => staff._id === values.nguoiChuyen);
-    // // const nguoiNhan = staffOptions.receiver.find(staff => staff._id === values.nguoiNhan);
-    // //
+    // const values = reportBySuppliesForm.getFieldsValue();
+    // const {
+    //   donVi, lyDoChuyen, diaDiemBanGiao,
+    //   donViChuyen, cmndNguoiChuyen, ngayCapCmndNguoiChuyen, noiCapCmndNguoiChuyen,
+    //   donViNhan, cmndNguoiNhan, ngayCapCmndNguoiNhan, noiCapCmndNguoiNhan,
+    // } = values;
+    // const nguoiChuyen = staffOptions.sender.find(staff => staff._id === values.nguoiChuyen);
+    // const nguoiNhan = staffOptions.receiver.find(staff => staff._id === values.nguoiNhan);
     //
-    // let danhSach = [];
-    // reportData.forEach((row, index) => {
-    //   if (!row.notEdited) {
-    //     const dataPush = {
-    //       stt: index + 1,
-    //       vatTu: row.id_vattu.ten_vat_tu,
-    //       donViTinh: row.id_vattu.ma_don_vi_tinh.ten_don_vi_tinh,
-    //       tgDauKy: moment(row.thoigian_dauky).format('DD-MM-YYYY'),
-    //       tgCuoiKy: moment(row.thoigian_cuoiky).format('DD-MM-YYYY'),
-    //       tonKhoDauKy: row.tonkho_dauky,
-    //       soLuongTang: row.soluong_tang,
-    //       soLuongGiam: row.soluong_tang,
-    //       tonKhoCuoiKy: row.tonkho_cuoiky,
-    //     };
-    //     danhSach = [...danhSach, dataPush];
-    //   }
-    // });
-    // const dataDocx = {
-    //   danhSach,
-    // };
-    //
-    // generateDocx(dataDocx, 'BaoCaoThucLucTheoVatTu', `Báo cáo thực lực theo vật tư`);
+
+    let danhSach = [];
+    reportData.forEach((row, index) => {
+      const dataPush = {
+        stt: index + 1,
+        tenSinhVien: row?.sinh_vien.ten_sinh_vien,
+        maSinhVien: row?.sinh_vien.ma_sinh_vien,
+        diaDiem: row?.dia_diem_thuc_tap.ten_dia_diem,
+        giangVien: row?.giao_vien_huong_dan.ten_giao_vien,
+        diem_tbtl: row?.diem_tbtl,
+        so_tctl: row?.so_tctl,
+        dkTTTN: 'Đủ điều kiện',
+      };
+      danhSach = [...danhSach, dataPush];
+    });
+    console.log('danhSach',danhSach);
+    const dataDocx = {
+      danhSach,
+    };
+
+    generateDocx(dataDocx, 'DanhSachSinhVienDKTT', `DANH SÁCH, ĐỊA ĐIỂM TTTN KHOA CTTT-TT`);
   }
 
   return (
