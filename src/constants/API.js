@@ -25,6 +25,15 @@ export const API = {
   NAM_HOC: 'api/namhoc',
   NAM_HOC_ID: 'api/namhoc/{0}',
 
+  TU_KHOA: 'api/tukhoa',
+  TU_KHOA_ID: 'api/tukhoa/{0}',
+
+  LINH_VUC: 'api/linhvuc',
+  LINH_VUC_ID: 'api/linhvuc/{0}',
+
+  NGACH_GV: 'api/ngachgiangvien',
+  NGACH_GV_ID: 'api/ngachgiangvien/{0}',
+
   DOT_THUC_TAP: '/api/dotthuctap',
   DOT_THUC_TAP_ID: '/api/dotthuctap/{0}',
 

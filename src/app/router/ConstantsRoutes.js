@@ -30,6 +30,10 @@ const DangKyDeTai = lazy(() => import('@containers/DangKyDeTaiTTTN/DangKyDeTai')
 const ThemFile = lazy(() => import('@containers/QuanLyDanhMuc/QuanLySinhVienTTTN/ThemFile'));
 const DiaDiemThucTap = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyDiaDiemThucTap/DiaDiemThucTap'));
 const NamHoc = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyNamHoc/NamHoc'));
+const LinhVuc = lazy(() => import('@containers/LinhVuc/linhVucManagerment'));
+
+const TuKhoa = lazy(() => import('@containers/QuanLyTuKhoa/tuKhoaManagerment'));
+const Ngach = lazy(() => import('@containers/NgachGiangVien/ngachGVManagerment'));
 
 
 const DangKyThucTap = lazy(() => import('@containers/ThucTap/DangKyThucTap/DangKyThucTap'));
@@ -103,6 +107,18 @@ export const ConstantsRoutes = [
         role : [ROLE.ADMIN, ROLE.GIAO_VU],
       },
       {
+        path: URL.MENU.LINH_VUC, menuName: 'Quản lý lĩnh vực',
+        component: LinhVuc,
+        icon: renderIcon('layer-group'),
+        role : [ROLE.ADMIN, ROLE.GIAO_VU],
+      },
+      {
+        path: URL.MENU.NGACH_GV, menuName: 'Ngạch giảng viên',
+        component: Ngach,
+        icon: renderIcon('layer-group'),
+        role : [ROLE.ADMIN, ROLE.GIAO_VU],
+      },
+      {
         path: URL.MENU.LOP_HOC, menuName: 'Quản lý lớp học',
         component: LopHoc,
         icon: renderIcon('school'),
@@ -118,6 +134,12 @@ export const ConstantsRoutes = [
       {
         path: URL.MENU.NAM_HOC, menuName: 'Quản lý năm học',
         component: NamHoc,
+        icon: renderIcon('calendar'),
+        role : [ROLE.ADMIN, ROLE.GIAO_VU],
+      },
+      {
+        path: URL.MENU.TU_KHOA, menuName: 'Quản lý từ khóa',
+        component: TuKhoa,
         icon: renderIcon('calendar'),
         role : [ROLE.ADMIN, ROLE.GIAO_VU],
       },

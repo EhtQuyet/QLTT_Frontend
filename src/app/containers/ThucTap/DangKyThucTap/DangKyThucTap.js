@@ -138,7 +138,7 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
     },
     {
       title: 'Trạng thái',
-      dataIndex: 'trang_thai',
+      dataIndex: 'trang_thai ',
       render: value => <>
         {console.log('value', value)}
         {value === DANG_KY_THUC_TAP.DA_DANG_KY ? <Tag color='lime'>Đã đăng ký</Tag>
