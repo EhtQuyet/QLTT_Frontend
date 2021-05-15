@@ -8,6 +8,8 @@ export const URL = {
     GIAO_VIEN: '/giao-vien',
     QUAN_LY_THUC_TAP: '/quan-ly-thuc-tap',
 
+
+
     SINH_VIEN: '/sinh-vien',
     BO_MON: '/bo-mon',
     NGACH_GV: '/ngach-giang-vien',
@@ -43,6 +45,7 @@ export const URL = {
 
   MY_INFO: '/my-info',
   FILE_SINH_VIEN: '/file-sinh-vien',
-
+  KE_HOACH: '/them-moi-ke-hoach',
+  KE_HOACH_ID: '/chi-tiet-ke-hoach/{0}',
 };
 

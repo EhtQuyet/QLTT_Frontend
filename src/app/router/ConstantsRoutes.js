@@ -17,6 +17,7 @@ import {
   ArrowsAltOutlined,
   UsergroupAddOutlined
 } from '@ant-design/icons';
+import keHoachDetail from '@containers/KeHoachThucTap/keHoachDetail';
 
 const Dashboard = lazy(() => import('@containers/Dashboard/Dashboard'));
 const User = lazy(() => import('@containers/User/User'));
@@ -35,6 +36,7 @@ const LinhVuc = lazy(() => import('@containers/LinhVuc/linhVucManagerment'));
 const TuKhoa = lazy(() => import('@containers/QuanLyTuKhoa/tuKhoaManagerment'));
 const Ngach = lazy(() => import('@containers/NgachGiangVien/ngachGVManagerment'));
 const KeHoach = lazy(() => import('@containers/KeHoachThucTap/keHoachManagerment'));
+const KeHoachDetail = lazy(() => import('@containers/KeHoachThucTap/keHoachDetail'));
 
 
 const DangKyThucTap = lazy(() => import('@containers/ThucTap/DangKyThucTap/DangKyThucTap'));
@@ -249,8 +251,18 @@ export const ConstantsRoutes = [
     component: ChiTiet,
     role: [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
   },
-
-
+  {
+    path: `${URL.KE_HOACH}`,
+    breadcrumbName: 'Kế hoạch thực tập',
+    component: KeHoachDetail,
+    role: [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+  },
+  {
+    path: `${URL.KE_HOACH_ID}`,
+    breadcrumbName: 'Chi tiết kế hoạch',
+    component: KeHoachDetail,
+    role: [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+  },
 ];
 
 

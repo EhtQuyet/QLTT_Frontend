@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import AddNewButton from '@AddNewButton';
 import KeHoachDetail from './keHoachDetail';
+import { Link } from 'react-router-dom';
 import {
   createKeHoach,
   deleteKeHoach,
@@ -14,8 +15,9 @@ import { columnIndex, toast } from '@app/common/functionCommons';
 import Filter from '@components/Filter';
 import Loading from '@components/Loading';
 import { connect } from 'react-redux';
+import { URL } from '@url';
 
-function KeHoachManagernent({ isLoading,  ...props }) {
+function KeHoachManagernent({ isLoading, ...props }) {
   const [kehoach, setKeHoach] = useState(PAGINATION_INIT);
   const [state, setState] = useState({
     isShowModal: false,
@@ -98,7 +100,8 @@ function KeHoachManagernent({ isLoading,  ...props }) {
     const apiResponse = await deleteKeHoach(userSelected._id);
     if (apiResponse) {
       getDataKeHoach();
-      toast(CONSTANTS.SUCCESS, 'Xóa kế hoạch thành công');    }
+      toast(CONSTANTS.SUCCESS, 'Xóa kế hoạch thành công');
+    }
   }
 
 // function create or modify
@@ -154,17 +157,10 @@ function KeHoachManagernent({ isLoading,  ...props }) {
       {/*  ]}*/}
       {/*  handleFilter={(query) => getDataKeHoach(1, kehoach.pageSize, query)}/>*/}
 
-      <AddNewButton onClick={() => handleShowModal(true)} disabled={isLoading}/>
+      <Link to={URL.KE_HOACH} ><AddNewButton  onClick={() => handleShowModal(true)} disabled={isLoading}/></Link>
       <Loading active={isLoading}>
         <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
       </Loading>
-      {/*<KeHoachDetail*/}
-      {/*  type={!!state.userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE}*/}
-      {/*  isModalVisible={state.isShowModal}*/}
-      {/*  handleOk={createAndModifyKeHoach}*/}
-      {/*  handleCancel={() => handleShowModal(false)}*/}
-      {/*  userSelected={state.userSelected}*/}
-      {/*/>*/}
     </div>
   );
 }
