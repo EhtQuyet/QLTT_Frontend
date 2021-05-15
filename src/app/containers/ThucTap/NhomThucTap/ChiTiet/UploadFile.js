@@ -31,18 +31,6 @@ function UploadFile({ isModalVisible, handleCancel, handleOk, ...props }) {
         setProgressUpload(percentCompleted === 100 ? 99 : percentCompleted);
       },
     };
-
-    // const apiResponse = await uploadSuppliesFile(fileUpload, config);
-    // console.log(apiResponse);
-    // setProgressUpload(100);
-    // if (apiResponse.success === true) {
-    //   await setUploadStatus(CONSTANTS.UPLOADED);
-    //   toast(CONSTANTS.SUCCESS, 'Tải lên thành công');
-    //   handleOk(true);
-    // } else if (apiResponse.success === false){
-    //   await setUploadStatus(CONSTANTS.UPLOAD_ERROR);
-    //   toast(CONSTANTS.ERROR, 'Tập tin không hợp lệ');
-    // }
     handleCancel(true);
   }
 

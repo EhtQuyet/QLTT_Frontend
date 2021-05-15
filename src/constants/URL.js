@@ -15,6 +15,7 @@ export const URL = {
     DIA_DIEM_THUC_TAP: '/dia-diem-thuc-tap',
     NAM_HOC: '/nam-hoc',
     TU_KHOA: '/tu-khoa',
+    KE_HOACH_THUC_TAP: '/ke-hoach-thuc-tap',
     LOP_HOC: '/lop-hoc',
     KHOA_HOC: '/khoa-hoc',
 

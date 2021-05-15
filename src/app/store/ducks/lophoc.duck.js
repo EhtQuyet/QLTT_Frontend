@@ -32,7 +32,6 @@ export const actions = {
 export function* saga() {
   yield takeLatest(actionTypes.GetClass, function* getClassmateSaga(data) {
     const dataResponse = yield getAllLopHoc();
-    console.log('data',dataResponse);
     if (dataResponse) {
       const classmateList = dataResponse.docs.map(doc => ({
         _id: doc._id,

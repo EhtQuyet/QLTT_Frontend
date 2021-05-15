@@ -64,6 +64,7 @@ function GiaoVien({ isLoading, bomonList, teacherList, ...props }) {
     diaChi: data.dia_chi,
     hocVi: data.hoc_vi,
     maGiaoVien: data.ma_giao_vien,
+    maNgach: data.ma_ngach,
     gioiTinh: data.gioi_tinh,
     boMon: data.ma_bo_mon,
   }));
@@ -147,12 +148,13 @@ function GiaoVien({ isLoading, bomonList, teacherList, ...props }) {
 
 // function create or modify
   async function createAndModifyGiaoVien(type, dataForm) {
-    const { tenGiaoVien, hocVi, ngaySinh, maGiaoVien, diaChi, sdt, email, gioiTinh , boMon} = dataForm;
+    const { tenGiaoVien, hocVi, ngachGiangVien, ngaySinh, maGiaoVien, diaChi, sdt, email, gioiTinh, boMon } = dataForm;
     const dataRequest = {
       ten_giao_vien: tenGiaoVien,
       hoc_vi: hocVi,
       ngay_sinh: ngaySinh ? ngaySinh.toString() : null,
       ma_giao_vien: maGiaoVien,
+      ma_ngach: ngachGiangVien,
       ma_bo_mon: boMon,
       dia_chi: diaChi,
       sdt: sdt,
@@ -172,7 +174,7 @@ function GiaoVien({ isLoading, bomonList, teacherList, ...props }) {
       dataRequest._id = state.userSelected._id;
       const apiResponse = await updateGiaoVien(dataRequest);
       if (apiResponse) {
-          const docs = giaovien.docs.map(doc => {
+        const docs = giaovien.docs.map(doc => {
           if (doc._id === apiResponse._id) {
             doc = apiResponse;
           }
@@ -215,6 +217,7 @@ function GiaoVien({ isLoading, bomonList, teacherList, ...props }) {
 
     props.setTeacher(teacherListUpdated);
   }
+
   function handleChangePagination(current, pageSize) {
     getDataGiaoVien(current, pageSize);
   }
@@ -256,4 +259,4 @@ function mapStateToProps(store) {
   return { isLoading, bomonList, teacherList };
 }
 
-export default (connect(mapStateToProps, {...bomon.actions, ...giaovien.actions})(GiaoVien));
+export default (connect(mapStateToProps, { ...bomon.actions, ...giaovien.actions })(GiaoVien));

@@ -11,6 +11,8 @@ import { Link } from 'react-router-dom';
 import Filter from '@components/Filter';
 import Loading from '@components/Loading';
 import * as giaovien from '@app/store/ducks/giaovien.duck';
+
+import { getAllLinhVuc } from '@app/services/LinhVuc/linhVuc.service';
 import * as bomon from '@app/store/ducks/bomon.duck';
 import * as user from '@app/store/ducks/user.duck';
 import * as detai from '@app/store/ducks/detai.reduck';
@@ -26,22 +28,26 @@ function DangKyDeTai({ isLoading, bomonList, teacherList, myInfo, detaiList, ...
     isShowModal: false,
     userSelected: null,
   });
-
+  const [listLinhVuc, setListLinhVuc] = useState([])
   useEffect(() => {
-    console.log('myInfo', myInfo);
     if (!props?.teacherList?.length) {
       props.getTeacher();
     }
     if (!props?.detaiList?.length) {
       props.getDeTai();
     }
-    if (!props?.bomonList?.length) {
-      props.getBoMon();
-    }
     (async () => {
       await getDataDeTai();
+      await getLinhVuc();
     })();
   }, []);
+
+  async function getLinhVuc() {
+    const api = await getAllLinhVuc();
+    if(api){
+      setListLinhVuc(api.docs);
+    }
+  }
 
   async function getDataDeTai(
     currentPage = detai.currentPage,
@@ -68,9 +74,8 @@ function DangKyDeTai({ isLoading, bomonList, teacherList, myInfo, detaiList, ...
     ngayTao: data.ngay_tao,
     trangThai: data.trang_thai_dang_ky,
     // hoanThanh: data.trang_thai === TRANG_THAI.DA_DUOC_DUYET,
-    giaoVien: data?.ma_giao_vien,
-    boMon: data?.ma_bo_mon,
-    nguoiDangKy: data?.ma_nguoi_dang_ky,
+    giaoVien: data?.ma_giang_vien,
+    linhVuc: data?.ma_linh_vuc,
   }));
 
   const columns = [
@@ -89,9 +94,9 @@ function DangKyDeTai({ isLoading, bomonList, teacherList, myInfo, detaiList, ...
       width: 300,
     },
     {
-      title: 'Bộ môn',
-      dataIndex: 'boMon',
-      render: value => value?.ten_bo_mon,
+      title: 'Lĩnh vực',
+      dataIndex: 'linhVuc',
+      render: value => value?.ten_linh_vuc,
       width: 200,
     },
     {
@@ -99,13 +104,6 @@ function DangKyDeTai({ isLoading, bomonList, teacherList, myInfo, detaiList, ...
       dataIndex: 'giaoVien',
       key: 'giaoVien',
       render: (value => value?.ten_giao_vien),
-      width: 200,
-    },
-    {
-      title: 'Người đăng ký',
-      dataIndex: 'nguoiDangKy',
-      key: 'nguoiDangKy',
-      render: (value => value?.full_name),
       width: 200,
     },
     {
@@ -231,8 +229,8 @@ function DangKyDeTai({ isLoading, bomonList, teacherList, myInfo, detaiList, ...
             options: { data: teacherList, valueString: '_id', labelString: 'name' },
           },
           {
-            name: 'ma_bo_mon', label: 'Bộ môn', type: CONSTANTS.SELECT,
-            options: { data: bomonList, valueString: '_id', labelString: 'name' },
+            name: 'ma_linh_vuc', label: 'Lĩnh vực', type: CONSTANTS.SELECT,
+            options: { data: listLinhVuc, valueString: '_id', labelString: 'name' },
           },
         ]}
         handleFilter={(query) => getDataDeTai(1, detai.pageSize, query)}

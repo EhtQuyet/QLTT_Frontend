@@ -95,7 +95,6 @@ function ChiTiet({
 
   async function getDataRecord() {
     const apiResponse = await getNhomThucTapById(recordId);
-    console.log(apiResponse);
     if (apiResponse) {
       const giangVien = { value: apiResponse.id_giangvien._id, label: apiResponse.id_giangvien.ten_giao_vien };
       await form.setFieldsValue({

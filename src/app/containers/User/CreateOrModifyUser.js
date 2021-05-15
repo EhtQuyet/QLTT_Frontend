@@ -41,8 +41,6 @@ function CreateOrModifyUser({ isModalVisible, handleOk, handleCancel, userSelect
     }
   }
 
-  console.log('roleData',roleData);
-
   function onFinish(data) {
     if (props.isLoading) return;
     handleOk(userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE, data);

@@ -1,6 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Col, Modal, Row } from 'antd';
 import ModalFooter from '@components/ModalFooter/ModalFooter';
+import {getAllNgachGV} from '@app/services/NgachGV/ngachGV.service'
+
 import CustomSkeleton from '@components/CustomSkeleton';
 import { CONSTANTS, GENDER_OPTIONS, HOCVI_OPTIONS, RULES } from '@constants';
 import Form from 'antd/es/form';
@@ -12,18 +14,27 @@ import moment from 'moment';
 
 function ThemSuaGiaoVien({ isModalVisible, handleOk, handleCancel, userSelected, ...props }) {
   const [giaovienForm] = Form.useForm();
-
+  const [ngachList, setNgachList] = useState([]);
   useEffect(() => {
     if (userSelected && isModalVisible) {
       const dataField = Object.assign({}, userSelected);
       dataField.ngaySinh = userSelected.ngaySinh ? moment(userSelected.ngaySinh) : '';
       dataField.boMon = userSelected.boMon._id;
+      dataField.ngachGiangVien = userSelected.maNgach._id;
       giaovienForm.setFieldsValue(dataField);
     } else if (!isModalVisible) {
       giaovienForm.resetFields();
     }
+    (async () => {
+      await getData();
+    })();
   }, [isModalVisible]);
-
+  async function getData() {
+      const api = await getAllNgachGV();
+      if(api) {
+        setNgachList(api.docs)
+      }
+  }
   function onFinish(data) {
     if (props.isLoading) return;
     handleOk(userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE, data);
@@ -102,6 +113,16 @@ function ThemSuaGiaoVien({ isModalVisible, handleOk, handleCancel, userSelected,
               layoutCol={{ xs: 24 }}
               layoutItem={{ labelCol: { xs: 8 } }}
               options={{ data: props.bomonList, valueString: '_id', labelString: 'name' }}
+              labelLeft
+              rules={[RULES.REQUIRED]}
+            />
+            <CustomSkeleton
+              size='default'
+              label="Ngạch giảng viên" name="ngachGiangVien"
+              type={CONSTANTS.SELECT}
+              layoutCol={{ xs: 24 }}
+              layoutItem={{ labelCol: { xs: 8 } }}
+              options={{ data: ngachList, valueString: '_id', labelString: 'ten_ngach' }}
               labelLeft
               rules={[RULES.REQUIRED]}
             />

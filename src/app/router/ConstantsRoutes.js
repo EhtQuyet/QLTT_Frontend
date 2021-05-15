@@ -34,6 +34,7 @@ const LinhVuc = lazy(() => import('@containers/LinhVuc/linhVucManagerment'));
 
 const TuKhoa = lazy(() => import('@containers/QuanLyTuKhoa/tuKhoaManagerment'));
 const Ngach = lazy(() => import('@containers/NgachGiangVien/ngachGVManagerment'));
+const KeHoach = lazy(() => import('@containers/KeHoachThucTap/keHoachManagerment'));
 
 
 const DangKyThucTap = lazy(() => import('@containers/ThucTap/DangKyThucTap/DangKyThucTap'));
@@ -170,6 +171,13 @@ export const ConstantsRoutes = [
         path: URL.MENU.NHOM_THUC_TAP,
         menuName: 'Nhóm thực tập',
         component: NhomThucTap,
+        icon: renderIcon('user-friends'),
+        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+      },
+      {
+        path: URL.MENU.KE_HOACH_THUC_TAP,
+        menuName: 'Kế hoạch thực tập',
+        component: KeHoach,
         icon: renderIcon('user-friends'),
         role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
       },

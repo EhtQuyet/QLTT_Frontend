@@ -31,23 +31,17 @@ function AddSinhVien({ isLoading, isModalVisible, handleOk, handleCancel, userSe
   }, [isModalVisible]);
 
   async function getStudentData() {
-    console.log('teacher', props.teacher);
-    console.log('address', props.address);
-    console.log('detailStudentsList', props.detailStudentsList);
 
     const apiResponse = dkthuctapList.filter(item => {
       if (item.teacherId === props.teacher && item.diadiem_id === props.address) return item;
     });
-    console.log('apiResponse', apiResponse);
     if (apiResponse) {
       let studentsIdList = [];
       props.detailStudentsList.forEach(item => {
-        console.log(item);
         if (!item.isDeleted)
           studentsIdList = [...studentsIdList, item.tenSinhVien._id];
       });
       const filterer = apiResponse.filter(item => !studentsIdList.includes(item.sinhvien._id));
-      console.log('filterer', filterer);
       setStudentsData(filterer);
     }
   }

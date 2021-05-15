@@ -31,6 +31,9 @@ export const API = {
   LINH_VUC: 'api/linhvuc',
   LINH_VUC_ID: 'api/linhvuc/{0}',
 
+  KE_HOACH: 'api/kehoachthuctap',
+  KE_HOACH_ID: 'api/kehoachthuctap/{0}',
+
   NGACH_GV: 'api/ngachgiangvien',
   NGACH_GV_ID: 'api/ngachgiangvien/{0}',
 

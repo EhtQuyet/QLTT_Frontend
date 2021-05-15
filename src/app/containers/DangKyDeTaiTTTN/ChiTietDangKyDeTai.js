@@ -13,7 +13,6 @@ function ChiTietDangKyDeTai({ isModalVisible, handleOk, handleCancel, userSelect
 
   useEffect(() => {
     if (userSelected && isModalVisible) {
-      console.log('data', userSelected);
       const dataField = Object.assign({}, userSelected);
       chitietdangkyForm.setFieldsValue(dataField);
     } else if (!isModalVisible) {

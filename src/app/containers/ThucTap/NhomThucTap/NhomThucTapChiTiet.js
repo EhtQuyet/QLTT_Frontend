@@ -55,7 +55,6 @@ function NhomThucTapChiTiet({
   const [stateUpload, setStateUpload] = useState(false);
 
   const isSinhVien = myInfo && myInfo.role.includes(ROLE.SINH_VIEN);
-  // console.log('isSinhVien', isSinhVien);
 
   useEffect(() => {
     if (!props?.namhocList?.length) {
@@ -90,7 +89,6 @@ function NhomThucTapChiTiet({
 
   async function getDataRecord() {
     const apiResponse = await getNhomThucTapById(recordId);
-    console.log(apiResponse);
     if (apiResponse) {
       const namHoc = { value: apiResponse.nam_hoc._id, label: apiResponse.nam_hoc.nam_hoc };
       const diaDiem = { value: apiResponse.dia_diem._id, label: apiResponse.dia_diem.ten_dia_diem };
@@ -303,7 +301,6 @@ function NhomThucTapChiTiet({
   }
 
   function addGroupStudent(studentsListSelected) {
-    console.log('studentsListSelected', studentsListSelected);
     let detailGroupStudentNew = [...detailStudentsList];
 
     studentsListSelected.forEach(students => {
@@ -325,8 +322,6 @@ function NhomThucTapChiTiet({
       setFormEdited(true);
     }
   }
-
-  // console.log(form.getFieldsValue()?.giangVien);
   return (
     <>
       <Form size='small' form={form} onFinish={handleSaveData} scrollToFirstError

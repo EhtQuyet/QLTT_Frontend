@@ -82,7 +82,6 @@ function ReportSinhVienDKTT({ isLoading, namhocList, dotthuctapList, ...props })
     if (apiResponse) {
       setReportData(apiResponse.docs);
     }
-    console.log('apiResponse', apiResponse.docs);
   }
 
   async function onValuesChange(changedValues, allValues) {
@@ -108,7 +107,6 @@ function ReportSinhVienDKTT({ isLoading, namhocList, dotthuctapList, ...props })
       };
       danhSach = [...danhSach, dataPush];
     });
-    console.log('danhSach', danhSach);
     const dataDocx = {
       danhSach,
     };

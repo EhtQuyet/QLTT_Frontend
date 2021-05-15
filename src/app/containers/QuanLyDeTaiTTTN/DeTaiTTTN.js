@@ -4,6 +4,7 @@ import AddNewButton from '@AddNewButton';
 import { DeleteOutlined, EditOutlined, EyeOutlined, SendOutlined } from '@ant-design/icons';
 import ThemSuaDeTaiTTTN from './ThemSuaDeTaiTTTN';
 import { createDeTai, deleteDeTai, getAllDetai, updateDeTai } from '@app/services/DeTaiTTTN/DeTaiService';
+import { getAllLinhVuc } from '@app/services/LinhVuc/linhVuc.service';
 import ActionCell from '@components/ActionCell';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT, TRANG_THAI, TRANG_THAI_LABEL } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
@@ -12,17 +13,17 @@ import { connect } from 'react-redux';
 import Filter from '@components/Filter';
 import Loading from '@components/Loading';
 import * as giaovien from '@app/store/ducks/giaovien.duck';
-import * as bomon from '@app/store/ducks/bomon.duck';
 import * as user from '@app/store/ducks/user.duck';
 import * as detai from '@app/store/ducks/detai.reduck';
 
 
-function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props }) {
+function DetaiTTTN({ isLoading, teacherList, myInfo, detaiList, ...props }) {
   const [detai, setDetai] = useState(PAGINATION_INIT);
   const [state, setState] = useState({
     isShowModal: false,
     userSelected: null,
   });
+  const [listLinhVuc, setListLinhVuc] = useState([])
 
   useEffect(() => {
     if (!props?.teacherList?.length) {
@@ -31,13 +32,18 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
     if (!props?.detaiList?.length) {
       props.getDeTai();
     }
-    if (!props?.bomonList?.length) {
-      props.getBoMon();
-    }
     (async () => {
       await getDataDeTai();
+      await getLinhVuc();
     })();
   }, []);
+
+  async function getLinhVuc() {
+    const api = await getAllLinhVuc();
+    if(api){
+      setListLinhVuc(api.docs);
+    }
+  }
 
   async function getDataDeTai(
     currentPage = detai.currentPage,
@@ -56,7 +62,6 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
     }
   }
 
-  console.log('detai.docs',detai.docs);
 
   const dataSource = detai.docs.map((data, index) => ({
     _id: data._id,
@@ -66,9 +71,10 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
     ngayTao: data.created_at,
     trangThai: data.trang_thai,
     hoanThanh: data.trang_thai === TRANG_THAI.DA_DUOC_DUYET,
-    giaoVien: data?.ma_giao_vien,
-    boMon: data?.ma_bo_mon,
+    giangVien: data?.ma_giang_vien,
+    linhVuc: data?.ma_linh_vuc,
     nguoiTao: data?.ma_nguoi_tao,
+    namHoc: data?.nam_hoc,
   }));
 
   const columns = [
@@ -87,15 +93,16 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
       width: 300,
     },
     {
-      title: 'Bộ môn',
-      dataIndex: 'boMon',
-      render: value => value?.ten_bo_mon,
+      title: 'Lĩnh vực',
+      dataIndex: 'linhVuc',
+      key: 'linhVuc',
+      render: value => value?.ten_linh_vuc,
       width: 200,
     },
     {
       title: 'Giảng viên hướng dẫn',
-      dataIndex: 'giaoVien',
-      key: 'giaoVien',
+      dataIndex: 'giangVien',
+      key: 'giangVien',
       render: (value => value?.ten_giao_vien),
       width: 250,
     },
@@ -143,7 +150,7 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
           <div className='mt-2'>
             <Button size='small' onClick={() => handleEdit(record)} style={{ borderColor: 'white' }}>
               <Tag color='blue' className='tag-action'>
-                <EditOutlined/><span>Chỉnh sửa đề tài</span>
+                <EditOutlined/><span>Chỉnh sửa</span>
               </Tag>
             </Button>
           </div>
@@ -198,7 +205,6 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
     if (apiResponse) {
       getDataDeTai();
       toast(CONSTANTS.SUCCESS, 'Xóa đề tài thành công');
-      // updateStoreStaff(CONSTANTS.DELETE, apiResponse);
     }
   }
 
@@ -209,9 +215,10 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
       ten_de_tai: dataForm.tenDeTai,
       ma_de_tai: dataForm.maDeTai,
       ngay_tao: dataForm.ngayTao ? dataForm.ngayTao.toString() : null,
-      ma_giao_vien: dataForm.giaoVien,
-      ma_bo_mon: dataForm.boMon,
+      ma_giang_vien: dataForm.giangVien,
+      ma_linh_vuc: dataForm.linhVuc,
       ma_nguoi_tao: myInfo._id,
+      nam_hoc: dataForm.namHoc,
     };
     if (type === CONSTANTS.CREATE) {
       const apiResponse = await createDeTai(dataRequest);
@@ -241,37 +248,6 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
     }
   }
 
-  // function updateStoreDeTai(type, dataResponse) {
-  //   if (!type || !dataResponse || !staffList.length) return;
-  //
-  //   const dataChanged = {
-  //     _id: dataResponse._id,
-  //     code: dataResponse.ma_nhan_vien,
-  //     name: dataResponse.ten_nhan_vien,
-  //   };
-  //   let staffListUpdated = [];
-  //   if (type === CONSTANTS.UPDATE) {
-  //     staffListUpdated = staffList.map(staff => {
-  //       if (staff._id === dataChanged._id) {
-  //         return dataChanged;
-  //       }
-  //       return staff;
-  //     });
-  //   }
-  //
-  //   if (type === CONSTANTS.DELETE) {
-  //     staffListUpdated = staffList.filter(staff => {
-  //       return staff._id !== dataChanged._id;
-  //     });
-  //   }
-  //
-  //   if (type === CONSTANTS.CREATE) {
-  //     staffListUpdated = [...staffList, dataChanged];
-  //   }
-  //
-  //   props.setCalUnit(staffListUpdated);
-  // }
-
   function handleChangePagination(current, pageSize) {
     getDataDeTai(current, pageSize);
   }
@@ -287,12 +263,12 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
         dataSearch={[
           { name: 'ten_de_tai', label: 'Tên đề tài', type: CONSTANTS.TEXT },
           {
-            name: 'ma_giao_vien', label: 'giảng viên hướng dẫn ', type: CONSTANTS.SELECT,
+            name: 'ma_giang_vien', label: 'giảng viên hướng dẫn ', type: CONSTANTS.SELECT,
             options: { data: teacherList, valueString: '_id', labelString: 'name' },
           },
           {
-            name: 'ma_bo_mon', label: 'Bộ môn', type: CONSTANTS.SELECT,
-            options: { data: bomonList, valueString: '_id', labelString: 'name' },
+            name: 'ma_linh_vuc', label: 'Lĩnh vực', type: CONSTANTS.SELECT,
+            options: { data: listLinhVuc, valueString: '_id', labelString: 'name' },
           },
         ]}
         handleFilter={(query) => getDataDeTai(1, detai.pageSize, query)}/>
@@ -316,10 +292,9 @@ function DetaiTTTN({ isLoading, bomonList, teacherList, myInfo, detaiList, ...pr
 function mapStateToProps(store) {
   const { isLoading } = store.app;
   const { myInfo } = store.user;
-  const { bomonList } = store.bomon;
   const { teacherList } = store.giaovien;
   const { detaiList } = store.detai;
-  return { isLoading, bomonList, teacherList, myInfo, detaiList };
+  return { isLoading, teacherList, myInfo, detaiList };
 }
 
-export default (connect(mapStateToProps, { ...bomon.actions, ...giaovien.actions, ...user.actions, ...detai.actions })(DetaiTTTN));
+export default (connect(mapStateToProps, {  ...giaovien.actions, ...user.actions, ...detai.actions })(DetaiTTTN));

@@ -29,7 +29,6 @@ function ThemFile({ isLoading, ...props }) {
 
   async function getDataClass() {
     const apiResponse = await getAllLopHoc();
-    console.log('claas', apiResponse.docs);
     if (apiResponse) {
       setClassmate(apiResponse.docs);
     }
@@ -57,7 +56,6 @@ function ThemFile({ isLoading, ...props }) {
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
       const data = XLSX.utils.sheet_to_json(ws);
-      console.log('data', data);
       setDataImport(data);
     };
     if (rABS) {
@@ -117,9 +115,6 @@ function ThemFile({ isLoading, ...props }) {
     row: data.row,
     err: data.error,
   })) : [];
-
-  console.log('tableErr', tableErr);
-
 
   const columns = [
     {
@@ -182,9 +177,6 @@ function ThemFile({ isLoading, ...props }) {
       width: 500,
     },
   ];
-
-  console.log('errorImport', errorImport);
-
 
   return (
     <div>

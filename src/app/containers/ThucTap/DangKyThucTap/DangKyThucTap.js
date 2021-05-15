@@ -71,7 +71,6 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
     query = dkthuctap.query,
   ) {
     const apiResponse = await getAllDKTT(currentPage, pageSize, query);
-    console.log('apiResponse', apiResponse);
     if (apiResponse) {
       setDkthuctap({
         docs: apiResponse.docs,
@@ -140,7 +139,6 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
       title: 'Trạng thái',
       dataIndex: 'trang_thai ',
       render: value => <>
-        {console.log('value', value)}
         {value === DANG_KY_THUC_TAP.DA_DANG_KY ? <Tag color='lime'>Đã đăng ký</Tag>
           : value === DANG_KY_THUC_TAP.KHONG_DU_DIEU_KIEN ? <Tag color='red'>Không đủ ĐKTT</Tag>
             : value === DANG_KY_THUC_TAP.DU_DIEU_KIEN ? <Tag color='lime'>Đủ ĐKTT</Tag>
@@ -237,7 +235,6 @@ function DangKyThucTap({ isLoading, myInfo, dotthuctapList, teacherList, diadiem
 // function create or modify
   async function createAndModify(type, dataForm) {
     const { giaoVien, diemTichLuy, tinchi_tichluy, diaDiem, dot_thuc_tap, maSinhVien, tenDiaDiem, diaChi } = dataForm;
-    console.log(diaDiem, tenDiaDiem, diaChi);
     let dataRequest = {
       giao_vien_huong_dan: '',
       dia_diem_thuc_tap: '',

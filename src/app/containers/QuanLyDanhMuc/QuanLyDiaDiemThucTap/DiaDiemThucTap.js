@@ -111,7 +111,6 @@ function DiaDiemThucTap({ isLoading, ...props }) {
   }
 
   function handleEdit(userSelected) {
-    console.log('userSelected',userSelected);
     setState({ isShowModal: true, userSelected });
   }
 
