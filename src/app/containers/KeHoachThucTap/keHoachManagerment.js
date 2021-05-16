@@ -17,7 +17,7 @@ import Loading from '@components/Loading';
 import { connect } from 'react-redux';
 import { URL } from '@url';
 
-function KeHoachManagernent({ isLoading, ...props }) {
+function keHoachManagerment({ isLoading, ...props }) {
   const [kehoach, setKeHoach] = useState(PAGINATION_INIT);
   const [state, setState] = useState({
     isShowModal: false,
@@ -35,7 +35,8 @@ function KeHoachManagernent({ isLoading, ...props }) {
     pageSize = kehoach.pageSize,
     query = kehoach.query,
   ) {
-    const apiResponse = await getAllKeHoach(currentPage, pageSize, query);
+    const apiResponse = await getAllKeHoach(currentPage, pageSize, query)
+    console.log('apiResponse', apiResponse);
     if (apiResponse) {
       setKeHoach({
         docs: apiResponse.docs,
@@ -50,7 +51,7 @@ function KeHoachManagernent({ isLoading, ...props }) {
   const dataSource = kehoach.docs.map((data, index) => ({
     key: data._id,
     _id: data._id,
-    maSinhVien: data.ma_sinh_vien,
+    tenSinhVien: data.id_sinhvien,
     keHoach: data.ke_hoach,
     ghiChu: data.ghi_chu,
     trangThai: data.trang_thai,
@@ -61,8 +62,8 @@ function KeHoachManagernent({ isLoading, ...props }) {
 
     {
       title: 'Tên sinh viên',
-      dataIndex: 'maSinhVien',
-      key: 'maSinhVien',
+      dataIndex: 'tenSinhVien',
+      key: 'tenSinhVien',
       render: value => value?.ten_sinh_vien,
       width: 300,
     },
@@ -75,26 +76,30 @@ function KeHoachManagernent({ isLoading, ...props }) {
     {
       title: 'Trạng thái',
       dataIndex: 'trangThai',
+      render: value => {
+        if(value === 'DANG_XU_LY'){
+          return 'Đã xử lý'
+        }
+        return 'Chưa xử lý'
+      },
       key: 'trangThai',
       width: 300,
     },
     {
       align: 'center',
-      render: (value) => <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>,
+      render: (text, record, index) => <>
+        <ActionCell
+          value={record}
+          disabledDelete={isLoading}
+          linkToEdit={URL.MENU.KE_HOACH_CHI_TIET_ID.format(record._id)}
+          handleDelete={handleDelete}
+        />
+      </>,
       width: 300,
     },
   ];
 
-  function handleShowModal(isShowModal, userSelected = null) {
-    setState({
-      isShowModal,
-      userSelected,
-    });
-  }
 
-  function handleEdit(userSelected) {
-    setState({ isShowModal: true, userSelected });
-  }
 
   async function handleDelete(userSelected) {
     const apiResponse = await deleteKeHoach(userSelected._id);
@@ -103,42 +108,6 @@ function KeHoachManagernent({ isLoading, ...props }) {
       toast(CONSTANTS.SUCCESS, 'Xóa kế hoạch thành công');
     }
   }
-
-// function create or modify
-  async function createAndModifyKeHoach(type, dataForm) {
-    const { maSinhVien, keHoach, ghiChu, trangThai } = dataForm;
-    const dataRequest = {
-      ma_sinh_vien: maSinhVien,
-      ke_hoach: keHoach,
-      ghi_chu: ghiChu,
-      trang_thai: trangThai,
-    };
-    if (type === CONSTANTS.CREATE) {
-      const apiResponse = await createKeHoach(dataRequest);
-      if (apiResponse) {
-        getDataKeHoach();
-        handleShowModal(false);
-        toast(CONSTANTS.SUCCESS, 'Thêm mới kế hoạch thành công');
-      }
-    }
-
-    if (type === CONSTANTS.UPDATE) {
-      dataRequest._id = state.userSelected._id;
-      const apiResponse = await updateKeHoach(dataRequest);
-      if (apiResponse) {
-        const docs = kehoach.docs.map(doc => {
-          if (doc._id === apiResponse._id) {
-            doc = apiResponse;
-          }
-          return doc;
-        });
-        setKeHoach(Object.assign({}, kehoach, { docs }));
-        handleShowModal(false);
-        toast(CONSTANTS.SUCCESS, 'Chỉnh sửa thông tin kế hoạch thành công');
-      }
-    }
-  }
-
 
   function handleChangePagination(current, pageSize) {
     getDataKeHoach(current, pageSize);
@@ -157,7 +126,10 @@ function KeHoachManagernent({ isLoading, ...props }) {
       {/*  ]}*/}
       {/*  handleFilter={(query) => getDataKeHoach(1, kehoach.pageSize, query)}/>*/}
 
-      <Link to={URL.KE_HOACH} ><AddNewButton  onClick={() => handleShowModal(true)} disabled={isLoading}/></Link>
+      <AddNewButton
+        disabled={isLoading}
+        linkTo={URL.MENU.THEM_KE_HOACH} label={'Thêm nhóm thực tập'}
+      />
       <Loading active={isLoading}>
         <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
       </Loading>
@@ -171,4 +143,4 @@ function mapStateToProps(store) {
   return { isLoading };
 }
 
-export default (connect(mapStateToProps)(KeHoachManagernent));
+export default (connect(mapStateToProps)(keHoachManagerment));

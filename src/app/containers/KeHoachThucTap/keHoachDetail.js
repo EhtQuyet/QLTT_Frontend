@@ -1,92 +1,197 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Col, Modal, Row, Table } from 'antd';
-import ModalFooter from '@components/ModalFooter/ModalFooter';
-import CustomSkeleton from '@components/CustomSkeleton';
-import { CONSTANTS, GENDER_OPTIONS, HOCVI_OPTIONS, RULES } from '@constants';
-import Form from 'antd/es/form';
-import { connect } from 'react-redux';
-import Loading from '@components/Loading';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import {
+  Button,
+  Typography,
+  Form,
+  InputNumber,
+  Row,
+  Table,
+  Card, Col, Divider, Tag, Popconfirm, Switch, Input,
+} from 'antd';
+import { DeleteOutlined, SaveFilled } from '@ant-design/icons';
 import moment from 'moment';
-import { columnIndex } from '@app/common/functionCommons';
+import { connect } from 'react-redux';
+import CustomSkeleton from '@components/CustomSkeleton';
+import { CONSTANTS, CONSTANTS_ERROR, RULES, TOAST_MESSAGE, TRANG_THAI } from '@constants';
+import { getKeHoachById, createKeHoach, updateKeHoach } from '@app/services/KeHoach/keHoach.service';
+import Loading from '@components/Loading';
+import { URL } from '@url';
 import ActionCell from '@components/ActionCell';
 
-function KeHoachDetail({ ...props }) {
+function keHoachDetail({ isLoading, ...props }) {
 
-  const khId = undefined;
+  const [, updateState] = React.useState();
+  const forceUpdate = React.useCallback(() => updateState({}), []);
 
+  const kehoachID = useParams()?.id;
+
+  const [form] = Form.useForm();
+  const [isFormEdited, setFormEdited] = useState(false);
+  const [isShowModal, toggleModal] = useState(false);
+  const [isFinish, setFinish] = useState(false);
+
+  const [stateUpload, setStateUpload] = useState(false);
+  console.log('kehoachID', kehoachID);
   useEffect(() => {
   }, []);
-  async function getData() {
+
+  useEffect(() => {
+    (async () => {
+      if (kehoachID) {
+        await getDataRecord();
+      } else {
+      }
+    })();
+  }, []);
+
+
+  async function getDataRecord() {
+    const apiResponse = await getKeHoachById(kehoachID)
+    console.log('apiResponse', apiResponse);
+  }
+
+
+  async function handleSaveData() {
 
   }
-  function onFinish(data) {
-    if (props.isLoading) return;
-    handleOk(userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE, data);
-  }
+
 
   const columns = [
-    {
-      title: 'Bắt đầu',
-      width: 200,
-    },
-    {
-      title: 'Kết thúc',
-      width: 200,
-    },
-    {
-      title: 'Nội dung',
-      width: 500,
-    },
-    {
-      title: 'Kết quả',
-      width: 500,
-    },
+    { title: 'Thời gian bắt đầu', dataIndex: 'batDau', width: 150 },
+    { title: 'Thời gian kết thúc', dataIndex: 'ketThuc', width: 150 },
+    { title: 'Nội dung công việc', dataIndex: 'noiDung', width: 200 },
+    { title: 'Kết quả công việc', dataIndex: 'ketQua', width: 200 },
   ];
+
+  let dataSource = [];
+
+  async function onValuesChange(changedValues, allValues) {
+    // if(allValues.dotThucTap && allValues.giangVien && allValues.diaDiem)
+    //   set
+    // if (changedValues.namHoc) {
+    //   console.log(changedValues.namHoc);
+    //   const data = dotthuctapList.filter(item => {
+    //     if (item.namhoc === changedValues.namHoc) return item;
+    //   });
+    //   setDotThucTap(data);
+    // }
+    // if (changedValues.giangVien) {
+    //   setGVId(changedValues.giangVien);
+    // }
+    // if (changedValues.dotThucTap) {
+    //   setDotTTId(changedValues.dotThucTap);
+    // }
+    // if (changedValues.diaDiem) {
+    //
+    // }
+    if (!isFormEdited) {
+      setFormEdited(true);
+    }
+  }
+
+  async function handleApprove(e) {
+
+  }
+
   return (
-      <Loading active={props.isLoading}>
-        <p>{khId ? 'Chi tiết kế hoạch thực tập' : 'Thêm mới kế hoạch thực tập'}</p>
-        <Form id='form' onFinish={onFinish}>
-          <Row gutter={15}>
-            <CustomSkeleton
-              size='default'
-              label="Mã sinh viên" name="maSinhVien"
-              Value='sdasdas'
-              type={CONSTANTS.TEXT}
-              Disable={true}
-              layoutCol={{ xs: 24 }}
-              layoutItem={{ labelCol: { xs: 8 } }}
-              rules={[RULES.REQUIRED]}
-              labelLeft
-            />
-            <CustomSkeleton
-              size='default'
-              label="Họ và tên"  name="hoVaTen"
-              type={CONSTANTS.TEXT}
-              layoutCol={{ xs: 24 }}
-              layoutItem={{ labelCol: { xs: 8 } }}
-              rules={[RULES.REQUIRED]}
-              labelLeft
-            />
-            <CustomSkeleton
-              size='default'
-              label="Ghi chú" name='ghiChu'
-              type={CONSTANTS.TEXT}
-              layoutCol={{ xs: 24 }}
-              layoutItem={{ labelCol: { xs: 8 } }}
-              rules={[RULES.REQUIRED]}
-              labelLeft
-            />
-            <Table  size='small' columns={columns} bordered/>
-          </Row>
-        </Form>
-      </Loading>
-  );
+    <>
+      <Form size="small" form={form} onFinish={handleSaveData} scrollToFirstError={true}
+            onValuesChange={onValuesChange}>
+        <Row>
+          <CustomSkeleton
+            label="Mã sinh viên" name="maSinhVien"
+            type={CONSTANTS.TEXT}
+            layoutCol={{ xs: 24, lg: 15 }}
+            layoutItem={{ labelCol: { xs: 6, sm: 24, md: 8, lg: 8, xl: 8, xxl: 8 } }}
+            showSearch
+            disabled={isLoading}
+            rules={[RULES.REQUIRED]}
+            showInputLabel={isFinish}
+            labelLeft
+            labelInValue
+            fullLine
+          />
+          <CustomSkeleton
+            label="Họ và tên" name="tenSinhVien"
+            type={CONSTANTS.TEXT}
+            layoutCol={{ xs: 24, lg: 15 }}
+            layoutItem={{ labelCol: { xs: 6, sm: 24, md: 8, lg: 8, xl: 8, xxl: 8 } }}
+            rules={[RULES.REQUIRED]}
+            showSearch
+            disabled={isLoading}
+            showInputLabel={isFinish}
+            labelLeft
+            labelInValue
+            fullLine
+          />
+          <CustomSkeleton
+            label="Ghi chú" name="ghiChu"
+            type={CONSTANTS.TEXT}
+            layoutCol={{ xs: 24, lg: 15 }}
+            layoutItem={{ labelCol: { xs: 6, sm: 24, md: 8, lg: 8, xl: 8, xxl: 8 } }}
+            showSearch
+            disabled={isLoading}
+            rules={[RULES.REQUIRED]}
+            showInputLabel={isFinish}
+            labelLeft
+            labelInValue
+            fullLine
+          />
+        </Row>
+        <Divider orientation="left" plain={false} className="m-0">
+          {'Chi tiết kế hoạch thực tập'}
+        </Divider>
+
+        <Loading active={isLoading}>
+          <Table
+            dataSource={dataSource}
+            columns={columns}
+            // pagination={false}
+          />
+        </Loading>
+
+        <Row className="clearfix mt-2">
+          <Col xs={24} lg={15} xl={8}>
+            <Row>
+              <p>Xác nhận kế hoạch: </p>
+              <Popconfirm
+                onConfirm={(e) => handleApprove(e)}
+                okText="Xác nhận"
+                title={isFinish ? `Hủy xác nhận kế hoạch thực tập` : `Xác nhận kế hoạch thực tập`}
+              >
+                <Switch className="ml-2" size="default" checked={isFinish} loading={isLoading}
+                />
+              </Popconfirm>
+            </Row>
+
+          </Col>
+          {!isFinish && <Col xs={24} lg={9} xl={16}>
+            <Button
+              size="small" type="primary"
+              htmlType="submit"
+              className="pull-right"
+              loading={isLoading}
+              icon={<SaveFilled/>}
+            >
+              {kehoachID ? `Cập nhật kế hoạch thực tập` : `Tạo kế hoạch thực tập`}
+            </Button>
+          </Col>}
+        </Row>
+      </Form>
+    </>
+  )
+    ;
 }
 
 function mapStateToProps(store) {
   const { isLoading } = store.app;
 
-  return { isLoading};
+  return { isLoading };
 }
-export default (connect(mapStateToProps)(KeHoachDetail));
+
+const actions = {};
+
+
+export default (connect(mapStateToProps, actions)(keHoachDetail));
 

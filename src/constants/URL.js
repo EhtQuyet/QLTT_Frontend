@@ -17,7 +17,12 @@ export const URL = {
     DIA_DIEM_THUC_TAP: '/dia-diem-thuc-tap',
     NAM_HOC: '/nam-hoc',
     TU_KHOA: '/tu-khoa',
+
     KE_HOACH_THUC_TAP: '/ke-hoach-thuc-tap',
+    THEM_KE_HOACH: '/them-moi-ke-hoach',
+    KE_HOACH_CHI_TIET: '/chi-tiet-ke-hoach',
+    KE_HOACH_CHI_TIET_ID: '/chi-tiet-ke-hoach/{0}',
+
     LOP_HOC: '/lop-hoc',
     KHOA_HOC: '/khoa-hoc',
 
@@ -28,6 +33,7 @@ export const URL = {
     ADD_NHOM_THUC_TAP: '/tao_nhom-thuc-tap',
     NHOM_THUC_TAP_CHI_TIET: '/chi-tiet-nhom-thuc-tap',
     NHOM_THUC_TAP_CHI_TIET_ID: '/chi-tiet-nhom-thuc-tap/{0}',
+
     CHI_TIET_NHOM: '/chi-tiet-nhom',
     CHI_TIET_NHOM_ID: '/chi-tiet-nhom/{0}',
 
@@ -45,7 +51,6 @@ export const URL = {
 
   MY_INFO: '/my-info',
   FILE_SINH_VIEN: '/file-sinh-vien',
-  KE_HOACH: '/them-moi-ke-hoach',
-  KE_HOACH_ID: '/chi-tiet-ke-hoach/{0}',
+
 };
 

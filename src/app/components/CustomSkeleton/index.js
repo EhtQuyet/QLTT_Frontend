@@ -77,7 +77,8 @@ class CustomSkeleton extends Component {
 
   renderSelect() {
     const { label, options, placeholder, filterOption, fetching, labelInValue, allowClear, showInputLabel } = this.props;
-    const { size, disabled, showSearch, onSearch, onChange, mode, suffix } = this.props;
+    const { size, disabled, showSearch, onSearch, onChange, value, type, suffix } = this.props;
+    const mode = type === CONSTANTS.SELECT ? '' : 'multiple';
     return <Select
       className={showInputLabel ? 'select-label' : ''}
       placeholder={placeholder || `Chọn ${label}`}
@@ -169,11 +170,8 @@ class CustomSkeleton extends Component {
         inputHtml = this.renderDatePicker(CONSTANTS.DATE_TIME);
         break;
       case CONSTANTS.SELECT:
-        // if (showInputLabel) {
-        //   inputHtml = this.renderSelectLabel();
-        // } else {
+      case CONSTANTS.SELECT_MULTI:
         inputHtml = this.renderSelect();
-        // }
         break;
       case CONSTANTS.TEXT_AREA:
         inputHtml = this.renderArea();
@@ -283,7 +281,7 @@ CustomSkeleton.defaultProps = {
   size: 'small',
   layoutCol: { xs: 24 },
   itemStyle: {},
-  labelLeft: false,
+  labelLeft: true,
   fetching: false,
   showInputLabel: false,
   filterOption: (input, option) => option.children.toLowerCase().includes(input.toLowerCase()),

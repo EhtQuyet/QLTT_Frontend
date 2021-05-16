@@ -2,6 +2,20 @@ import axios from 'axios';
 import { API } from '@api';
 import { convertParam, renderMessageError } from '@app/common/functionCommons';
 
+
+export function getKeHoachById(id) {
+  return axios.get(API.KE_HOACH_ID.format(id))
+    .then(response => {
+      if (response.status === 200 && response.data && response.data.data) {
+        return response.data.data;
+      }
+      return null;
+    })
+    .catch(err => {
+      renderMessageError(err);
+      return null;
+    });
+}
 export function createKeHoach(data) {
   return axios.post(`${API.KE_HOACH}`, data)
     .then(response => {
