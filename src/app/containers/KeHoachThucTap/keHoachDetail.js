@@ -67,24 +67,7 @@ function keHoachDetail({ isLoading, ...props }) {
   let dataSource = [];
 
   async function onValuesChange(changedValues, allValues) {
-    // if(allValues.dotThucTap && allValues.giangVien && allValues.diaDiem)
-    //   set
-    // if (changedValues.namHoc) {
-    //   console.log(changedValues.namHoc);
-    //   const data = dotthuctapList.filter(item => {
-    //     if (item.namhoc === changedValues.namHoc) return item;
-    //   });
-    //   setDotThucTap(data);
-    // }
-    // if (changedValues.giangVien) {
-    //   setGVId(changedValues.giangVien);
-    // }
-    // if (changedValues.dotThucTap) {
-    //   setDotTTId(changedValues.dotThucTap);
-    // }
-    // if (changedValues.diaDiem) {
-    //
-    // }
+
     if (!isFormEdited) {
       setFormEdited(true);
     }
