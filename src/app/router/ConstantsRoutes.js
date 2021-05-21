@@ -1,24 +1,6 @@
 import React, { lazy } from 'react';
 import {ROLE} from '@src/constants/contans';
 import { URL } from '@url';
-import {
-  DashboardOutlined,
-  UserOutlined,
-  UnorderedListOutlined,
-  InboxOutlined,
-  HddOutlined,
-  DeploymentUnitOutlined,
-  ClusterOutlined,
-  GroupOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  DiffOutlined,
-  SnippetsOutlined,
-  ArrowsAltOutlined,
-  UsergroupAddOutlined
-} from '@ant-design/icons';
-import keHoachDetail from '@containers/KeHoachThucTap/keHoachDetail';
-
 const Dashboard = lazy(() => import('@containers/Dashboard/Dashboard'));
 const User = lazy(() => import('@containers/User/User'));
 const MyInfo = lazy(() => import('@containers/MyInfo/MyInfo'));
@@ -28,6 +10,7 @@ const BoMon = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyBoMon/BoMon'));
 const LopHoc = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyLopHoc/LopHoc'));
 const DeTai = lazy(() => import('@containers/QuanLyDeTaiTTTN/DeTaiTTTN'));
 const DangKyDeTai = lazy(() => import('@containers/DangKyDeTaiTTTN/DangKyDeTai'));
+
 const ThemFile = lazy(() => import('@containers/QuanLyDanhMuc/QuanLySinhVienTTTN/ThemFile'));
 const DiaDiemThucTap = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyDiaDiemThucTap/DiaDiemThucTap'));
 const NamHoc = lazy(() => import('@containers/QuanLyDanhMuc/QuanLyNamHoc/NamHoc'));
@@ -37,6 +20,7 @@ const TuKhoa = lazy(() => import('@containers/QuanLyTuKhoa/tuKhoaManagerment'));
 const Ngach = lazy(() => import('@containers/NgachGiangVien/ngachGVManagerment'));
 
 const KeHoach = lazy(() => import('@containers/KeHoachThucTap/keHoachManagerment'));
+const NhatKy = lazy(() => import('@containers/NhatKyThucTap/nhatKyThucTapManagerment'));
 const KeHoachDetail = lazy(() => import('@containers/KeHoachThucTap/keHoachDetail'));
 const ThemKeHoach = lazy(() => import('@containers/KeHoachThucTap/keHoachDetail'));
 
@@ -50,6 +34,9 @@ const NhomThucTapChiTiet = lazy(() => import('@containers/ThucTap/NhomThucTap/Nh
 const ChiTiet = lazy(() => import('@containers/ThucTap/NhomThucTap/ChiTiet/ChiTiet'));
 const ReportSinhVienDKTT = lazy(() => import('@containers/ThongKe/ReportSinhVienDKTT'));
 const ReportNhomThucTap = lazy(() => import('@containers/ThongKe/ReportNhomThucTap'));
+const DanhSachDeTai = lazy(() => import('@containers/DeTaiThucTap/DanhSachDeTai/index'));
+const DeTaiDangThucHien = lazy(() => import('@containers/DeTaiThucTap/DeTaiDangThucHien/index'));
+const DeTaiDaHoanThanh = lazy(() => import('@containers/DeTaiThucTap/DeTaiDaHoanThanh/index'));
 
 
 function renderIcon(icon) {
@@ -162,7 +149,7 @@ export const ConstantsRoutes = [
         menuName: 'Đợt thực tập',
         component: DotThucTap,
         icon: renderIcon('calendar-alt'),
-        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.GIAO_VU],
       },
       {
         path: URL.MENU.DANG_KY_TUC_TAP,
@@ -185,26 +172,40 @@ export const ConstantsRoutes = [
         icon: renderIcon('user-friends'),
         role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
       },
+      {
+        path: URL.MENU.NHAT_KY_THUC_TAP,
+        menuName: 'Nhật ký thực tập',
+        component: NhatKy,
+        icon: renderIcon('user-friends'),
+        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+      },
     ],
   },
   {
     role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
     path: URL.MENU.QUAN_LY_DE_TAI,
-    menuName: 'Quản lý đề tài thực tập',
+    menuName: 'Đề tài thực tập',
     icon: renderIcon('file-signature'),
     children: [
       {
-        path: URL.MENU.DE_TAI_TTTN,
+        path: URL.MENU.DANH_SACH_DE_TAI,
         menuName: 'Danh sách đề tài',
-        component: DeTai,
+        component: DanhSachDeTai,
         icon: renderIcon('list-alt'),
         role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
       },
       {
-        path: URL.MENU.DANG_KY_DE_TAI,
-        menuName: 'Đăng ký đề tài',
-        component: DangKyDeTai,
-        icon: renderIcon('edit'),
+        path: URL.MENU.DE_TAI_DANG_THUC_HIEN,
+        menuName: 'Đề tài đang thực hiện',
+        component: DeTaiDangThucHien,
+        icon: renderIcon('spinner'),
+        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+      },
+      {
+        path: URL.MENU.DE_TAI_DA_HOAN_THANH,
+        menuName: 'Đề tài đã hoàn thành',
+        component: DeTaiDaHoanThanh,
+        icon: renderIcon('check-circle'),
         role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
       },
     ],

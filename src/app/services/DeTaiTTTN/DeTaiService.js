@@ -15,7 +15,19 @@ export function createDeTai(data) {
       return null;
     });
 }
-
+export function getListDetai(currentPage = 1, totalDocs = 0, query, loading = true) {
+  const params = convertParam(query, '&');
+  const config = { loading };
+  return axios.get(`${API.DE_TAI+'/list'}?page=${currentPage}&limit=${totalDocs}${params}`, config)
+    .then(response => {
+      if (response.status === 200 && Array.isArray(response.data?.data?.docs)) return response.data.data;
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
 export function getAllDetai(currentPage = 1, totalDocs = 0, query, loading = true) {
   const params = convertParam(query, '&');
   const config = { loading };

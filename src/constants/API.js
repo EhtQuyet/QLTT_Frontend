@@ -34,6 +34,9 @@ export const API = {
   KE_HOACH: 'api/kehoachthuctap',
   KE_HOACH_ID: 'api/kehoachthuctap/{0}',
 
+  NHAT_KY: 'api/nhatkythuctap',
+  NHAT_KY_ID: 'api/nhatkythuctap/{0}',
+
   NGACH_GV: 'api/ngachgiangvien',
   NGACH_GV_ID: 'api/ngachgiangvien/{0}',
 
