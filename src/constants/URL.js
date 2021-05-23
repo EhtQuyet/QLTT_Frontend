@@ -2,7 +2,7 @@ export const URL = {
   MENU: {
     DASHBOARD: '/dashboard',
     USER: '/user',
-
+    DK_TT: 'dang-ky-tt/{0}',
     DANH_MUC_QUAN_LY: '/danh-muc-quan-ly',
     QUAN_LY_DE_TAI: '/quan-ly-de-tai',
     GIAO_VIEN: '/giao-vien',
@@ -27,8 +27,13 @@ export const URL = {
     KHOA_HOC: '/khoa-hoc',
 
     DOT_THUC_TAP: '/dot_thuc_tap',
-    DANG_KY_TUC_TAP: '/dang-ky-thuc-tap',
-    DANG_KY_TUC_TAP_1: '/dang-ky-thuc-tap-1',
+
+
+    DANG_KY_THUC_TAP: '/dang-ky-thuc-tap',
+    THEM_DANG_KY_THUC_TAP: '/them-dang-ky-thuc-tap',
+    DANG_KY_THUC_TAP_CHI_TIET: '/dang-ky-thuc-tap-chi-tiet',
+    DANG_KY_THUC_TAP_CHI_TIET_ID: '/dang-ky-thuc-tap-chi-tiet/{0}',
+
 
     NHOM_THUC_TAP: '/nhom-thuc-tap',
     ADD_NHOM_THUC_TAP: '/tao_nhom-thuc-tap',

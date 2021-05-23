@@ -14,21 +14,16 @@ import Form from 'antd/es/form';
 import { connect } from 'react-redux';
 import Loading from '@components/Loading';
 
-
 function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected, sinhVienList, ...props }) {
   const [dkttForm] = Form.useForm();
   const [diadiemTT, setDiaDiaTT] = useState([]);
   const [dotTT, setDotTT] = useState([]);
   const [isOtherPlace, setOtherPlace] = useState(false);
   useEffect(() => {
-
     getData();
-
     setDiaDiaTT([...diadiemTT, { _id: '####', name: '---KHÁC---' }]);
-
     if (userSelected && isModalVisible) {
       const dataField = Object.assign({}, userSelected);
-
       dataField.diaDiem = userSelected.diadiem_thuctap._id;
       dataField.giaoVien = userSelected.giaoien_huongdan._id;
       dataField.dot_thuc_tap = userSelected.dot_thuc_tap._id;
@@ -38,12 +33,10 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
       dkttForm.resetFields();
     }
   }, [isModalVisible]);
-
   function onFinish(data) {
     if (props.isLoading) return;
     handleOk(userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE, data);
   }
-
   function onValuesChange(changedValues, allValues) {
     if (changedValues.diaDiem) {
       if (changedValues.diaDiem === '####') {
@@ -53,15 +46,12 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
       }
     }
   }
-
-
   async function getData() {
     const apiResponse = await getAllDiaDiemThucTap(1, 0, { trang_thai: DIA_DIEM_THUC_TAP.DA_XAC_NHAN });
     setDiaDiaTT([...apiResponse.docs, { _id: '####', ten_dia_diem: '---KHÁC---' }]);
     const apiDotTT = await getAllDotThucTap(1, 0, { trang_thai: DOT_THUC_TAP.DANG_MO});
     setDotTT(apiDotTT.docs);
   }
-
   const isGiaoVu = props.myInfo && props.myInfo.role.includes(ROLE.GIAO_VU);
   const isAdmin = props.myInfo && props.myInfo.role.includes(ROLE.ADMIN);
   return (
@@ -80,7 +70,6 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
       <Loading active={props.isLoading}>
         <Form id="formModal" form={dkttForm} size='default' onFinish={onFinish}
               onValuesChange={onValuesChange}
-
         >
           <Row gutter={15}>
             {(isAdmin || isGiaoVu) && <CustomSkeleton
@@ -145,8 +134,6 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
               rules={[RULES.REQUIRED]}
               labelLeft
             />}
-
-
             <CustomSkeleton
               size='default'
               label="Điểm TB tích lũy" name="diemTichLuy"
@@ -166,7 +153,6 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
               labelLeft
               form={dkttForm}
             />
-
           </Row>
         </Form>
       </Loading>
@@ -180,11 +166,7 @@ function mapStateToProps(store) {
   const { diadiemList } = store.diadiem;
   const { dotthuctapList } = store.dotthuctap;
   const { sinhVienList } = store.sinhvien;
-  // const { myInfo } = store.user;
-
-
-  return { isLoading, teacherList, diadiemList, dotthuctapList, sinhVienList };
+   return { isLoading, teacherList, diadiemList, dotthuctapList, sinhVienList };
 }
-
 export default (connect(mapStateToProps)(CreateAndModify));
 

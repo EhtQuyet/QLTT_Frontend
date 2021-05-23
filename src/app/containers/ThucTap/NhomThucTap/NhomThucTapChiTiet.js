@@ -39,11 +39,11 @@ function NhomThucTapChiTiet({
                               dotthuctapList, diadiemList, teacherList, dkthuctapList, ...props
                             }) {
 
-  const [, updateState] = React.useState();
-  const forceUpdate = React.useCallback(() => updateState({}), []);
+    const [, updateState] = React.useState();
+    const forceUpdate = React.useCallback(() => updateState({}), []);
+  console.log('id', props);
 
   const recordId = useParams()?.id;
-
   const [form] = Form.useForm();
   const [isFormEdited, setFormEdited] = useState(false);
   const [detailStudentsList, setDetailStudentsList] = useState([]);

@@ -29,6 +29,19 @@ export function getAllDotThucTap(currentPage = 1, totalDocs = 0, query, loading 
       return null;
     });
 }
+export function getDKDotThucTap(currentPage = 1, totalDocs = 0, query, loading = true) {
+  const params = convertParam(query, '&');
+  const config = { loading };
+  return axios.get(`${API.DOT_THUC_TAP_DK}?page=${currentPage}&limit=${totalDocs}${params}`, config)
+    .then(response => {
+      if (response.status === 200 && Array.isArray(response.data?.data?.docs)) return response.data.data;
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
 
 export function updateDotThucTap(data) {
   return axios.put(API.DOT_THUC_TAP_ID.format(data._id), data)

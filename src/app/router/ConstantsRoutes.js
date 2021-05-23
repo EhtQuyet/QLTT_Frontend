@@ -26,17 +26,22 @@ const ThemKeHoach = lazy(() => import('@containers/KeHoachThucTap/keHoachDetail'
 
 
 const DangKyThucTap = lazy(() => import('@containers/ThucTap/DangKyThucTap/DangKyThucTap'));
+const ThemDangKyThucTap = lazy(() => import('@containers/ThucTap/DangKyThucTap/DKTTDetail'));
+const DangKyThucTapChiTiet = lazy(() => import('@containers/ThucTap/DangKyThucTap/DKTTDetail'));
+
 const DotThucTap = lazy(() => import('@containers/ThucTap/DotThucTap/DotThucTap'));
 
 const NhomThucTap = lazy(() => import('@containers/ThucTap/NhomThucTap/NhomThucTap'));
 const ThemNhomThucTap = lazy(() => import('@containers/ThucTap/NhomThucTap/NhomThucTapChiTiet'));
 const NhomThucTapChiTiet = lazy(() => import('@containers/ThucTap/NhomThucTap/NhomThucTapChiTiet'));
+
 const ChiTiet = lazy(() => import('@containers/ThucTap/NhomThucTap/ChiTiet/ChiTiet'));
 const ReportSinhVienDKTT = lazy(() => import('@containers/ThongKe/ReportSinhVienDKTT'));
 const ReportNhomThucTap = lazy(() => import('@containers/ThongKe/ReportNhomThucTap'));
 const DanhSachDeTai = lazy(() => import('@containers/DeTaiThucTap/DanhSachDeTai/index'));
 const DeTaiDangThucHien = lazy(() => import('@containers/DeTaiThucTap/DeTaiDangThucHien/index'));
 const DeTaiDaHoanThanh = lazy(() => import('@containers/DeTaiThucTap/DeTaiDaHoanThanh/index'));
+
 
 
 function renderIcon(icon) {
@@ -152,7 +157,7 @@ export const ConstantsRoutes = [
         role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.GIAO_VU],
       },
       {
-        path: URL.MENU.DANG_KY_TUC_TAP,
+        path: URL.MENU.DANG_KY_THUC_TAP,
         menuName: 'Đăng ký thực tập',
         component: DangKyThucTap,
         icon: renderIcon('pen-alt'),
@@ -264,6 +269,30 @@ export const ConstantsRoutes = [
     path: `${URL.MENU.KE_HOACH_CHI_TIET}/:id`,
     breadcrumbName: 'Chi tiết kế hoạch',
     component: KeHoachDetail,
+    role: [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+  },
+  // {
+  //   path: URL.MENU.DANG_KY_THUC_TAP_CHI_TIET,
+  //   breadcrumbName: 'Đăng ký thực tập',
+  //   component: ThemDKTTDetail,
+  //   role: [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+  // },
+  // {
+  //   path:  `${URL.MENU.DANG_KY_THUC_TAP_CHI_TIET}/:id`,
+  //   breadcrumbName: 'Đăng ký thực tập',
+  //   component: DKTTDetail,
+  //   role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+  // },
+  {
+    path: URL.MENU.THEM_DANG_KY_THUC_TAP,
+    breadcrumbName: 'Thêm đăng ký thực tập',
+    component: ThemDangKyThucTap,
+    role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+  },
+  {
+    path: `${URL.MENU.DANG_KY_THUC_TAP_CHI_TIET}/:id`,
+    breadcrumbName: 'Đăng ký thực tập chi tiết',
+    component: DangKyThucTapChiTiet,
     role: [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
   },
 ];

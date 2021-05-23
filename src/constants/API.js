@@ -41,6 +41,7 @@ export const API = {
   NGACH_GV_ID: 'api/ngachgiangvien/{0}',
 
   DOT_THUC_TAP: '/api/dotthuctap',
+  DOT_THUC_TAP_DK: '/api/dotthuctap/dangky',
   DOT_THUC_TAP_ID: '/api/dotthuctap/{0}',
 
   KHOA_HOC: 'api/khoahoc',
