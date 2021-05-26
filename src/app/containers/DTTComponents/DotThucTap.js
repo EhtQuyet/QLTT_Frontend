@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from 'antd';
-import {  getDKDotThucTap} from '@app/services/ThucTap/DotThucTap/dotthuctapService';
+import {  getDKDotThucTap, getAllDotThucTap} from '@app/services/ThucTap/DotThucTap/dotthuctapService';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT } from '@constants';
-import { DOT_THUC_TAP, ROLE } from '../../../../constants/contans';
+import { DOT_THUC_TAP, ROLE } from '../../../constants/contans';
 import { columnIndex, renderRowData, toast } from '@app/common/functionCommons';
 import moment from 'moment';
 import Filter from '@components/Filter';
@@ -10,14 +10,15 @@ import Loading from '@components/Loading';
 import { connect } from 'react-redux';
 import * as namhoc from '@app/store/ducks/namhoc.duck';
 import { Tag } from 'antd';
-import { EditOutlined } from '@ant-design/icons';
+import { EyeOutlined } from '@ant-design/icons';
 import { URL } from '@url';
 import { Link } from 'react-router-dom';
 
 
-function DangKyThucTap({ isLoading, myInfo, namhocList, ...props }) {
+function DotThucTap({ isLoading, myInfo, namhocList, ...props }) {
   const [dangkythuctap, setDangKyThucTap] = useState([]);
-
+  const giangVienId =  props.maGiangVien;
+  console.log('giangVienId',giangVienId);
   useEffect(() => {
     if (!props?.namhocList?.length) {
       props.getNamHoc();
@@ -26,15 +27,14 @@ function DangKyThucTap({ isLoading, myInfo, namhocList, ...props }) {
       await getDataDotThucTap();
     })();
   }, []);
-
   async function getDataDotThucTap() {
-    const apiResponse = await getDKDotThucTap();
+    const apiResponse = await getAllDotThucTap(1,0,{trang_thai: DOT_THUC_TAP.DA_KHOA});
     if (apiResponse) {
-      setDangKyThucTap(apiResponse.docs);
+      setDangKyThucTap(apiResponse);
     }
   }
 
-  const dataSource = dangkythuctap?.map((data, index) => ({
+  const dataSource = dangkythuctap.docs?.map((data, index) => ({
     key: data._id,
     _id: data._id,
     namHoc: data.namhoc,
@@ -46,7 +46,7 @@ function DangKyThucTap({ isLoading, myInfo, namhocList, ...props }) {
   }));
 
   const columns = [
-    columnIndex(10,1),
+    columnIndex(10, 1),
 
     {
       title: 'Năm học',
@@ -81,23 +81,13 @@ function DangKyThucTap({ isLoading, myInfo, namhocList, ...props }) {
     },
     {
       align: 'center',
-      render: (value) => <> { (isSinhVien  && value.trangThai === DOT_THUC_TAP.DANG_MO) ?
-          <Link to={URL.MENU.DANG_KY_THUC_TAP_CHI_TIET_ID.format(value._id)}>
-            <Tag color='cyan' className='tag-action'>
-              <EditOutlined/><span className='ml-1'>Đăng ký</span>
-            </Tag>
-          </Link>
-          : <></>
-      }
-        {!isSinhVien &&
-        <Link to={URL.MENU.PHE_DUYET_DANG_KY_ID.format(value._id)}>
-          <Tag color='cyan' className='tag-action'>
-            <EditOutlined/><span className='ml-1'>Chi tiết</span>
-          </Tag>
-        </Link>
-        }
+      render: (value) =>
 
-      </>,
+        <Link to={URL.MENU.KIEM_DUYET_NHAT_KY_ID.format(value._id)}>
+          <Tag color='cyan' className='tag-action'>
+            <EyeOutlined/><span className='ml-1'>Chi tiết</span>
+          </Tag>
+        </Link>,
       width: 300,
     },
   ];
@@ -133,4 +123,4 @@ function mapStateToProps(store) {
   return { isLoading, namhocList, myInfo };
 }
 
-export default (connect(mapStateToProps, { ...namhoc.actions })(DangKyThucTap));
+export default (connect(mapStateToProps, { ...namhoc.actions })(DotThucTap));

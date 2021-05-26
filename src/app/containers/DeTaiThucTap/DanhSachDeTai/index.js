@@ -14,6 +14,7 @@ import Loading from '@components/Loading';
 import * as giaovien from '@app/store/ducks/giaovien.duck';
 import * as user from '@app/store/ducks/user.duck';
 import * as detai from '@app/store/ducks/detai.reduck';
+import { ROLE } from '@src/constants/contans';
 
 
 function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
@@ -49,6 +50,10 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
     pageSize = detai.pageSize,
     query = detai.query,
   ) {
+    if(isSinhVien)
+    {
+
+    }
     const apiResponse = await getListDetai(currentPage, pageSize, query);
 
     if (apiResponse) {
@@ -76,6 +81,12 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
     nguoiTao: data?.ma_nguoi_tao,
     namHoc: data?.nam_hoc,
   }));
+
+  const isAdmin = myInfo.role.includes(ROLE.ADMIN);
+  const isSinhVien = myInfo && myInfo.role.includes(ROLE.SINH_VIEN);
+  const isGiangVien = myInfo && myInfo.role.includes(ROLE.GIANG_VIEN);
+  const isGiaoVu = myInfo && myInfo.role.includes(ROLE.GIAO_VU);
+  const isBanChuNiem = myInfo && myInfo.role.includes(ROLE.BAN_CHU_NHIEM);
 
   const columns = [
     columnIndex(detai.pageSize, detai.currentPage),
@@ -137,7 +148,7 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
       render: (text, record, index) => {
         const daDuyet = record.trangThai === TRANG_THAI.DA_DUOC_DUYET;
         return <>
-          {!daDuyet && <div className='mt-2'>
+          {!daDuyet && (isAdmin || isGiaoVu) && <div className='mt-2'>
             <Popconfirm
               title='Bạn có chắc chắn duyệt đề tài hay không'
               onConfirm={() => handleComfirmTopic(record)}
@@ -147,14 +158,14 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
               </Tag>
             </Popconfirm>
           </div>}
-          <div className='mt-2'>
+          {(isAdmin || isGiaoVu) &&  <div className='mt-2'>
             <Button size='small' onClick={() => handleEdit(record)} style={{ borderColor: 'white' }}>
               <Tag color='blue' className='tag-action'>
                 <EditOutlined/><span>Chỉnh sửa</span>
               </Tag>
             </Button>
-          </div>
-          {!daDuyet && <div className='mt-2'>
+          </div>}
+          {!daDuyet && (isAdmin || isGiaoVu) &&  <div className='mt-2'>
             <Popconfirm
               title='Bạn chắc chắn muốn xoá'
               onConfirm={() => handleDelete(record)}

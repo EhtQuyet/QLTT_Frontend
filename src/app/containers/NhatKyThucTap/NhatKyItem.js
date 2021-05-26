@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import AddNewButton from '@AddNewButton';
 import NhatKyDetail from './nhatKyThucTapDetail';
-import { Link } from 'react-router-dom';
+import { Link, useParams} from 'react-router-dom';
 import {
   createNhatKy,
   deleteNhatKy,
@@ -18,7 +18,9 @@ import { connect } from 'react-redux';
 import { URL } from '@url';
 import ThemSuaSinhVien from '@containers/QuanLyDanhMuc/QuanLySinhVienTTTN/ThemSuaSinhVien';
 
-function NhatKyManagernent({ isLoading, ...props }) {
+function NhatKyItem({ isLoading, ...props }) {
+  const recordId = useParams()?.id;
+  console.log('recordId',recordId);
   const [nhatky, setNhatKy] = useState([]);
   const [state, setState] = useState({
     isShowModal: false,
@@ -32,7 +34,8 @@ function NhatKyManagernent({ isLoading, ...props }) {
   }, []);
 
   async function getDataNhatKy() {
-    const apiResponse = await getAllNhatKy();
+
+    const apiResponse = await getAllNhatKy(1,0,{ma_sinh_vien: recordId});
     if (apiResponse) {
       setNhatKy(apiResponse);
     }
@@ -183,4 +186,4 @@ function mapStateToProps(store) {
   return { isLoading };
 }
 
-export default (connect(mapStateToProps)(NhatKyManagernent));
+export default (connect(mapStateToProps)(NhatKyItem));

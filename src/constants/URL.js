@@ -18,10 +18,15 @@ export const URL = {
     NAM_HOC: '/nam-hoc',
     TU_KHOA: '/tu-khoa',
     KE_HOACH_THUC_TAP: '/ke-hoach-thuc-tap',
+
     NHAT_KY_THUC_TAP: '/nhat-ky-thuc-tap',
     THEM_KE_HOACH: '/them-moi-ke-hoach',
     KE_HOACH_CHI_TIET: '/chi-tiet-ke-hoach',
     KE_HOACH_CHI_TIET_ID: '/chi-tiet-ke-hoach/{0}',
+    KIEM_DUYET_NHAT_KY: '/kiem-duyet-nhat-ky',
+    KIEM_DUYET_NHAT_KY_ID: '/kiem-duyet-nhat-ky/{0}',
+    NHAT_KY_ITEM: '/nhat-ky-sinh-vien',
+    NHAT_KY_ITEM_ID: '/nhat-ky-sinh-vien/{0}',
 
     LOP_HOC: '/lop-hoc',
     KHOA_HOC: '/khoa-hoc',
@@ -33,6 +38,9 @@ export const URL = {
     THEM_DANG_KY_THUC_TAP: '/them-dang-ky-thuc-tap',
     DANG_KY_THUC_TAP_CHI_TIET: '/dang-ky-thuc-tap-chi-tiet',
     DANG_KY_THUC_TAP_CHI_TIET_ID: '/dang-ky-thuc-tap-chi-tiet/{0}',
+
+    PHE_DUYET_DANG_KY: '/phe-duyet-dang-ky',
+    PHE_DUYET_DANG_KY_ID: '/phe-duyet-dang-ky/{0}',
 
 
     NHOM_THUC_TAP: '/nhom-thuc-tap',

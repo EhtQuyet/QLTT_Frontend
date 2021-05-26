@@ -6,6 +6,7 @@ import {
   getAllDiaDiemThucTap,
 } from '@app/services/DiaDiemThucTap/diadiemthuctapService';
 import {
+  getDotThucTapById,
   getAllDotThucTap,
 } from '@app/services/ThucTap/DotThucTap/dotthuctapService';
 import {
@@ -15,7 +16,8 @@ import {
   updateDKTT,
   getById,
 } from '@app/services/ThucTap/DKThucTap/dangkythuctapService';
-
+import { getAllGiaoVien } from '@app/services/GiaoVienHD/giaoVienService';
+import { getAllSinhVien } from '@app/services/SinhVienTTTN/sinhVienTTService';
 import { CONSTANTS, PAGINATION_INIT, RULES, PAGINATION_CONFIG } from '@constants';
 import { DOT_THUC_TAP, DIA_DIEM_THUC_TAP, ROLE } from '../../../../constants/contans';
 import Form from 'antd/es/form';
@@ -23,34 +25,63 @@ import { connect } from 'react-redux';
 import Loading from '@components/Loading';
 import { Table } from 'antd';
 import { columnIndex, toast } from '@app/common/functionCommons';
+import { getNhomThucTapById } from '@app/services/ThucTap/NhomThucTap/nhomThucTapService';
 
-function DKTTDetail(sinhVienList, ...props) {
-
-  console.log('Value', useParams()?.id);
+function DKTTDetail({isLoading, sinhVienList, myInfo, ...props }) {
+  const [, updateState] = React.useState();
+  const forceUpdate = React.useCallback(() => updateState({}), []);
+  const recordId = useParams()?.id;
   const [dkttForm] = Form.useForm();
   const [diadiemTT, setDiaDiaTT] = useState([]);
+  const [giangVienList, setGiangVienList] = useState([]);
   const [dotTT, setDotTT] = useState([]);
   const [svtt, setSvtt] = useState(PAGINATION_INIT);
   const [isOtherPlace, setOtherPlace] = useState(false);
+  const [itemInfo, setItemInfo] = useState(undefined)
   useEffect(() => {
     getData();
     getDanhSachSinhVienThucTap();
+    getAllGiangVien();
     setDiaDiaTT([...diadiemTT, { _id: '####', name: '---KHÁC---' }]);
-    // if (userSelected && isModalVisible) {
-    //   const dataField = Object.assign({}, userSelected);
-    // dataField.diaDiem = useParams()?.id;
-    //   dataField.giaoVien = userSelected.giaoien_huongdan._id;
-    //   dataField.dot_thuc_tap = userSelected.dot_thuc_tap._id;
-    //   dataField.maSinhVien = userSelected.sinhVien._id;
+    // if (itemInfo) {
+    //   const dataField = Object.assign({}, itemInfo);
+    //   dataField.diaDiem = useParams()?.id;
+    //   dataField.giaoVien = itemInfo.giao_vien_huong_dan._id;
+    //   dataField.dot_thuc_tap = itemInfo.dot_thuc_tap._id;
+    //   dataField.maSinhVien = itemInfo.sinhVien._id;
     //   dkttForm.setFieldsValue(dataField);
-    // } else if (!isModalVisible) {
-    //   dkttForm.resetFields();
+    // // } else if (!isModalVisible) {
+    // //   dkttForm.resetFields();
     // }
+  }, [itemInfo]);
+
+  useEffect(() => {
+    (async () => {
+      if (recordId) {
+        await getDataRecord();
+      } else {
+
+      }
+    })();
   }, []);
 
   function onFinish(data) {
-    if (props.isLoading) return;
-    handleOk(userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE, data);
+    // if (props.isLoading) return;
+    // handleOk(userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE, data);
+  }
+
+  async function getDataRecord() {
+    const apiResponse = await getDotThucTapById(recordId);
+    if (apiResponse) {
+    }
+    dkttForm.setFieldsValue({ dot_thuc_tap: apiResponse.ten_dot });
+  }
+
+  async function getAllGiangVien() {
+    const apiResponse = await getAllGiaoVien();
+    if (apiResponse) {
+      setGiangVienList(apiResponse.docs);
+    }
   }
 
   function onValuesChange(changedValues, allValues) {
@@ -80,7 +111,6 @@ function DKTTDetail(sinhVienList, ...props) {
     }
   }
 
-  console.log('svtt', svtt);
   const dataSource = svtt.docs.map((data, index) => ({
     key: data._id,
     _id: data._id,
@@ -90,10 +120,10 @@ function DKTTDetail(sinhVienList, ...props) {
   const columns = [
     columnIndex(svtt.pageSize, svtt.currentPage),
     {
-      title: 'Đợt thực tập',
-      dataIndex: 'dot_thuc_tap',
-      render: value => value?.ten_dot,
-      width: 300,
+      title: 'Mã sinh viên',
+      dataIndex: 'sinhVien',
+      render: value => value?.ma_sinh_vien,
+      width: 200,
     },
     {
       title: 'Tên sinh viên',
@@ -101,32 +131,42 @@ function DKTTDetail(sinhVienList, ...props) {
       render: value => value?.ten_sinh_vien,
       width: 200,
     },
-    {
-      title: 'Mã sinh viên',
-      dataIndex: 'sinhVien',
-      render: value => value?.ma_sinh_vien,
-      width: 200,
-    },
+
   ];
+
+  function handleChangePagination(current, pageSize) {
+    getDanhSachSinhVienThucTap(current, pageSize);
+  }
+
   const pagination = PAGINATION_CONFIG;
-  // pagination.onChange = handleChangePagination;
+  pagination.onChange = handleChangePagination;
   pagination.current = svtt.currentPage;
   pagination.total = svtt.totalDocs;
   pagination.pageSize = svtt.pageSize;
 
-
   async function getData() {
     const apiResponse = await getAllDiaDiemThucTap(1, 0, { trang_thai: DIA_DIEM_THUC_TAP.DA_XAC_NHAN });
-    console.log('apiResponse', apiResponse);
     if (apiResponse) {
       setDiaDiaTT([...apiResponse.docs, { _id: '####', ten_dia_diem: '---KHÁC---' }]);
     }
-    const apiDotTT = await getAllDotThucTap(1, 0, { trang_thai: DOT_THUC_TAP.DANG_MO });
-    setDotTT(apiDotTT.docs);
+    if (isSinhVien) {
+      const apiSinhVien = await getAllSinhVien(1, 0, { ma_sinh_vien: myInfo.username });
+      console.log(recordId,apiSinhVien.docs[0]._id);
+      if(apiSinhVien){
+        const TTInfo = await getAllDKTT(1,0, {dot_thuc_tap: recordId, sinh_vien: apiSinhVien.docs[0]._id});
+        setItemInfo(TTInfo.docs[0])
+      }
+    }
+    // const apiDotTT = await getAllDotThucTap(1, 0, { trang_thai: DOT_THUC_TAP.DANG_MO });
+    // setDotTT(apiDotTT.docs);
   }
 
-  const isGiaoVu = props.myInfo && props.myInfo.role.includes(ROLE.GIAO_VU);
-  const isAdmin = props.myInfo && props.myInfo.role.includes(ROLE.ADMIN);
+  const isGiaoVu = myInfo && myInfo.role.includes(ROLE.GIAO_VU);
+  const isAdmin = myInfo && myInfo.role.includes(ROLE.ADMIN);
+  const isSinhVien = myInfo && myInfo.role.includes(ROLE.SINH_VIEN);
+  const isGiangVien = myInfo && myInfo.role.includes(ROLE.GIANG_VIEN);
+  const isBanChuNiem = myInfo && myInfo.role.includes(ROLE.BAN_CHU_NHIEM);
+
   return (
     <>
       {/*<Loading active={props.isLoading}>*/}
@@ -148,13 +188,14 @@ function DKTTDetail(sinhVienList, ...props) {
           <CustomSkeleton
             size='default'
             label="Đợt thực tập" name="dot_thuc_tap"
-            type={CONSTANTS.SELECT}
+            type={CONSTANTS.TEXT}
             layoutCol={{ xs: 24 }}
             layoutItem={{ labelCol: { xs: 8 } }}
             rules={[RULES.REQUIRED]}
+            disable={true}
             labelLeft
             showSearch
-            options={{ data: dotTT ? dotTT : [], valueString: '_id', labelString: 'ten_dot' }}
+            // options={{ data: dotTT ? dotTT : [], valueString: '_id', labelString: 'ten_dot' }}
           />
           <CustomSkeleton
             size='default'
@@ -165,7 +206,7 @@ function DKTTDetail(sinhVienList, ...props) {
             rules={[RULES.REQUIRED]}
             labelLeft
             showSearch
-            options={{ data: props.teacherList, valueString: '_id', labelString: 'name' }}
+            options={{ data: giangVienList ? giangVienList : [], valueString: '_id', labelString: 'ten_giao_vien' }}
           />
           <CustomSkeleton
             size='default'
@@ -216,21 +257,26 @@ function DKTTDetail(sinhVienList, ...props) {
             form={dkttForm}
           />
         </Row>
+
       </Form>
-      <button>Lưu</button>
+      <button onClick={onFinish}>Lưu</button>
+      <br/>
+      <h2>Danh sách sinh viên đăng ký thực tập</h2>
+      <Loading active={isLoading}>
       <Table dataSource={dataSource} size='small' columns={columns}
              pagination={pagination} bordered/>
-      {/*</Loading>*/}
+      </Loading>
     </>);
 }
 
 function mapStateToProps(store) {
   const { isLoading } = store.app;
   const { teacherList } = store.giaovien;
+  const { myInfo } = store.user;
   const { diadiemList } = store.diadiem;
   const { dotthuctapList } = store.dotthuctap;
   const { sinhVienList } = store.sinhvien;
-  return { isLoading, teacherList, diadiemList, dotthuctapList, sinhVienList };
+  return { isLoading, myInfo, teacherList, diadiemList, dotthuctapList, sinhVienList };
 }
 
 export default (connect(mapStateToProps)(DKTTDetail));

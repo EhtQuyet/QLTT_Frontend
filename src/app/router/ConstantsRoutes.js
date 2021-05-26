@@ -20,14 +20,17 @@ const TuKhoa = lazy(() => import('@containers/QuanLyTuKhoa/tuKhoaManagerment'));
 const Ngach = lazy(() => import('@containers/NgachGiangVien/ngachGVManagerment'));
 
 const KeHoach = lazy(() => import('@containers/KeHoachThucTap/keHoachManagerment'));
-const NhatKy = lazy(() => import('@containers/NhatKyThucTap/nhatKyThucTapManagerment'));
+const NhatKyIndex = lazy(() => import('@containers/NhatKyThucTap/index'));
 const KeHoachDetail = lazy(() => import('@containers/KeHoachThucTap/keHoachDetail'));
 const ThemKeHoach = lazy(() => import('@containers/KeHoachThucTap/keHoachDetail'));
+const KiemDuyetNhatKy = lazy(() => import('@containers/NhatKyThucTap/KiemDuyetNhatKy'));
+const NhatKyItem = lazy(() => import('@containers/NhatKyThucTap/NhatKyItem'));
 
 
 const DangKyThucTap = lazy(() => import('@containers/ThucTap/DangKyThucTap/DangKyThucTap'));
 const ThemDangKyThucTap = lazy(() => import('@containers/ThucTap/DangKyThucTap/DKTTDetail'));
 const DangKyThucTapChiTiet = lazy(() => import('@containers/ThucTap/DangKyThucTap/DKTTDetail'));
+const PheDuyetDangKy = lazy(() => import('@containers/ThucTap/DangKyThucTap/PheDuyetDangKy'));
 
 const DotThucTap = lazy(() => import('@containers/ThucTap/DotThucTap/DotThucTap'));
 
@@ -38,6 +41,7 @@ const NhomThucTapChiTiet = lazy(() => import('@containers/ThucTap/NhomThucTap/Nh
 const ChiTiet = lazy(() => import('@containers/ThucTap/NhomThucTap/ChiTiet/ChiTiet'));
 const ReportSinhVienDKTT = lazy(() => import('@containers/ThongKe/ReportSinhVienDKTT'));
 const ReportNhomThucTap = lazy(() => import('@containers/ThongKe/ReportNhomThucTap'));
+
 const DanhSachDeTai = lazy(() => import('@containers/DeTaiThucTap/DanhSachDeTai/index'));
 const DeTaiDangThucHien = lazy(() => import('@containers/DeTaiThucTap/DeTaiDangThucHien/index'));
 const DeTaiDaHoanThanh = lazy(() => import('@containers/DeTaiThucTap/DeTaiDaHoanThanh/index'));
@@ -154,35 +158,42 @@ export const ConstantsRoutes = [
         menuName: 'Đợt thực tập',
         component: DotThucTap,
         icon: renderIcon('calendar-alt'),
-        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.GIAO_VU],
+        role : [ROLE.ADMIN, ROLE.GIAO_VU],
       },
       {
         path: URL.MENU.DANG_KY_THUC_TAP,
         menuName: 'Đăng ký thực tập',
         component: DangKyThucTap,
         icon: renderIcon('pen-alt'),
-        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+        role : [ROLE.ADMIN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+      },
+      {
+        path: URL.MENU.DANG_KY_THUC_TAP,
+        menuName: 'Sinh viên hướng dẫn',
+        component: DangKyThucTap,
+        icon: renderIcon('pen-alt'),
+        role : [ROLE.GIANG_VIEN],
       },
       {
         path: URL.MENU.NHOM_THUC_TAP,
         menuName: 'Nhóm thực tập',
         component: NhomThucTap,
         icon: renderIcon('user-friends'),
-        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+        role : [ROLE.ADMIN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
       },
       {
         path: URL.MENU.KE_HOACH_THUC_TAP,
         menuName: 'Kế hoạch thực tập',
         component: KeHoach,
         icon: renderIcon('user-friends'),
-        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN],
       },
       {
         path: URL.MENU.NHAT_KY_THUC_TAP,
         menuName: 'Nhật ký thực tập',
-        component: NhatKy,
+        component: NhatKyIndex,
         icon: renderIcon('user-friends'),
-        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN],
       },
     ],
   },
@@ -294,6 +305,24 @@ export const ConstantsRoutes = [
     breadcrumbName: 'Đăng ký thực tập chi tiết',
     component: DangKyThucTapChiTiet,
     role: [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
+  },
+  {
+    path: `${URL.MENU.PHE_DUYET_DANG_KY}/:id`,
+    breadcrumbName: 'Phê duyệt đăng ký thực tập',
+    component: PheDuyetDangKy,
+    role: [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.GIAO_VU],
+  },
+  {
+    path: `${URL.MENU.KIEM_DUYET_NHAT_KY}/:id`,
+    breadcrumbName: 'Kiểm duyệt nhật ký',
+    component: KiemDuyetNhatKy,
+    role: [ROLE.GIANG_VIEN, ROLE.BAN_CHU_NHIEM],
+  },
+  {
+    path: `${URL.MENU.NHAT_KY_ITEM}/:id`,
+    breadcrumbName: 'Nhật ký item',
+    component: NhatKyItem,
+    role: [ROLE.GIANG_VIEN],
   },
 ];
 

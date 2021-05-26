@@ -26,7 +26,7 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
       const dataField = Object.assign({}, userSelected);
       dataField.diaDiem = userSelected.diadiem_thuctap._id;
       dataField.giaoVien = userSelected.giaoien_huongdan._id;
-      dataField.dot_thuc_tap = userSelected.dot_thuc_tap._id;
+      // dataField.dot_thuc_tap = userSelected.dot_thuc_tap._id;
       dataField.maSinhVien = userSelected.sinhVien._id;
       dkttForm.setFieldsValue(dataField);
     } else if (!isModalVisible) {
@@ -83,17 +83,17 @@ function CreateAndModify({ isModalVisible, handleOk, handleCancel, userSelected,
               showSearch
               options={{ data: sinhVienList ? sinhVienList : [], valueString: '_id', labelString: 'namecode' }}
             />}
-            <CustomSkeleton
-              size='default'
-              label="Đợt thực tập" name="dot_thuc_tap"
-              type={CONSTANTS.SELECT}
-              layoutCol={{ xs: 24 }}
-              layoutItem={{ labelCol: { xs: 8 } }}
-              rules={[RULES.REQUIRED]}
-              labelLeft
-              showSearch
-              options={{ data: dotTT ? dotTT : [], valueString: '_id', labelString: 'ten_dot' }}
-            />
+            {/*<CustomSkeleton*/}
+            {/*  size='default'*/}
+            {/*  label="Đợt thực tập" name="dot_thuc_tap"*/}
+            {/*  type={CONSTANTS.SELECT}*/}
+            {/*  layoutCol={{ xs: 24 }}*/}
+            {/*  layoutItem={{ labelCol: { xs: 8 } }}*/}
+            {/*  rules={[RULES.REQUIRED]}*/}
+            {/*  labelLeft*/}
+            {/*  showSearch*/}
+            {/*  options={{ data: dotTT ? dotTT : [], valueString: '_id', labelString: 'ten_dot' }}*/}
+            {/*/>*/}
             <CustomSkeleton
               size='default'
               label="Giảng viên hướng dẫn" name="giaoVien"

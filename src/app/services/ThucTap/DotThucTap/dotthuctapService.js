@@ -16,6 +16,19 @@ export function createDotThucTap(data) {
     });
 }
 
+export function getDotThucTapById(id) {
+  return axios.get(API.DOT_THUC_TAP_ID.format(id))
+    .then(response => {
+      if (response.status === 200 ) return response.data.data;
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
+
+
 export function getAllDotThucTap(currentPage = 1, totalDocs = 0, query, loading = true) {
   const params = convertParam(query, '&');
   const config = { loading };
