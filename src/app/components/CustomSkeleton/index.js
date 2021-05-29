@@ -77,8 +77,8 @@ class CustomSkeleton extends Component {
 
   renderSelect() {
     const { label, options, placeholder, filterOption, fetching, labelInValue, allowClear, showInputLabel } = this.props;
-    const { size, disabled, showSearch, onSearch, onChange, value, type, suffix } = this.props;
-    const mode = type === CONSTANTS.SELECT ? '' : 'multiple';
+    const { size, disabled, showSearch, onSearch, onChange, value, type, suffix, mode } = this.props;
+    // const mode = type === CONSTANTS.SELECT ? '' : 'multiple';
     return <Select
       className={showInputLabel ? 'select-label' : ''}
       placeholder={placeholder || `Chọn ${label}`}

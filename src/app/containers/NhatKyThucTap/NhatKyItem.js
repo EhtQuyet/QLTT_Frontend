@@ -165,7 +165,7 @@ function NhatKyItem({ isLoading, ...props }) {
       {/*  ]}*/}
       {/*  handleFilter={(query) => getDataNhatKy(1, nhatky.pageSize, query)}/>*/}
 
-      <AddNewButton onClick={() => handleShowModal(true)} disabled={isLoading}/>
+      {/*{ !isGiangVien && <AddNewButton onClick={() => handleShowModal(true)} disabled={isLoading}/>}*/}
       <Loading active={isLoading}>
         <Table dataSource={dataSource} size='small' columns={columns} pagination={true} bordered/>
       </Loading>

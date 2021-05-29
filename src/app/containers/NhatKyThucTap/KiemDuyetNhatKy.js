@@ -76,7 +76,7 @@ function KiemDuyetNhatKy({ isLoading, myInfo, ...props }) {
     key: data._id,
     _id: data._id,
     dot_thuc_tap: data.dot_thuc_tap,
-    giaoien_huongdan: data.giao_vien_huong_dan,
+    giaovien_huongdan: data.giao_vien_huong_dan,
     sinhVien: data.sinh_vien,
     diadiem_thuctap: data.dia_diem_thuc_tap,
     diemTichLuy: data.diem_tbtl,

@@ -3,7 +3,7 @@ import { Table, Tag, Popconfirm, Button } from 'antd';
 import AddNewButton from '@AddNewButton';
 import { DeleteOutlined, EditOutlined,SendOutlined } from '@ant-design/icons';
 import Detail from './detail';
-import { createDeTai, deleteDeTai, getListDetai, updateDeTai } from '@app/services/DeTaiTTTN/DeTaiService';
+import { createDeTai, deleteDeTai, getAllDetai, getListDetai, updateDeTai } from '@app/services/DeTaiTTTN/DeTaiService';
 import { getAllLinhVuc } from '@app/services/LinhVuc/linhVuc.service';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT, TRANG_THAI, TRANG_THAI_LABEL } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
@@ -15,10 +15,14 @@ import * as giaovien from '@app/store/ducks/giaovien.duck';
 import * as user from '@app/store/ducks/user.duck';
 import * as detai from '@app/store/ducks/detai.reduck';
 import { ROLE } from '@src/constants/contans';
+import { getAllSinhVien } from '@app/services/SinhVienTTTN/sinhVienTTService';
+import { getAllDKTT } from '@app/services/ThucTap/DKThucTap/dangkythuctapService';
 
 
 function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
   const [detai, setDetai] = useState(PAGINATION_INIT);
+  const [isDangKy, setIsDangKy] = useState(null);
+  const [isTrue, setIsTrue] = useState();
   const [state, setState] = useState({
     isShowModal: false,
     userSelected: null,
@@ -45,16 +49,35 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
     }
   }
 
+  console.log(isTrue);
   async function getDataDeTai(
     currentPage = detai.currentPage,
     pageSize = detai.pageSize,
     query = detai.query,
   ) {
-    if(isSinhVien)
-    {
-
+    let apiResponse = null;
+    if(isGiaoVu || isAdmin) {
+      apiResponse = await getListDetai(currentPage, pageSize, query);
     }
-    const apiResponse = await getListDetai(currentPage, pageSize, query);
+    else {
+      const api = await getAllSinhVien(1,0, {ma_sinh_vien: myInfo.username})
+      console.log( api.docs[0]._id);
+      const api0 =  await getAllDetai(1, 0, {sinh_vien_thuc_hien: api.docs[0]._id});
+      console.log(api0.docs[0]);
+      if(api0){
+        setIsTrue(api0.docs[0])
+      }
+
+      const api2 = await getAllDKTT(1,0, {sinh_vien: api.docs[0]._id})
+      if(api2){
+        setIsDangKy(api2.docs[0])
+        apiResponse = await getAllDetai(1, 0, {trang_thai: TRANG_THAI.DA_DUOC_DUYET, ma_giang_vien: api2.docs[0].giao_vien_huong_dan._id});
+      }
+      else{
+        apiResponse = await getAllDetai(1, 0, {trang_thai: TRANG_THAI.DA_DUOC_DUYET});
+      }
+    }
+
 
     if (apiResponse) {
       setDetai({
@@ -77,6 +100,7 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
     trangThai: data.trang_thai,
     hoanThanh: data.trang_thai === TRANG_THAI.DA_DUOC_DUYET,
     giangVien: data?.ma_giang_vien,
+    tuKhoa: data?.tu_khoa,
     linhVuc: data?.ma_linh_vuc,
     nguoiTao: data?.ma_nguoi_tao,
     namHoc: data?.nam_hoc,
@@ -158,6 +182,18 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
               </Tag>
             </Popconfirm>
           </div>}
+
+          {isSinhVien && !isTrue && isDangKy !== null && <div className='mt-2'>
+            <Popconfirm
+              title='Bạn có chắc chắn đăng ký đề tài này không'
+              onConfirm={() => handleDangKyDeTai(record)}
+              cancelText='Huỷ' okText='Xác nhận' okButtonProps={{ type: 'access' }}>
+              <Tag color='green' className='tag-action'>
+                <SendOutlined/><span className='ml-1'>Đăng ký đề tài</span>
+              </Tag>
+            </Popconfirm>
+          </div>}
+
           {(isAdmin || isGiaoVu) &&  <div className='mt-2'>
             <Button size='small' onClick={() => handleEdit(record)} style={{ borderColor: 'white' }}>
               <Tag color='blue' className='tag-action'>
@@ -188,6 +224,8 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
     });
   }
 
+
+
   function handleEdit(userSelected) {
     setState({ isShowModal: true, userSelected });
   }
@@ -211,6 +249,20 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
     }
   }
 
+  async function handleDangKyDeTai(data){
+    const item =
+      {
+        _id: data._id,
+        sinh_vien_thuc_hien: isDangKy.sinh_vien._id,
+        trang_thai: TRANG_THAI.DA_DANG_KY
+      }
+    const api = await updateDeTai(item);
+    if (api) {
+      getDataDeTai(1,0,{});
+      toast(CONSTANTS.SUCCESS, 'Đăng ký đề tài thành công!');
+    }
+  }
+
   async function handleDelete(userSelected) {
     const apiResponse = await deleteDeTai(userSelected._id);
     if (apiResponse) {
@@ -221,12 +273,12 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
 
 // function create or modify
   async function createAndModifyDetai(type, dataForm) {
-
     const dataRequest = {
       ten_de_tai: dataForm.tenDeTai,
       ma_de_tai: dataForm.maDeTai,
       ngay_tao: dataForm.ngayTao ? dataForm.ngayTao.toString() : null,
       ma_giang_vien: dataForm.giangVien,
+      tu_khoa: dataForm.tuKhoa,
       ma_linh_vuc: dataForm.linhVuc,
       ma_nguoi_tao: myInfo._id,
       nam_hoc: dataForm.namHoc,
@@ -254,6 +306,8 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
         setDetai(Object.assign({}, detai, { docs }));
         handleShowModal(false);
         toast(CONSTANTS.SUCCESS, 'Chỉnh sửa thông tin đề tài thành công');
+        getDataDeTai();
+
         // updateStoreStaff(type, apiResponse);
       }
     }

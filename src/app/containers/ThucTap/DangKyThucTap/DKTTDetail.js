@@ -26,8 +26,10 @@ import Loading from '@components/Loading';
 import { Table } from 'antd';
 import { columnIndex, toast } from '@app/common/functionCommons';
 import { getNhomThucTapById } from '@app/services/ThucTap/NhomThucTap/nhomThucTapService';
+import { createTuKhoa, updateTuKhoa } from '@app/services/TuKhoa/tuKhoa.service';
+import { createDiaDiemThucTap } from '@app/services/DiaDiemThucTap/diadiemthuctapService';
 
-function DKTTDetail({isLoading, sinhVienList, myInfo, ...props }) {
+function DKTTDetail({ isLoading, sinhVienList, myInfo, ...props }) {
   const [, updateState] = React.useState();
   const forceUpdate = React.useCallback(() => updateState({}), []);
   const recordId = useParams()?.id;
@@ -37,22 +39,17 @@ function DKTTDetail({isLoading, sinhVienList, myInfo, ...props }) {
   const [dotTT, setDotTT] = useState([]);
   const [svtt, setSvtt] = useState(PAGINATION_INIT);
   const [isOtherPlace, setOtherPlace] = useState(false);
-  const [itemInfo, setItemInfo] = useState(undefined)
+  const [itemInfo, setItemInfo] = useState(undefined);
+  const [userSelected, setUserSelected] = useState();
   useEffect(() => {
     getData();
     getDanhSachSinhVienThucTap();
     getAllGiangVien();
     setDiaDiaTT([...diadiemTT, { _id: '####', name: '---KHÁC---' }]);
-    // if (itemInfo) {
-    //   const dataField = Object.assign({}, itemInfo);
-    //   dataField.diaDiem = useParams()?.id;
-    //   dataField.giaoVien = itemInfo.giao_vien_huong_dan._id;
-    //   dataField.dot_thuc_tap = itemInfo.dot_thuc_tap._id;
-    //   dataField.maSinhVien = itemInfo.sinhVien._id;
-    //   dkttForm.setFieldsValue(dataField);
-    // // } else if (!isModalVisible) {
-    // //   dkttForm.resetFields();
-    // }
+    if (userSelected) {
+      const dataField = Object.assign({}, userSelected);
+      dkttForm.setFieldsValue(dataField);
+    }
   }, [itemInfo]);
 
   useEffect(() => {
@@ -65,9 +62,62 @@ function DKTTDetail({isLoading, sinhVienList, myInfo, ...props }) {
     })();
   }, []);
 
+
+
+
+  async function handleOk(type, dataForm) {
+    const {
+      maSinhVien, dot_thuc_tap, giaoVien, diaDiem, diemTichLuy, tinchi_tichluy, tenDiaDiem, diaChi,
+    } = dataForm;
+    console.log('dataForm',dkttForm);
+    const dataRequest = {
+      sinh_vien: maSinhVien,
+      dot_thuc_tap: dot_thuc_tap,
+      giao_vien_huong_dan: giaoVien,
+      diem_tbtl: diemTichLuy,
+      so_tctl: tinchi_tichluy,
+    };
+    if (diaDiem !== '####') {
+      dataRequest.dia_diem_thuc_tap = diaDiem;
+    } else {
+      const dataDiaDiem = {
+        ten_dia_diem: tenDiaDiem,
+        dia_chi: diaChi,
+      };
+      const api = await createDiaDiemThucTap(dataDiaDiem);
+      dataRequest.dia_diem_thuc_tap = api._id;
+    }
+    ;
+
+    if (type === CONSTANTS.CREATE) {
+      const apiResponse = await createDKTT(dataRequest);
+      if (apiResponse) {
+        toast(CONSTANTS.SUCCESS, 'Đăng ký thực tập thành công');
+      }
+    }
+
+    if (type === CONSTANTS.UPDATE) {
+      // dataRequest._id = state.userSelected._id;
+      const apiResponse = await updateDKTT(dataRequest);
+      if (apiResponse) {
+        const docs = tukhoa.docs.map(doc => {
+          if (doc._id === apiResponse._id) {
+            doc = apiResponse;
+          }
+          return doc;
+        });
+        setTuKhoa(Object.assign({}, tukhoa, { docs }));
+        handleShowModal(false);
+        toast(CONSTANTS.SUCCESS, 'Chỉnh sửa thông tin thực tập thành công');
+      }
+    }
+  }
+
+
   function onFinish(data) {
-    // if (props.isLoading) return;
-    // handleOk(userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE, data);
+    console.log('data', data);
+    if (props.isLoading) return;
+    handleOk(userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE, data);
   }
 
   async function getDataRecord() {
@@ -151,14 +201,15 @@ function DKTTDetail({isLoading, sinhVienList, myInfo, ...props }) {
     }
     if (isSinhVien) {
       const apiSinhVien = await getAllSinhVien(1, 0, { ma_sinh_vien: myInfo.username });
-      console.log(recordId,apiSinhVien.docs[0]._id);
-      if(apiSinhVien){
-        const TTInfo = await getAllDKTT(1,0, {dot_thuc_tap: recordId, sinh_vien: apiSinhVien.docs[0]._id});
-        setItemInfo(TTInfo.docs[0])
+      if (apiSinhVien) {
+        const apiUser = await getAllDKTT(1,0, {sinh_vien: apiSinhVien.docs[0]?._id, dot_thuc_tap: recordId});
+        if(apiUser){
+          setUserSelected(apiUser.docs[0])
+        }
+        const TTInfo = await getAllDKTT(1, 0, { dot_thuc_tap: recordId, sinh_vien: apiSinhVien.docs[0]._id });
+        setItemInfo(TTInfo.docs[0]);
       }
     }
-    // const apiDotTT = await getAllDotThucTap(1, 0, { trang_thai: DOT_THUC_TAP.DANG_MO });
-    // setDotTT(apiDotTT.docs);
   }
 
   const isGiaoVu = myInfo && myInfo.role.includes(ROLE.GIAO_VU);
@@ -263,8 +314,8 @@ function DKTTDetail({isLoading, sinhVienList, myInfo, ...props }) {
       <br/>
       <h2>Danh sách sinh viên đăng ký thực tập</h2>
       <Loading active={isLoading}>
-      <Table dataSource={dataSource} size='small' columns={columns}
-             pagination={pagination} bordered/>
+        <Table dataSource={dataSource} size='small' columns={columns}
+               pagination={pagination} bordered/>
       </Loading>
     </>);
 }

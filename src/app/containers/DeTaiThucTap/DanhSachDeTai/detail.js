@@ -5,6 +5,7 @@ import CustomSkeleton from '@components/CustomSkeleton';
 import { CONSTANTS, RULES } from '@constants';
 import { getAllLinhVuc } from '@app/services/LinhVuc/linhVuc.service';
 import { getAllNamHoc } from '@app/services/NamHoc/namhocService';
+import { getAllTuKhoa } from '@app/services/TuKhoa/tuKhoa.service';
 import Form from 'antd/es/form';
 import { connect } from 'react-redux';
 import Loading from '@components/Loading';
@@ -14,6 +15,7 @@ function Detail({ isModalVisible, handleOk, handleCancel, userSelected, ...props
   const [detaiForm] = Form.useForm();
   const [listLinhVuc, setListLinhVuc] = useState();
   const [listNamHoc, setListNamHoc] = useState();
+  const [tuKhoaList, setTuKhoaList] = useState();
 
   useEffect(() => {
     if (userSelected && isModalVisible) {
@@ -21,6 +23,8 @@ function Detail({ isModalVisible, handleOk, handleCancel, userSelected, ...props
       dataField.ngayTao = userSelected.ngayTao ? moment(userSelected.ngayTao) : '';
       dataField.linhVuc = userSelected.linhVuc._id;
       dataField.giangVien = userSelected.giangVien._id;
+      dataField.tuKhoa = userSelected?.tuKhoa?.map(x => x._id);
+
       detaiForm.setFieldsValue(dataField);
     } else if (!isModalVisible) {
       detaiForm.resetFields();
@@ -38,6 +42,10 @@ function Detail({ isModalVisible, handleOk, handleCancel, userSelected, ...props
     const apiNamHoc = await getAllNamHoc();
     if(apiNamHoc){
       setListNamHoc(apiNamHoc.docs);
+    }
+    const apiTuKhoa = await getAllTuKhoa(1,0,{});
+    if(apiTuKhoa){
+      setTuKhoaList(apiTuKhoa.docs);
     }
   }
   function onFinish(data) {
@@ -108,6 +116,17 @@ function Detail({ isModalVisible, handleOk, handleCancel, userSelected, ...props
               layoutCol={{ xs: 24 }}
               layoutItem={{ labelCol: { xs: 8 } }}
               options={{ data: listNamHoc, valueString: '_id', labelString: 'nam_hoc' }}
+              labelLeft
+              rules={[RULES.REQUIRED]}
+            />
+            <CustomSkeleton
+              size='default'
+              mode="multiple"
+              label="Từ khóa" name="tuKhoa"
+              type={CONSTANTS.SELECT}
+              layoutCol={{ xs: 24 }}
+              layoutItem={{ labelCol: { xs: 8 } }}
+              options={{ data: tuKhoaList, valueString: '_id', labelString: 'tu_khoa' }}
               labelLeft
               rules={[RULES.REQUIRED]}
             />

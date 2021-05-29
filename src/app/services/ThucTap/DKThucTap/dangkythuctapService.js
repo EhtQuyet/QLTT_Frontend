@@ -29,6 +29,18 @@ export function createDKTT(data) {
     });
 }
 
+export function xacNhanHD(value) {
+  return axios.post(API.XAC_NHAN_HUONG_DAN, value)
+    .then(response => {
+      if (response.status === 200) return response.data?.data;
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
+
 
 export function getAllDKTT(currentPage = 1, totalDocs = 0, query, loading = true) {
   const params = convertParam(query, '&');
