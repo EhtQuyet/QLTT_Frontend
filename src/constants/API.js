@@ -20,6 +20,9 @@ export const API = {
   BO_MON: '/api/bomon',
   BO_MON_ID: '/api/bomon/{0}',
 
+  NHIEM_VU: '/api/nhiemvusinhvien',
+  NHIEM_VU_ID: '/api/nhiemvusinhvien/{0}',
+
   DIA_DIEM_THUC_TAP: '/api/diadiemthuctap',
   DIA_DIEM_THUC_TAP_ID: '/api/diadiemthuctap/{0}',
 

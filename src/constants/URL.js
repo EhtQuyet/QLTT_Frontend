@@ -28,6 +28,13 @@ export const URL = {
     NHAT_KY_ITEM: '/nhat-ky-sinh-vien',
     NHAT_KY_ITEM_ID: '/nhat-ky-sinh-vien/{0}',
 
+
+    NHIEM_VU_DOT_THUC_TAP: '/nhiem-vu-dot-thuc-tap',
+    NHIEM_VU: '/nhiem-vu',
+    NHIEM_VU_ID: '/nhiem-vu/{0}',
+    NHIEM_VU_SINH_VIEN: '/nhiem-vu-sinh-vien',
+    NHIEM_VU_SINH_VIEN_ID: '/nhiem-vu-sinh-vien/{0}',
+
     LOP_HOC: '/lop-hoc',
     KHOA_HOC: '/khoa-hoc',
 

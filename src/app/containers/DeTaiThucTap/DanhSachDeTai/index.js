@@ -17,6 +17,7 @@ import * as detai from '@app/store/ducks/detai.reduck';
 import { ROLE } from '@src/constants/contans';
 import { getAllSinhVien } from '@app/services/SinhVienTTTN/sinhVienTTService';
 import { getAllDKTT } from '@app/services/ThucTap/DKThucTap/dangkythuctapService';
+import { getAllGiaoVien } from '@app/services/GiaoVienHD/giaoVienService';
 
 
 function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
@@ -49,7 +50,6 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
     }
   }
 
-  console.log(isTrue);
   async function getDataDeTai(
     currentPage = detai.currentPage,
     pageSize = detai.pageSize,
@@ -59,22 +59,27 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
     if(isGiaoVu || isAdmin) {
       apiResponse = await getListDetai(currentPage, pageSize, query);
     }
-    else {
+    if(isSinhVien) {
       const api = await getAllSinhVien(1,0, {ma_sinh_vien: myInfo.username})
-      console.log( api.docs[0]._id);
       const api0 =  await getAllDetai(1, 0, {sinh_vien_thuc_hien: api.docs[0]._id});
-      console.log(api0.docs[0]);
       if(api0){
         setIsTrue(api0.docs[0])
       }
-
       const api2 = await getAllDKTT(1,0, {sinh_vien: api.docs[0]._id})
+
       if(api2){
         setIsDangKy(api2.docs[0])
         apiResponse = await getAllDetai(1, 0, {trang_thai: TRANG_THAI.DA_DUOC_DUYET, ma_giang_vien: api2.docs[0].giao_vien_huong_dan._id});
-      }
-      else{
+      } else{
         apiResponse = await getAllDetai(1, 0, {trang_thai: TRANG_THAI.DA_DUOC_DUYET});
+      }
+    }
+
+    if(isGiangVien) {
+      console.log('isGiangVien',isGiangVien);
+      const  apiGiangVien = await getAllGiaoVien(1,0, {ma_giao_vien: myInfo?.username})
+      if(apiGiangVien) {
+        apiResponse = await getListDetai(1, 0, {trang_thai: TRANG_THAI.DA_DUOC_DUYET, ma_giang_vien: apiGiangVien.docs[0]._id});
       }
     }
 

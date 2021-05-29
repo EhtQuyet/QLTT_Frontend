@@ -26,6 +26,9 @@ const ThemKeHoach = lazy(() => import('@containers/KeHoachThucTap/keHoachDetail'
 const KiemDuyetNhatKy = lazy(() => import('@containers/NhatKyThucTap/KiemDuyetNhatKy'));
 const NhatKyItem = lazy(() => import('@containers/NhatKyThucTap/NhatKyItem'));
 
+const NhiemVu_DotThucTap = lazy(() => import('@containers/ThucTap/NhiemVuSinhVien/nhiemVu-dotThucTap'));
+const NhiemVu_SinhVien = lazy(() => import('@containers/ThucTap/NhiemVuSinhVien/nhiemVu-sinhVien'));
+const NhiemVuManagerment = lazy(() => import('@containers/ThucTap/NhiemVuSinhVien/nhiemVuManagerment'));
 
 const DangKyThucTap = lazy(() => import('@containers/ThucTap/DangKyThucTap/DangKyThucTap'));
 const ThemDangKyThucTap = lazy(() => import('@containers/ThucTap/DangKyThucTap/DKTTDetail'));
@@ -195,6 +198,13 @@ export const ConstantsRoutes = [
         icon: renderIcon('user-friends'),
         role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN],
       },
+      {
+        path: URL.MENU.NHIEM_VU_DOT_THUC_TAP,
+        menuName: 'Nhiệm vụ sinh viên',
+        component: NhiemVu_DotThucTap,
+        icon: renderIcon('briefcase'),
+        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN],
+      },
     ],
   },
   {
@@ -322,6 +332,18 @@ export const ConstantsRoutes = [
     path: `${URL.MENU.NHAT_KY_ITEM}/:id`,
     breadcrumbName: 'Nhật ký item',
     component: NhatKyItem,
+    role: [ROLE.GIANG_VIEN],
+  },
+  {
+    path: `${URL.MENU.NHIEM_VU_SINH_VIEN}/:id`,
+    breadcrumbName: 'Nhiệm vụ sinh viên',
+    component: NhiemVuManagerment,
+    role: [ROLE.GIANG_VIEN],
+  },
+  {
+    path: `${URL.MENU.NHIEM_VU}/:id`,
+    breadcrumbName: 'Danh sách sinh viên hướng dẫn',
+    component: NhiemVu_SinhVien,
     role: [ROLE.GIANG_VIEN],
   },
 ];
