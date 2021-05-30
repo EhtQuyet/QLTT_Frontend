@@ -145,3 +145,9 @@ export const Role = {
   ADMIN: 'Admin',
   User: 'User'
 }
+
+export const NHIEM_VU = {
+  DA_GIAO: 'DA_GIAO',
+  HOAN_THANH: 'HOAN_THANH',
+  XAC_NHAN: 'XAC_NHAN'
+}

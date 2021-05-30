@@ -10,13 +10,11 @@ import Form from 'antd/es/form';
 import { connect } from 'react-redux';
 import Loading from '@components/Loading';
 
-function NhiemVuDetail({ isModalVisible, handleOk, myInfo, handleCancel, userSelected, sinhVienList, ...props }) {
+function NhiemVuDetail({ isModalVisible, handleOk, myInfo, handleCancel, userSelected, type, sinhVienList, ...props }) {
   const [nhiemVuForm] = Form.useForm();
   useEffect(() => {
     getData();
-    console.log('userSelected', userSelected);
     if (userSelected && isModalVisible) {
-      console.log('isModalVisible', isModalVisible);
       const dataField = Object.assign({}, userSelected);
       dataField.noiDung = userSelected.noiDung;
       dataField.yeuCau = userSelected.yeuCau;
@@ -28,6 +26,10 @@ function NhiemVuDetail({ isModalVisible, handleOk, myInfo, handleCancel, userSel
   }, [isModalVisible]);
 
   function onFinish(data) {
+    if(type)
+    {data.trangThai = type}
+    console.log('data',data);
+
     if (props.isLoading) return;
     handleOk(userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE, data);
   }
@@ -59,24 +61,26 @@ function NhiemVuDetail({ isModalVisible, handleOk, myInfo, handleCancel, userSel
         >
           <Row gutter={15}>
 
-            {isGiangVien && <CustomSkeleton
+            <CustomSkeleton
               size='default'
               label="Nội dung công việc" name="noiDung"
               type={CONSTANTS.TEXT_AREA}
               layoutCol={{ xs: 24 }}
+              disabled={isSinhVien}
               layoutItem={{ labelCol: { xs: 8 } }}
               rules={[RULES.REQUIRED]}
               labelLeft
-            />}
-            {isGiangVien && <CustomSkeleton
+            />
+            <CustomSkeleton
               size='default'
               label="Yêu cầu" name="yeuCau"
               type={CONSTANTS.TEXT_AREA}
               layoutCol={{ xs: 24 }}
+              disabled={isSinhVien}
               layoutItem={{ labelCol: { xs: 8 } }}
               rules={[RULES.REQUIRED]}
               labelLeft
-            />}
+            />
             {isSinhVien && <CustomSkeleton
               size='default'
               label="Kết quả" name="ketQua"

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Table } from 'antd';
-import { Link, useParams} from 'react-router-dom';
+import { Button, Popconfirm, Table, Tag } from 'antd';
+import { Link, useParams } from 'react-router-dom';
 import {
   createNhiemVu,
   deleteNhiemVu,
@@ -8,7 +8,7 @@ import {
   updateNhiemVu,
 } from '@app/services/NhiemVu/nhiemVu.service';
 import ActionCell from '@components/ActionCell';
-import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT,  } from '@constants';
+import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT, NHIEM_VU, TRANG_THAI } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
 import Filter from '@components/Filter';
 import Loading from '@components/Loading';
@@ -19,34 +19,52 @@ import NhiemVDetail from '@containers/ThucTap/NhiemVuSinhVien/nhiemVuDetail';
 import AddNewButton from '@AddNewButton';
 import { getAllDKTT } from '@app/services/ThucTap/DKThucTap/dangkythuctapService';
 import { getAllGiaoVien } from '@app/services/GiaoVienHD/giaoVienService';
+import { getAllSinhVien } from '@app/services/SinhVienTTTN/sinhVienTTService';
+import { DeleteOutlined, EditOutlined, SendOutlined } from '@ant-design/icons';
 
 function NhiemVuManagerment({ isLoading, myInfo, ...props }) {
   const recordId = useParams()?.id;
   const [nhiemvu, setNhiemVu] = useState([]);
   const [giangVien, setGiangVien] = useState();
+  const [sinhVien, setSinhVien] = useState();
   const [state, setState] = useState({
     isShowModal: false,
     userSelected: null,
+    type: null,
   });
 
   useEffect(() => {
-    (async () => {
-      await getDataNhiemVu();
-      await getInfoGiangVien();
-    })();
+    getInfo();
+    getDataNhiemVu();
   }, []);
 
-  async function getInfoGiangVien(){
-    if(isGiangVien) {
-      const apiGV = await getAllGiaoVien(1,0,{ma_giao_vien: myInfo?.username})
+  async function getInfo() {
+    if (isGiangVien) {
+      const apiGV = await getAllGiaoVien(1, 0, { ma_giao_vien: myInfo?.username });
       setGiangVien(apiGV.docs[0]);
+    }
+    if (isSinhVien) {
+      const apiSV = await getAllSinhVien(1, 0, { ma_sinh_vien: myInfo?.username });
+      setSinhVien(apiSV.docs[0]);
     }
   }
 
+
   async function getDataNhiemVu() {
-    const apiResponse = await getAllNhiemVu(1,0,{sinh_vien: recordId});
-    if (apiResponse) {
-      setNhiemVu(apiResponse);
+    await getInfo();
+    if (isSinhVien) {
+      const apiSV = await getAllSinhVien(1, 0, { ma_sinh_vien: myInfo?.username });
+      const apiResponse = await getAllNhiemVu(1, 0, { sinh_vien: apiSV.docs[0]?._id });
+      console.log('sinh_vien', sinhVien?._id);
+      console.log('apiResponse', apiResponse);
+      if (apiResponse) {
+        setNhiemVu(apiResponse);
+      }
+    } else {
+      const apiResponse = await getAllNhiemVu(1, 0, { sinh_vien: recordId });
+      if (apiResponse) {
+        setNhiemVu(apiResponse);
+      }
     }
   }
 
@@ -63,7 +81,7 @@ function NhiemVuManagerment({ isLoading, myInfo, ...props }) {
   }));
 
   const columns = [
-    columnIndex(10,1),
+    columnIndex(10, 1),
 
     {
       title: 'Tên sinh viên',
@@ -98,20 +116,37 @@ function NhiemVuManagerment({ isLoading, myInfo, ...props }) {
     },
     {
       align: 'center',
-      render: (value) => <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>,
+      render: (value) => {
+        const daGiao = value.trangThai === NHIEM_VU.DA_GIAO;
+        const hoanThanh = value.trangThai === NHIEM_VU.HOAN_THANH;
+        const xacNhan = value.trangThai === NHIEM_VU.XAC_NHAN;
+        return <>
+          {daGiao && isGiangVien && <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>}
+
+          {isSinhVien && daGiao && <div className='mt-2'>
+            <Button size='small' onClick={() => handleEdit(value, 'HOAN_THANH')} style={{ borderColor: 'white' }}>
+              <Tag color='blue' className='tag-action'>
+                <EditOutlined/><span>Hoàn thành</span>
+              </Tag>
+            </Button>
+          </div>}
+        </>;
+      },
+
       width: 200,
     },
   ];
 
-  function handleShowModal(isShowModal, userSelected = null) {
+  function handleShowModal(isShowModal, userSelected = null, type = null) {
     setState({
       isShowModal,
       userSelected,
+      type,
     });
   }
 
-  function handleEdit(userSelected) {
-    setState({ isShowModal: true, userSelected });
+  function handleEdit(userSelected, type) {
+    setState({ isShowModal: true, userSelected, type });
   }
 
   async function handleDelete(userSelected) {
@@ -123,17 +158,23 @@ function NhiemVuManagerment({ isLoading, myInfo, ...props }) {
   }
 
   async function createAndModifyNhiemVu(type, dataForm) {
-    const { noiDung, yeuCau, ketQua } = dataForm;
-    const apiDktt = await getAllDKTT(1,0, {sinh_vien: recordId, giao_vien_huong_dan: giangVien._id})
-    console.log('apiDktt',apiDktt.docs[0]);
+    const { noiDung, yeuCau, ketQua, trangThai } = dataForm;
+    if (isGiangVien) {
+      const apiDktt = await getAllDKTT(1, 0, { sinh_vien: recordId, giao_vien_huong_dan: giangVien._id });
+    }
     const dataRequest = {
-      sinh_vien: apiDktt.docs[0].sinh_vien,
-      dot_thuc_tap: apiDktt.docs[0].dot_thuc_tap,
-      giang_vien: apiDktt.docs[0].giao_vien_huong_dan,
       noi_dung: noiDung,
       yeu_cau: yeuCau,
       ket_qua: ketQua,
     };
+    if (isSinhVien) {
+      dataRequest.trang_thai = trangThai;
+    }
+    if (isGiangVien) {
+      dataRequest.sinh_vien = apiDktt.docs[0].sinh_vien;
+      dataRequest.dot_thuc_tap = apiDktt.docs[0].dot_thuc_tap;
+      dataRequest.giang_vien = apiDktt.docs[0].giao_vien_huong_dan;
+    }
     if (type === CONSTANTS.CREATE) {
       const apiResponse = await createNhiemVu(dataRequest);
       if (apiResponse) {
@@ -144,8 +185,8 @@ function NhiemVuManagerment({ isLoading, myInfo, ...props }) {
     }
 
     if (type === CONSTANTS.UPDATE) {
+      console.log('dataRequest', dataRequest);
       dataRequest._id = await state.userSelected._id;
-      console.log('dataRequest._id',dataRequest._id);
       const apiResponse = await updateNhiemVu(dataRequest);
       if (apiResponse) {
         const docs = nhiemvu.docs.map(doc => {
@@ -169,7 +210,7 @@ function NhiemVuManagerment({ isLoading, myInfo, ...props }) {
 
   return (
     <div>
-      <AddNewButton label="Thêm nhiệm vụ" onClick={() => handleShowModal(true)} disabled={isLoading}/>
+      {isGiangVien && <AddNewButton label="Thêm nhiệm vụ" onClick={() => handleShowModal(true)} disabled={isLoading}/>}
       <Loading active={isLoading}>
         <Table dataSource={dataSource} size='small' columns={columns} pagination={true} bordered/>
       </Loading>
@@ -179,6 +220,7 @@ function NhiemVuManagerment({ isLoading, myInfo, ...props }) {
         handleOk={createAndModifyNhiemVu}
         handleCancel={() => handleShowModal(false)}
         userSelected={state.userSelected}
+        type={state.type}
       />
     </div>
   );
