@@ -159,9 +159,7 @@ function NhiemVuManagerment({ isLoading, myInfo, ...props }) {
 
   async function createAndModifyNhiemVu(type, dataForm) {
     const { noiDung, yeuCau, ketQua, trangThai } = dataForm;
-    if (isGiangVien) {
-      const apiDktt = await getAllDKTT(1, 0, { sinh_vien: recordId, giao_vien_huong_dan: giangVien._id });
-    }
+
     const dataRequest = {
       noi_dung: noiDung,
       yeu_cau: yeuCau,
@@ -171,6 +169,7 @@ function NhiemVuManagerment({ isLoading, myInfo, ...props }) {
       dataRequest.trang_thai = trangThai;
     }
     if (isGiangVien) {
+      const apiDktt = await getAllDKTT(1, 0, { sinh_vien: recordId, giao_vien_huong_dan: giangVien._id });
       dataRequest.sinh_vien = apiDktt.docs[0].sinh_vien;
       dataRequest.dot_thuc_tap = apiDktt.docs[0].dot_thuc_tap;
       dataRequest.giang_vien = apiDktt.docs[0].giao_vien_huong_dan;
