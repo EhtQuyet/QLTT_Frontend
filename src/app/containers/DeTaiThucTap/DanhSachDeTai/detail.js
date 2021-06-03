@@ -111,6 +111,16 @@ function Detail({ isModalVisible, handleOk, handleCancel, userSelected, ...props
             />
             <CustomSkeleton
               size='default'
+              label="Khái quát nội dung nghiên cứu" name="noiDung"
+              type={CONSTANTS.TEXT_AREA}
+              layoutCol={{ xs: 24 }}
+              layoutItem={{ labelCol: { xs: 8 } }}
+              rules={[RULES.REQUIRED]}
+              labelLeft
+              form={detaiForm}
+            />
+            <CustomSkeleton
+              size='default'
               label="Năm học" name="namHoc"
               type={CONSTANTS.SELECT}
               layoutCol={{ xs: 24 }}

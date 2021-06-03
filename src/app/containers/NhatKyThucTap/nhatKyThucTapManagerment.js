@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table } from 'antd';
+import { Table, Tag } from 'antd';
 import AddNewButton from '@AddNewButton';
 import NhatKyDetail from './nhatKyThucTapDetail';
 import { Link } from 'react-router-dom';
@@ -10,16 +10,19 @@ import {
   updateNhatKy,
 } from '@app/services/NhatKyThucTap/nhatKyThucTap.service';
 import ActionCell from '@components/ActionCell';
-import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT } from '@constants';
+import { CONSTANTS, NHAT_KY, PAGINATION_CONFIG, PAGINATION_INIT } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
 import Filter from '@components/Filter';
 import Loading from '@components/Loading';
 import { connect } from 'react-redux';
 import { URL } from '@url';
 import ThemSuaSinhVien from '@containers/QuanLyDanhMuc/QuanLySinhVienTTTN/ThemSuaSinhVien';
+import { ROLE } from '@src/constants/contans';
+import { getAllSinhVien } from '@app/services/SinhVienTTTN/sinhVienTTService';
 
-function NhatKyManagernent({ isLoading, ...props }) {
+function NhatKyManagernent({ isLoading, myInfo, ...props }) {
   const [nhatky, setNhatKy] = useState([]);
+  const [isSinhViens, setIsSinhViens ] = useState([]);
   const [state, setState] = useState({
     isShowModal: false,
     userSelected: null,
@@ -32,9 +35,15 @@ function NhatKyManagernent({ isLoading, ...props }) {
   }, []);
 
   async function getDataNhatKy() {
-    const apiResponse = await getAllNhatKy();
-    if (apiResponse) {
-      setNhatKy(apiResponse);
+    if (isSinhVien) {
+      const sinhViens = await getAllSinhVien(1,0,{ma_sinh_vien: myInfo?.username});
+      setIsSinhViens(sinhViens.docs[0]);
+      if(sinhViens) {
+        const apiResponse = await getAllNhatKy(1,0,{ma_sinh_vien: sinhViens.docs[0]._id});
+        if (apiResponse) {
+          setNhatKy(apiResponse);
+        }
+      }
     }
   }
 
@@ -51,8 +60,7 @@ function NhatKyManagernent({ isLoading, ...props }) {
   }));
 
   const columns = [
-    columnIndex(10,1),
-
+    columnIndex(10, 1),
     {
       title: 'Tên sinh viên',
       dataIndex: 'maSinhVien',
@@ -88,6 +96,12 @@ function NhatKyManagernent({ isLoading, ...props }) {
       title: 'Trạng thái',
       dataIndex: 'trangThai',
       key: 'trangThai',
+      render: value => <>
+        {value === NHAT_KY.HOAN_THANH ? <Tag color='blue'>Hoàn thành</Tag>
+          : value === NHAT_KY.DA_KHOA ? <Tag color='red'>Đã khóa</Tag>
+            : value === NHAT_KY.KIEM_DUYET ? <Tag color='gold'>Chờ xác nhận</Tag>
+              : <Tag color='green'>Giảng viên xác nhận</Tag>}
+      </>,
       width: 200,
     },
     {
@@ -119,7 +133,7 @@ function NhatKyManagernent({ isLoading, ...props }) {
   async function createAndModifyNhatKy(type, dataForm) {
     const { maSinhVien, ngay, diaDiem, congViec, ketQua, nhanXet, trangThai } = dataForm;
     const dataRequest = {
-      ma_sinh_vien: maSinhVien,
+      ma_sinh_vien: isSinhViens.ma_sinh_vien,
       ngay: ngay,
       dia_diem: diaDiem,
       cong_viec: congViec,
@@ -127,7 +141,6 @@ function NhatKyManagernent({ isLoading, ...props }) {
       nhan_xet: nhanXet,
       trang_thai: trangThai,
     };
-    console.log('dataRequest',dataRequest);
     if (type === CONSTANTS.CREATE) {
       const apiResponse = await createNhatKy(dataRequest);
       if (apiResponse) {
@@ -153,6 +166,12 @@ function NhatKyManagernent({ isLoading, ...props }) {
       }
     }
   }
+
+  const isGiaoVu = myInfo && myInfo.role.includes(ROLE.GIAO_VU);
+  const isAdmin = myInfo && myInfo.role.includes(ROLE.ADMIN);
+  const isSinhVien = myInfo && myInfo.role.includes(ROLE.SINH_VIEN);
+  const isGiangVien = myInfo && myInfo.role.includes(ROLE.GIANG_VIEN);
+  const isBanChuNiem = myInfo && myInfo.role.includes(ROLE.BAN_CHU_NHIEM);
 
   return (
     <div>
@@ -180,7 +199,8 @@ function NhatKyManagernent({ isLoading, ...props }) {
 
 function mapStateToProps(store) {
   const { isLoading } = store.app;
-  return { isLoading };
+  const { myInfo } = store.user;
+  return { isLoading, myInfo };
 }
 
 export default (connect(mapStateToProps)(NhatKyManagernent));

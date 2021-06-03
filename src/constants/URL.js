@@ -8,8 +8,6 @@ export const URL = {
     GIAO_VIEN: '/giao-vien',
     QUAN_LY_THUC_TAP: '/quan-ly-thuc-tap',
 
-
-
     SINH_VIEN: '/sinh-vien',
     BO_MON: '/bo-mon',
     NGACH_GV: '/ngach-giang-vien',
@@ -28,6 +26,8 @@ export const URL = {
     NHAT_KY_ITEM: '/nhat-ky-sinh-vien',
     NHAT_KY_ITEM_ID: '/nhat-ky-sinh-vien/{0}',
 
+    DANH_GIA_DE_TAI: '/danh-gia-de-tai',
+    DANH_GIA_DE_TAI_ID: '/danh-gia-de-tai/{0}',
 
     NHIEM_VU_DOT_THUC_TAP: '/nhiem-vu-dot-thuc-tap',
     NHIEM_VU: '/nhiem-vu',
@@ -40,7 +40,6 @@ export const URL = {
 
     DOT_THUC_TAP: '/dot_thuc_tap',
 
-
     DANG_KY_THUC_TAP: '/dang-ky-thuc-tap',
     THEM_DANG_KY_THUC_TAP: '/them-dang-ky-thuc-tap',
     DANG_KY_THUC_TAP_CHI_TIET: '/dang-ky-thuc-tap-chi-tiet',
@@ -49,15 +48,12 @@ export const URL = {
     PHE_DUYET_DANG_KY: '/phe-duyet-dang-ky',
     PHE_DUYET_DANG_KY_ID: '/phe-duyet-dang-ky/{0}',
 
-
     NHOM_THUC_TAP: '/nhom-thuc-tap',
     ADD_NHOM_THUC_TAP: '/tao_nhom-thuc-tap',
     NHOM_THUC_TAP_CHI_TIET: '/chi-tiet-nhom-thuc-tap',
     NHOM_THUC_TAP_CHI_TIET_ID: '/chi-tiet-nhom-thuc-tap/{0}',
     CHI_TIET_NHOM: '/chi-tiet-nhom',
     CHI_TIET_NHOM_ID: '/chi-tiet-nhom/{0}',
-
-
 
     DE_TAI_TTTN: '/de-tai-thuc-tap-tot-nghiep',
     DANH_SACH_DE_TAI: '/danh-sach-de-tai',
@@ -66,11 +62,9 @@ export const URL = {
     DANG_KY_DE_TAI: '/dang-ky-de-tai',
     DANG_KY_DE_TAI_ID: '/dang-ky-de-tai/{0}',
 
-
     THONG_KE: '/thong-ke',
     THONG_KE_DKTT: '/thong-ke-danh-sach-dang-ky-thuc-tap',
     THONG_KE_NHOM_THUC_TAP: '/thong-ke-danh-sach-nhom-thuc-tap',
-
   },
 
   MY_INFO: '/my-info',

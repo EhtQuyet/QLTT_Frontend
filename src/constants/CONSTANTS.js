@@ -151,3 +151,24 @@ export const NHIEM_VU = {
   HOAN_THANH: 'HOAN_THANH',
   XAC_NHAN: 'XAC_NHAN'
 }
+
+export const UU_TIEN = {
+  HIGH: 'HIGH',
+  MEDIUM: 'MEDIUM',
+  LOW: 'LOW',
+}
+
+export const NHAT_KY = {
+  HOAN_THANH: 'HOAN_THANH',
+  DA_KHOA: 'DA_KHOA',
+  KIEM_DUYET: 'KIEM_DUYET',
+  XAC_NHAN: 'XAC_NHAN'
+};
+
+export const UUTIEN_OPTIONS = [
+  { label: 'Cao', value: 'HIGH' },
+  { label: 'Trung bình', value: 'MEDIUM' },
+  { label: 'Thấp', value: 'LOW' },
+];
+
+

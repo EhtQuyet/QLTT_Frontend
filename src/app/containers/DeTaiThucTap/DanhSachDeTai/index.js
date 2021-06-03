@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Popconfirm, Button } from 'antd';
+import { Table, Tag, Popconfirm, Button, Tooltip } from 'antd';
 import AddNewButton from '@AddNewButton';
-import { DeleteOutlined, EditOutlined,SendOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, SendOutlined, CheckCircleOutlined, CopyOutlined } from '@ant-design/icons';
 import Detail from './detail';
 import { createDeTai, deleteDeTai, getAllDetai, getListDetai, updateDeTai } from '@app/services/DeTaiTTTN/DeTaiService';
 import { getAllLinhVuc } from '@app/services/LinhVuc/linhVuc.service';
@@ -18,6 +18,8 @@ import { ROLE } from '@src/constants/contans';
 import { getAllSinhVien } from '@app/services/SinhVienTTTN/sinhVienTTService';
 import { getAllDKTT } from '@app/services/ThucTap/DKThucTap/dangkythuctapService';
 import { getAllGiaoVien } from '@app/services/GiaoVienHD/giaoVienService';
+import { URL } from '@url';
+import { Link, useParams } from 'react-router-dom';
 
 
 function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
@@ -28,7 +30,7 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
     isShowModal: false,
     userSelected: null,
   });
-  const [listLinhVuc, setListLinhVuc] = useState([])
+  const [listLinhVuc, setListLinhVuc] = useState([]);
 
   useEffect(() => {
     if (!props?.teacherList?.length) {
@@ -45,7 +47,7 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
 
   async function getLinhVuc() {
     const api = await getAllLinhVuc();
-    if(api){
+    if (api) {
       setListLinhVuc(api.docs);
     }
   }
@@ -56,30 +58,34 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
     query = detai.query,
   ) {
     let apiResponse = null;
-    if(isGiaoVu || isAdmin) {
+    if (isGiaoVu || isAdmin) {
       apiResponse = await getListDetai(currentPage, pageSize, query);
     }
-    if(isSinhVien) {
-      const api = await getAllSinhVien(1,0, {ma_sinh_vien: myInfo.username})
-      const api0 =  await getAllDetai(1, 0, {sinh_vien_thuc_hien: api.docs[0]._id});
-      if(api0){
-        setIsTrue(api0.docs[0])
+    if (isSinhVien) {
+      const api = await getAllSinhVien(1, 0, { ma_sinh_vien: myInfo.username });
+      const api0 = await getAllDetai(1, 0, { sinh_vien_thuc_hien: api.docs[0]._id });
+      if (api0) {
+        setIsTrue(api0.docs[0]);
       }
-      const api2 = await getAllDKTT(1,0, {sinh_vien: api.docs[0]._id})
+      const api2 = await getAllDKTT(1, 0, { sinh_vien: api.docs[0]._id });
 
-      if(api2){
-        setIsDangKy(api2.docs[0])
-        apiResponse = await getAllDetai(1, 0, {trang_thai: TRANG_THAI.DA_DUOC_DUYET, ma_giang_vien: api2.docs[0].giao_vien_huong_dan._id});
-      } else{
-        apiResponse = await getAllDetai(1, 0, {trang_thai: TRANG_THAI.DA_DUOC_DUYET});
+      if (api2) {
+        setIsDangKy(api2.docs[0]);
+        apiResponse = await getAllDetai(1, 0, {
+          trang_thai: TRANG_THAI.DA_DUOC_DUYET,
+          ma_giang_vien: api2.docs[0].giao_vien_huong_dan._id,
+        });
+      } else {
+        apiResponse = await getAllDetai(1, 0, { trang_thai: TRANG_THAI.DA_DUOC_DUYET });
       }
     }
 
-    if(isGiangVien) {
-      console.log('isGiangVien',isGiangVien);
-      const  apiGiangVien = await getAllGiaoVien(1,0, {ma_giao_vien: myInfo?.username})
-      if(apiGiangVien) {
-        apiResponse = await getListDetai(1, 0, {trang_thai: TRANG_THAI.DA_DUOC_DUYET, ma_giang_vien: apiGiangVien.docs[0]._id});
+    if (isGiangVien) {
+      const apiGiangVien = await getAllGiaoVien(1, 0, { ma_giao_vien: myInfo?.username });
+      if (apiGiangVien) {
+        apiResponse = await getListDetai(1, 0, { trang_thai: TRANG_THAI.DA_DUOC_DUYET });
+        const all = await getListDetai(1, 0, { ma_giang_vien: apiGiangVien.docs[0]._id });
+        apiResponse.docs = [...apiResponse.docs, all.docs];
       }
     }
 
@@ -102,6 +108,7 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
     tenDeTai: data.ten_de_tai,
     maDeTai: data.ma_de_tai,
     ngayTao: data.created_at,
+    noiDung: data.noi_dung,
     trangThai: data.trang_thai,
     hoanThanh: data.trang_thai === TRANG_THAI.DA_DUOC_DUYET,
     giangVien: data?.ma_giang_vien,
@@ -176,51 +183,78 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
       align: 'center',
       render: (text, record, index) => {
         const daDuyet = record.trangThai === TRANG_THAI.DA_DUOC_DUYET;
+        const chuaDuocDuyet = record.trangThai === TRANG_THAI.CHUA_DUOC_DUYET;
         return <>
-          {!daDuyet && (isAdmin || isGiaoVu) && <div className='mt-2'>
-            <Popconfirm
-              title='Bạn có chắc chắn duyệt đề tài hay không'
-              onConfirm={() => handleComfirmTopic(record)}
-              cancelText='Huỷ' okText='Xác nhận' okButtonProps={{ type: 'access' }}>
-              <Tag color='green' className='tag-action'>
-                <SendOutlined/><span className='ml-1'>Duyệt đề tài</span>
-              </Tag>
-            </Popconfirm>
-          </div>}
+          {!daDuyet && (isAdmin || isGiaoVu) &&
+          <Tooltip title="Duyệt đề tài" placement="left" color='green' key='green'>
+            <div className='mt-2'>
+              <Popconfirm
+                title='Bạn có chắc chắn duyệt đề tài hay không'
+                onConfirm={() => handleComfirmTopic(record)}
+                cancelText='Huỷ' okText='Xác nhận' okButtonProps={{ type: 'access' }}>
+                <Tag color='green' className='tag-action'>
+                  <CheckCircleOutlined/><span className='ml-1'></span>
+                </Tag>
+              </Popconfirm>
+            </div>
+          </Tooltip>}
+          {chuaDuocDuyet &&
+          <Link to={URL.MENU.DANH_GIA_DE_TAI_ID.format(record._id)}>
+            <Tooltip title="Đánh giá trùng lặp" placement="left" color='gold' key='gold'>
+              <div className='mt-2'>
+                <Button size='small'
+                        style={{ borderColor: 'white' }}>
+                  <Tag color='gold' className='tag-action'>
+                    <CopyOutlined/><span></span>
+                  </Tag>
+                </Button>
+              </div>
+            </Tooltip>
+          </Link>}
 
-          {isSinhVien && !isTrue && isDangKy !== null && <div className='mt-2'>
-            <Popconfirm
-              title='Bạn có chắc chắn đăng ký đề tài này không'
-              onConfirm={() => handleDangKyDeTai(record)}
-              cancelText='Huỷ' okText='Xác nhận' okButtonProps={{ type: 'access' }}>
-              <Tag color='green' className='tag-action'>
-                <SendOutlined/><span className='ml-1'>Đăng ký đề tài</span>
-              </Tag>
-            </Popconfirm>
-          </div>}
+          {isSinhVien && !isTrue && isDangKy !== null &&
+          <Tooltip title="Đăng ký đề tài" placement="left" color='green' key='green'>
+            <div className='mt-2'>
+              <Popconfirm
+                title='Bạn có chắc chắn đăng ký đề tài này không'
+                onConfirm={() => handleDangKyDeTai(record)}
+                cancelText='Huỷ' okText='Xác nhận' okButtonProps={{ type: 'access' }}>
+                <Tag color='green' className='tag-action'>
+                  <SendOutlined/><span className='ml-1'></span>
+                </Tag>
+              </Popconfirm>
+            </div>
+          </Tooltip>}
 
-          {(isAdmin || isGiaoVu) &&  <div className='mt-2'>
-            <Button size='small' onClick={() => handleEdit(record)} style={{ borderColor: 'white' }}>
-              <Tag color='blue' className='tag-action'>
-                <EditOutlined/><span>Chỉnh sửa</span>
-              </Tag>
-            </Button>
-          </div>}
-          {!daDuyet && (isAdmin || isGiaoVu) &&  <div className='mt-2'>
-            <Popconfirm
-              title='Bạn chắc chắn muốn xoá'
-              onConfirm={() => handleDelete(record)}
-              cancelText='Huỷ' okText='Xóa' okButtonProps={{ type: 'danger' }}>
-              <Tag color='red' className='tag-action'>
-                <DeleteOutlined/><span className='ml-1'>Xoá</span>
-              </Tag>
-            </Popconfirm>
-          </div>}
+          {(isAdmin || isGiaoVu) &&
+          <Tooltip title="Chỉnh sửa" placement="left" color='blue' key='blue'>
+            <div className='mt-2'>
+              <Button size='small' onClick={() => handleEdit(record)} style={{ borderColor: 'white' }}>
+                <Tag color='blue' className='tag-action'>
+                  <EditOutlined/><span></span>
+                </Tag>
+              </Button>
+            </div>
+          </Tooltip>}
+          {!daDuyet && (isAdmin || isGiaoVu) &&
+          <Tooltip title="Xóa đề tài" placement="left" color='red' key='red'>
+            <div className='mt-2'>
+              <Popconfirm
+                title='Bạn chắc chắn muốn xoá'
+                onConfirm={() => handleDelete(record)}
+                cancelText='Huỷ' okText='Xóa' okButtonProps={{ type: 'danger' }}>
+                <Tag color='red' className='tag-action'>
+                  <DeleteOutlined/><span className='ml-1'></span>
+                </Tag>
+              </Popconfirm>
+            </div>
+          </Tooltip>}
 
         </>;
       },
     },
   ];
+
 
   function handleShowModal(isShowModal, userSelected = null) {
     setState({
@@ -228,7 +262,6 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
       userSelected,
     });
   }
-
 
 
   function handleEdit(userSelected) {
@@ -254,16 +287,16 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
     }
   }
 
-  async function handleDangKyDeTai(data){
+  async function handleDangKyDeTai(data) {
     const item =
       {
         _id: data._id,
         sinh_vien_thuc_hien: isDangKy.sinh_vien._id,
-        trang_thai: TRANG_THAI.DA_DANG_KY
-      }
+        trang_thai: TRANG_THAI.DA_DANG_KY,
+      };
     const api = await updateDeTai(item);
     if (api) {
-      getDataDeTai(1,0,{});
+      getDataDeTai(1, 0, {});
       toast(CONSTANTS.SUCCESS, 'Đăng ký đề tài thành công!');
     }
   }
@@ -276,13 +309,14 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
     }
   }
 
-// function create or modify
+  // function create or modify
   async function createAndModifyDetai(type, dataForm) {
     const dataRequest = {
       ten_de_tai: dataForm.tenDeTai,
       ma_de_tai: dataForm.maDeTai,
       ngay_tao: dataForm.ngayTao ? dataForm.ngayTao.toString() : null,
       ma_giang_vien: dataForm.giangVien,
+      noi_dung: dataForm.noiDung,
       tu_khoa: dataForm.tuKhoa,
       ma_linh_vuc: dataForm.linhVuc,
       ma_nguoi_tao: myInfo._id,
@@ -367,4 +401,5 @@ function mapStateToProps(store) {
   return { isLoading, teacherList, myInfo, detaiList };
 }
 
-export default (connect(mapStateToProps, {  ...giaovien.actions, ...user.actions, ...detai.actions })(Index));
+export default (connect(mapStateToProps, { ...giaovien.actions, ...user.actions, ...detai.actions })(Index));
+;

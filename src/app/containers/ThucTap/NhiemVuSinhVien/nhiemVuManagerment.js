@@ -8,7 +8,7 @@ import {
   updateNhiemVu,
 } from '@app/services/NhiemVu/nhiemVu.service';
 import ActionCell from '@components/ActionCell';
-import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT, NHIEM_VU, TRANG_THAI } from '@constants';
+import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT, NHIEM_VU, TRANG_THAI, UU_TIEN } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
 import Filter from '@components/Filter';
 import Loading from '@components/Loading';
@@ -74,10 +74,10 @@ function NhiemVuManagerment({ isLoading, myInfo, ...props }) {
     sinhVien: data.sinh_vien,
     giangVien: data.giang_vien,
     noiDung: data.noi_dung,
+    uuTien: data.uu_tien,
     yeuCau: data.yeu_cau,
     ketQua: data.ket_qua,
     trangThai: data.trang_thai,
-
   }));
 
   const columns = [
@@ -109,9 +109,25 @@ function NhiemVuManagerment({ isLoading, myInfo, ...props }) {
       width: 300,
     },
     {
+      title: 'Mức độ ưu tiên',
+      dataIndex: 'uuTien',
+      key: 'uuTien',
+      render: value => <>
+        {value === UU_TIEN.LOW ? <Tag color='purple'>Thấp</Tag>
+          : value === UU_TIEN.MEDIUM ? <Tag color='purple'>Trung bình</Tag>
+            : <Tag color='purple'>Cao</Tag>}
+      </>,
+      width: 200,
+    },
+    {
       title: 'Trạng thái',
       dataIndex: 'trangThai',
       key: 'trangThai',
+      render: value => <>
+        {value === NHIEM_VU.DA_GIAO ? <Tag color='gold'>Đang thực hiện</Tag>
+          : value === NHIEM_VU.HOAN_THANH ? <Tag color='blue'>Hoàn thành</Tag>
+            : <Tag color='green'>Giảng viên xác nhận</Tag>}
+      </>,
       width: 200,
     },
     {
@@ -158,9 +174,10 @@ function NhiemVuManagerment({ isLoading, myInfo, ...props }) {
   }
 
   async function createAndModifyNhiemVu(type, dataForm) {
-    const { noiDung, yeuCau, ketQua, trangThai } = dataForm;
+    const { noiDung, yeuCau, ketQua, trangThai, uuTien } = dataForm;
 
     const dataRequest = {
+      uu_tien: uuTien,
       noi_dung: noiDung,
       yeu_cau: yeuCau,
       ket_qua: ketQua,
@@ -184,7 +201,6 @@ function NhiemVuManagerment({ isLoading, myInfo, ...props }) {
     }
 
     if (type === CONSTANTS.UPDATE) {
-      console.log('dataRequest', dataRequest);
       dataRequest._id = await state.userSelected._id;
       const apiResponse = await updateNhiemVu(dataRequest);
       if (apiResponse) {

@@ -35,6 +35,9 @@ const ThemDangKyThucTap = lazy(() => import('@containers/ThucTap/DangKyThucTap/D
 const DangKyThucTapChiTiet = lazy(() => import('@containers/ThucTap/DangKyThucTap/DKTTDetail'));
 const PheDuyetDangKy = lazy(() => import('@containers/ThucTap/DangKyThucTap/PheDuyetDangKy'));
 
+
+const DanhGiaDeTai = lazy(() => import('@containers/DeTaiThucTap/DanhGiaTrungLap/index'));
+
 const DotThucTap = lazy(() => import('@containers/ThucTap/DotThucTap/DotThucTap'));
 
 const NhomThucTap = lazy(() => import('@containers/ThucTap/NhomThucTap/NhomThucTap'));
@@ -341,6 +344,13 @@ export const ConstantsRoutes = [
     component: NhatKyItem,
     role: [ROLE.GIANG_VIEN],
   },
+  {
+    path: `${URL.MENU.DANH_GIA_DE_TAI}/:id`,
+    breadcrumbName: 'Đánh giá đề tài',
+    component: DanhGiaDeTai,
+    role: [ROLE.GIAO_VU],
+  },
+
   {
     path: `${URL.MENU.NHIEM_VU_SINH_VIEN}/:id`,
     breadcrumbName: 'Nhiệm vụ sinh viên',

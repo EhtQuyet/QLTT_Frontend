@@ -42,16 +42,16 @@ function NhatKyDetail({ isModalVisible, handleOk, handleCancel, userSelected, ..
       <Loading active={props.isLoading}>
         <Form id="formModal" form={nhatkyFom} size='default' onFinish={onFinish}>
           <Row gutter={15}>
-            <CustomSkeleton
-              size='default'
-              label="Mã sinh viên" name="maSinhVien"
-              type={CONSTANTS.TEXT}
-              layoutCol={{ xs: 24 }}
-              layoutItem={{ labelCol: { xs: 8 } }}
-              rules={[RULES.REQUIRED]}
-              labelLeft
-              form={nhatkyFom}
-            />
+            {/*<CustomSkeleton*/}
+            {/*  size='default'*/}
+            {/*  label="Mã sinh viên" name="maSinhVien"*/}
+            {/*  type={CONSTANTS.TEXT}*/}
+            {/*  layoutCol={{ xs: 24 }}*/}
+            {/*  layoutItem={{ labelCol: { xs: 8 } }}*/}
+            {/*  rules={[RULES.REQUIRED]}*/}
+            {/*  labelLeft*/}
+            {/*  form={nhatkyFom}*/}
+            {/*/>*/}
             <CustomSkeleton
               size='default'
               label="Địa điểm" name="diaDiem"

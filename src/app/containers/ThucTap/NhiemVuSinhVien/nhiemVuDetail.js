@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Col, Modal, Row } from 'antd';
 import ModalFooter from '@components/ModalFooter/ModalFooter';
 import CustomSkeleton from '@components/CustomSkeleton';
-import { CONSTANTS, RULES } from '@constants';
+import { CONSTANTS, GENDER_OPTIONS, RULES, UUTIEN_OPTIONS } from '@constants';
 import { ROLE } from '../../../../constants/contans';
 
 
@@ -18,6 +18,7 @@ function NhiemVuDetail({ isModalVisible, handleOk, myInfo, handleCancel, userSel
       const dataField = Object.assign({}, userSelected);
       dataField.noiDung = userSelected.noiDung;
       dataField.yeuCau = userSelected.yeuCau;
+      dataField.uuTien = userSelected.uuTien;
       dataField.ketQua = userSelected.ketQua;
       nhiemVuForm.setFieldsValue(dataField);
     } else if (!isModalVisible) {
@@ -81,6 +82,7 @@ function NhiemVuDetail({ isModalVisible, handleOk, myInfo, handleCancel, userSel
               rules={[RULES.REQUIRED]}
               labelLeft
             />
+
             {isSinhVien && <CustomSkeleton
               size='default'
               label="Kết quả" name="ketQua"
@@ -89,6 +91,16 @@ function NhiemVuDetail({ isModalVisible, handleOk, myInfo, handleCancel, userSel
               layoutItem={{ labelCol: { xs: 8 } }}
               rules={[RULES.REQUIRED]}
               labelLeft
+            />}
+            {isGiangVien && <CustomSkeleton
+              size='default'
+              label="Mức độ ưu tiên" name="uuTien"
+              type={CONSTANTS.SELECT}
+              layoutCol={{ xs: 24 }}
+              layoutItem={{ labelCol: { xs: 8 } }}
+              options={{ data: UUTIEN_OPTIONS }}
+              labelLeft
+              rules={[RULES.REQUIRED]}
             />}
 
           </Row>
