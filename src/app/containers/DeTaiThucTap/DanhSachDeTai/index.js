@@ -128,12 +128,6 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
     columnIndex(detai.pageSize, detai.currentPage),
 
     {
-      title: 'Mã đề tài',
-      dataIndex: 'maDeTai',
-      key: 'maDeTai',
-      width: 150,
-    },
-    {
       title: 'Tên đề tài',
       dataIndex: 'tenDeTai',
       key: 'tenDeTai',
@@ -152,13 +146,6 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
       key: 'giangVien',
       render: (value => value?.ten_giao_vien),
       width: 250,
-    },
-    {
-      title: 'Người tạo',
-      dataIndex: 'nguoiTao',
-      key: 'nguoiTao',
-      render: (value => value?.full_name),
-      width: 200,
     },
     {
       title: 'Ngày tạo',
@@ -292,7 +279,7 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
       {
         _id: data._id,
         sinh_vien_thuc_hien: isDangKy.sinh_vien._id,
-        trang_thai: TRANG_THAI.DA_DANG_KY,
+        trang_thai: TRANG_THAI.DANG_THUC_HIEN,
       };
     const api = await updateDeTai(item);
     if (api) {

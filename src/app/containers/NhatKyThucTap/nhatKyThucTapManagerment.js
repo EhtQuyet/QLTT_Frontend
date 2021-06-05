@@ -66,31 +66,31 @@ function NhatKyManagernent({ isLoading, myInfo, ...props }) {
       dataIndex: 'maSinhVien',
       key: 'maSinhVien',
       render: value => value?.ten_sinh_vien,
-      width: 300,
+      width: 140,
     },
     {
       title: 'Ngày tháng',
       dataIndex: 'ngay',
       key: 'ngay',
-      width: 300,
+      width: 200,
     },
     {
       title: 'Công việc',
       dataIndex: 'congViec',
       key: 'congViec',
-      width: 300,
+      width: 200,
     },
     {
       title: 'Kết quả',
       dataIndex: 'ketQua',
       key: 'ketQua',
-      width: 300,
+      width: 200,
     },
     {
       title: 'Nhận xét',
       dataIndex: 'nhanXet',
       key: 'nhanXet',
-      width: 300,
+      width: 200,
     },
     {
       title: 'Trạng thái',
@@ -102,12 +102,12 @@ function NhatKyManagernent({ isLoading, myInfo, ...props }) {
             : value === NHAT_KY.KIEM_DUYET ? <Tag color='gold'>Chờ xác nhận</Tag>
               : <Tag color='green'>Giảng viên xác nhận</Tag>}
       </>,
-      width: 200,
+      width: 130,
     },
     {
       align: 'center',
       render: (value) => <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>,
-      width: 200,
+      width: 130,
     },
   ];
 

@@ -35,6 +35,7 @@ function Detail({ isModalVisible, handleCancel, userSelected, index, ...props })
       footer={null}
       forceRender
     >
+
       <Loading active={props.isLoading}>
         <Row>
           <Col span={4}
@@ -106,6 +107,7 @@ function Detail({ isModalVisible, handleCancel, userSelected, index, ...props })
           </Col>
         </Row>
       </Loading>
+
     </Modal>
   );
 }

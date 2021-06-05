@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag} from 'antd';
+import { Table, Tag, Tabs, Row, Col } from 'antd';
+
+const { TabPane } = Tabs;
 import { getAllDetai } from '@app/services/DeTaiTTTN/DeTaiService';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT, TRANG_THAI, TRANG_THAI_LABEL } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
@@ -12,6 +14,8 @@ import { getAllLinhVuc } from '@app/services/LinhVuc/linhVuc.service';
 import * as bomon from '@app/store/ducks/bomon.duck';
 import * as user from '@app/store/ducks/user.duck';
 import * as detai from '@app/store/ducks/detai.reduck';
+import { ROLE } from '@src/constants/contans';
+import { getAllSinhVien } from '@app/services/SinhVienTTTN/sinhVienTTService';
 
 
 function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props }) {
@@ -21,6 +25,7 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
     userSelected: null,
   });
   const [listLinhVuc, setListLinhVuc] = useState([]);
+  const [myTopic, setMyTopic] = useState();
   useEffect(() => {
     if (!props?.teacherList?.length) {
       props.getTeacher();
@@ -31,6 +36,7 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
     (async () => {
       await getDataDeTai();
       await getLinhVuc();
+      await getMyTopic();
     })();
   }, []);
 
@@ -41,12 +47,24 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
     }
   }
 
+  async function getMyTopic(){
+    if(isSinhVien){
+      const sinhVien = await getAllSinhVien(1,0,{ma_sinh_vien: myInfo?.username})
+      if(sinhVien) {
+        const topic = await getAllDetai(1,0, {sinh_vien_thuc_hien: sinhVien.docs[0]._id})
+        if(topic){
+          setMyTopic(topic.docs[0])
+        }
+      }
+    }
+  }
+
   async function getDataDeTai(
     currentPage = detai.currentPage,
     pageSize = detai.pageSize,
-    query = {}
+    query = {},
   ) {
-    query.trang_thai = TRANG_THAI.DANG_THUC_HIEN
+    query.trang_thai = TRANG_THAI.DANG_THUC_HIEN;
     const apiResponse = await getAllDetai(currentPage, pageSize, query);
     if (apiResponse) {
       setDetai({
@@ -113,26 +131,6 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
       align: 'center',
       render: (text, record, index) => {
         return <>
-          {/*{!daDangKy && <div className='mt-2'>*/}
-          {/*  <Popconfirm*/}
-          {/*    title='Bạn có chắc chắn đăng ký tài hay không'*/}
-          {/*    onConfirm={() => handleRegisTopic(record)}*/}
-          {/*    cancelText='Huỷ' okText='Xác nhận' okButtonProps={{ type: 'access' }}>*/}
-          {/*    <Tag color='green' className='tag-action'>*/}
-          {/*      <SendOutlined/><span className='ml-1'>Đăng ký đề tài</span>*/}
-          {/*    </Tag>*/}
-          {/*  </Popconfirm>*/}
-          {/*</div>}*/}
-          {/*{daDangKy && <div className='mt-2'>*/}
-          {/*  <Popconfirm*/}
-          {/*    title='Bạn có chắc chắn hủy đăng ký tài hay không'*/}
-          {/*    onConfirm={() => handleCancelRegisTopic(record)}*/}
-          {/*    cancelText='Huỷ' okText='Xác nhận' okButtonProps={{ type: 'access' }}>*/}
-          {/*    <Tag color='red' className='tag-action'>*/}
-          {/*      <SendOutlined/><span className='ml-1'>Hủy đăng ký đề tài</span>*/}
-          {/*    </Tag>*/}
-          {/*  </Popconfirm>*/}
-          {/*</div>}*/}
         </>;
       },
     },
@@ -153,38 +151,122 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
     getDataDeTai(current, pageSize);
   }
 
+  console.log(myTopic);
+
+  const isAdmin = myInfo.role.includes(ROLE.ADMIN);
+  const isSinhVien = myInfo && myInfo.role.includes(ROLE.SINH_VIEN);
+  const isGiangVien = myInfo && myInfo.role.includes(ROLE.GIANG_VIEN);
+  const isGiaoVu = myInfo && myInfo.role.includes(ROLE.GIAO_VU);
+  const isBanChuNiem = myInfo && myInfo.role.includes(ROLE.BAN_CHU_NHIEM);
+
   const pagination = PAGINATION_CONFIG;
   pagination.onChange = handleChangePagination;
   pagination.current = detai.currentPage;
   pagination.total = detai.totalDocs;
   pagination.pageSize = detai.pageSize;
   return (
-    <div>
-      <Filter
-        dataSearch={[
-          { name: 'ten_de_tai', label: 'Tên đề tài', type: CONSTANTS.TEXT },
-          {
-            name: 'ma_giao_vien', label: 'Giảng viên hướng dẫn ', type: CONSTANTS.SELECT,
-            options: { data: teacherList, valueString: '_id', labelString: 'name' },
-          },
-          {
-            name: 'ma_linh_vuc', label: 'Lĩnh vực', type: CONSTANTS.SELECT,
-            options: { data: listLinhVuc, valueString: '_id', labelString: 'name' },
-          },
-        ]}
-        handleFilter={(query) => getDataDeTai(1, detai.pageSize, query)}
-      />
-      <Loading active={isLoading}>
-        <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
-      </Loading>
-      {/*<ChiTietDangKyDeTai*/}
-      {/*  type={!!state.userSelected}*/}
-      {/*  isModalVisible={state.isShowModal}*/}
-      {/*  handleOk={handleRegisTopic}*/}
-      {/*  handleCancel={() => handleShowModal(false)}*/}
-      {/*  userSelected={state.userSelected}*/}
-      {/*/>*/}
-    </div>
+    <>
+
+      {!isSinhVien && <div>
+        <Filter
+          dataSearch={[
+            { name: 'ten_de_tai', label: 'Tên đề tài', type: CONSTANTS.TEXT },
+            {
+              name: 'ma_giao_vien', label: 'Giảng viên hướng dẫn ', type: CONSTANTS.SELECT,
+              options: { data: teacherList, valueString: '_id', labelString: 'name' },
+            },
+            {
+              name: 'ma_linh_vuc', label: 'Lĩnh vực', type: CONSTANTS.SELECT,
+              options: { data: listLinhVuc, valueString: '_id', labelString: 'name' },
+            },
+          ]}
+          handleFilter={(query) => getDataDeTai(1, detai.pageSize, query)}
+        />
+        <Loading active={isLoading}>
+          <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
+        </Loading>
+        {/*<ChiTietDangKyDeTai*/}
+        {/*  type={!!state.userSelected}*/}
+        {/*  isModalVisible={state.isShowModal}*/}
+        {/*  handleOk={handleRegisTopic}*/}
+        {/*  handleCancel={() => handleShowModal(false)}*/}
+        {/*  userSelected={state.userSelected}*/}
+        {/*/>*/}
+      </div>}
+      { isSinhVien && <Tabs defaultActiveKey="1">
+        <TabPane tab="Danh sách đề tài" key="1">
+          <div>
+            <Filter
+              dataSearch={[
+                { name: 'ten_de_tai', label: 'Tên đề tài', type: CONSTANTS.TEXT },
+                {
+                  name: 'ma_giao_vien', label: 'Giảng viên hướng dẫn ', type: CONSTANTS.SELECT,
+                  options: { data: teacherList, valueString: '_id', labelString: 'name' },
+                },
+                {
+                  name: 'ma_linh_vuc', label: 'Lĩnh vực', type: CONSTANTS.SELECT,
+                  options: { data: listLinhVuc, valueString: '_id', labelString: 'name' },
+                },
+              ]}
+              handleFilter={(query) => getDataDeTai(1, detai.pageSize, query)}
+            />
+            <Loading active={isLoading}>
+              <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
+            </Loading>
+            {/*<ChiTietDangKyDeTai*/}
+            {/*  type={!!state.userSelected}*/}
+            {/*  isModalVisible={state.isShowModal}*/}
+            {/*  handleOk={handleRegisTopic}*/}
+            {/*  handleCancel={() => handleShowModal(false)}*/}
+            {/*  userSelected={state.userSelected}*/}
+            {/*/>*/}
+          </div>
+        </TabPane>
+        <TabPane tab="Đề tài của tôi" key="2">
+
+          <Loading active={isLoading}>
+            <Row>
+              <Col span={4} style={{ padding: '10px', fontWeight: '500', borderBottom: '1px #DDDDDD solid' }}>Tên đề
+                tài</Col>
+              <Col span={10} style={{ padding: '10px', borderBottom: '1px #DDDDDD solid' }}>{myTopic?.ten_de_tai}</Col>
+            </Row>
+            <Row>
+              <Col span={4} style={{ padding: '10px', fontWeight: '500', borderBottom: '1px #DDDDDD solid' }}>lĩnh vực</Col>
+              <Col span={10}
+                   style={{ padding: '10px', borderBottom: '1px #DDDDDD solid' }}>{myTopic?.ma_linh_vuc.ten_linh_vuc}</Col>
+            </Row>
+            <Row>
+              <Col span={4} style={{ padding: '10px', fontWeight: '500', borderBottom: '1px #DDDDDD solid' }}>Giảng
+                viên</Col>
+              <Col span={10} style={{
+                padding: '10px',
+                borderBottom: '1px #DDDDDD solid',
+              }}>{myTopic?.ma_giang_vien.ten_giao_vien}</Col>
+            </Row>
+            <Row>
+              <Col span={4} style={{ padding: '10px', fontWeight: '500', borderBottom: '1px #DDDDDD solid' }}>Nội dung</Col>
+              <Col span={10} style={{ padding: '10px', borderBottom: '1px #DDDDDD solid' }}>{myTopic?.noi_dung}</Col>
+            </Row>
+            <Row>
+              <Col span={4} style={{ padding: '10px', fontWeight: '500', borderBottom: '1px #DDDDDD solid' }}>Năm học</Col>
+              <Col span={10}
+                   style={{ padding: '10px', borderBottom: '1px #DDDDDD solid' }}>{myTopic?.nam_hoc.nam_hoc}</Col>
+            </Row>
+            <Row>
+              <Col span={4} style={{ padding: '10px', fontWeight: '500', borderBottom: '1px #DDDDDD solid' }}>Từ khóa</Col>
+              <Col span={10} style={{ padding: '10px', borderBottom: '1px #DDDDDD solid' }}>
+                {myTopic?.tu_khoa.map((i, k) => {
+                  return <Tag style={{ marginBottom: '3px' }} key={k}>{i.tu_khoa}</Tag>;
+                })}
+              </Col>
+            </Row>
+            <Row style={{marginTop: '20px'}}> <Tag color='green'>Hoàn thành đề tài</Tag></Row>
+          </Loading>
+
+        </TabPane>
+      </Tabs>}
+
+    </>
   );
 }
 

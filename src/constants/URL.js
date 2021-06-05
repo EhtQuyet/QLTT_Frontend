@@ -1,6 +1,6 @@
 export const URL = {
   MENU: {
-    DASHBOARD: '/dashboard',
+    DASHBOARD: '/',
     USER: '/user',
     DK_TT: 'dang-ky-tt/{0}',
     DANH_MUC_QUAN_LY: '/danh-muc-quan-ly',

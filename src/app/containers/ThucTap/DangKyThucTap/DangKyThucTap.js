@@ -18,7 +18,6 @@ import { createNhiemVu, updateNhiemVu } from '@app/services/NhiemVu/nhiemVu.serv
 import { getAllSinhVien } from '@app/services/SinhVienTTTN/sinhVienTTService';
 import { createDiaDiemThucTap } from '@app/services/DiaDiemThucTap/diadiemthuctapService';
 
-
 function DangKyThucTap({ isLoading, myInfo, namhocList, ...props }) {
   const [dangkythuctap, setDangKyThucTap] = useState([]);
   const [isSV, setIsSV] = useState();
@@ -50,8 +49,7 @@ function DangKyThucTap({ isLoading, myInfo, namhocList, ...props }) {
     if (isSinhVien) {
       const apiSinhVien = await getAllSinhVien(1, 0, { ma_sinh_vien: myInfo.username });
       if (apiSinhVien) {
-        setIsSV(apiSinhVien.docs[0]);
-        const api = await getAllDKTT(1, 0, { ma_sinh_vien: apiSinhVien.docs[0]._id });
+        const api = await getAllDKTT(1, 0, { sinh_vien: apiSinhVien.docs[0]._id });
         if (api.docs.length > 0) {
           setIsSignUp(true);
         }
@@ -94,6 +92,7 @@ function DangKyThucTap({ isLoading, myInfo, namhocList, ...props }) {
       align: 'center',
       width: 200,
     },
+
     {
       title: 'Trạng thái',
       dataIndex: 'trangThai',
@@ -106,11 +105,10 @@ function DangKyThucTap({ isLoading, myInfo, namhocList, ...props }) {
     },
     {
       align: 'center',
-      render: (value) => <> {(isSignUp !== true && isSinhVien && value.trangThai === DOT_THUC_TAP.DANG_MO) ?
+      render: (value) => <> {isSignUp !== true && isSinhVien && value.trangThai === DOT_THUC_TAP.DANG_MO &&
         <Tag color='cyan' onClick={() => handleShowModal(true, value)} className='tag-action'>
           <EditOutlined/><span className='ml-1'>Đăng ký</span>
         </Tag>
-        : <></>
       }
         {!isSinhVien &&
         <Link to={URL.MENU.PHE_DUYET_DANG_KY_ID.format(value._id)}>
@@ -132,8 +130,6 @@ function DangKyThucTap({ isLoading, myInfo, namhocList, ...props }) {
       type,
     });
   }
-
-  console.log('state.userSelected._id',state.userSelected);
 
   async function createAndModify(type, dataForm) {
     const {

@@ -88,25 +88,25 @@ function NhiemVuManagerment({ isLoading, myInfo, ...props }) {
       dataIndex: 'sinhVien',
       key: 'sinhVien',
       render: value => value?.ten_sinh_vien,
-      width: 300,
+      width: 150,
     },
     {
       title: 'Công việc',
       dataIndex: 'noiDung',
       key: 'noiDung',
-      width: 300,
+      width: 280,
     },
     {
       title: 'Yêu cầu',
       dataIndex: 'yeuCau',
       key: 'yeuCau',
-      width: 300,
+      width: 280,
     },
     {
       title: 'Kết quả',
       dataIndex: 'ketQua',
       key: 'ketQua',
-      width: 300,
+      width: 250,
     },
     {
       title: 'Mức độ ưu tiên',
@@ -117,7 +117,7 @@ function NhiemVuManagerment({ isLoading, myInfo, ...props }) {
           : value === UU_TIEN.MEDIUM ? <Tag color='purple'>Trung bình</Tag>
             : <Tag color='purple'>Cao</Tag>}
       </>,
-      width: 200,
+      width: 60,
     },
     {
       title: 'Trạng thái',
@@ -128,7 +128,7 @@ function NhiemVuManagerment({ isLoading, myInfo, ...props }) {
           : value === NHIEM_VU.HOAN_THANH ? <Tag color='blue'>Hoàn thành</Tag>
             : <Tag color='green'>Giảng viên xác nhận</Tag>}
       </>,
-      width: 200,
+      width: 130,
     },
     {
       align: 'center',
@@ -149,7 +149,7 @@ function NhiemVuManagerment({ isLoading, myInfo, ...props }) {
         </>;
       },
 
-      width: 200,
+      width: 130,
     },
   ];
 

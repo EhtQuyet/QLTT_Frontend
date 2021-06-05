@@ -98,6 +98,12 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
       width: 200,
     },
     {
+      title: 'Kết quả nghiên cứu',
+      dataIndex: '',
+      key: '',
+      width: 200,
+    },
+    {
       title: 'Trạng thái',
       dataIndex: 'trangThai',
       key: 'trangThai',
@@ -108,13 +114,6 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
         }
       },
       width: 200,
-    },
-    {
-      align: 'center',
-      render: (text, record, index) => {
-        return <>
-        </>;
-      },
     },
   ];
 
