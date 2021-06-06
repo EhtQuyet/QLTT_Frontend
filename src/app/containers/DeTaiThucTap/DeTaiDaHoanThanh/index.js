@@ -12,6 +12,7 @@ import { getAllLinhVuc } from '@app/services/LinhVuc/linhVuc.service';
 import * as bomon from '@app/store/ducks/bomon.duck';
 import * as user from '@app/store/ducks/user.duck';
 import * as detai from '@app/store/ducks/detai.reduck';
+import Detail from '@containers/DeTaiThucTap/DeTaiDangThucHien/detail';
 
 
 function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props }) {
@@ -156,13 +157,6 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
       <Loading active={isLoading}>
         <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
       </Loading>
-      {/*<ChiTietDangKyDeTai*/}
-      {/*  type={!!state.userSelected}*/}
-      {/*  isModalVisible={state.isShowModal}*/}
-      {/*  handleOk={handleRegisTopic}*/}
-      {/*  handleCancel={() => handleShowModal(false)}*/}
-      {/*  userSelected={state.userSelected}*/}
-      {/*/>*/}
     </div>
   );
 }

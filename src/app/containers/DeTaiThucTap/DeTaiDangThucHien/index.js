@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Tag, Tabs, Row, Col } from 'antd';
+import Detail from '@containers/DeTaiThucTap/DeTaiDangThucHien/detail';
 
 const { TabPane } = Tabs;
-import { getAllDetai } from '@app/services/DeTaiTTTN/DeTaiService';
+import { createDeTai, getAllDetai, updateDeTai } from '@app/services/DeTaiTTTN/DeTaiService';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT, TRANG_THAI, TRANG_THAI_LABEL } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
 import { connect } from 'react-redux';
@@ -79,6 +80,7 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
   const dataSource = detai.docs.map((data, index) => ({
     _id: data._id,
     key: data._id,
+    file: data?.file,
     tenDeTai: data.ten_de_tai,
     maDeTai: data.ma_de_tai,
     ngayTao: data.ngay_tao,
@@ -141,6 +143,40 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
       isShowModal,
       userSelected,
     });
+  }
+
+  async function createAndModifyDetai(type, dataForm) {
+    const dataRequest = {
+      ten_de_tai: dataForm.tenDeTai,
+      ma_de_tai: dataForm.maDeTai,
+      ngay_tao: dataForm.ngayTao ? dataForm.ngayTao.toString() : null,
+      ma_giang_vien: dataForm.giangVien,
+      file: dataForm.file,
+      noi_dung: dataForm.noiDung,
+      tu_khoa: dataForm.tuKhoa,
+      ma_linh_vuc: dataForm.linhVuc,
+      ma_nguoi_tao: myInfo._id,
+      nam_hoc: dataForm.namHoc,
+    };
+
+    console.log('dataRequest',dataRequest);
+    // if (type === CONSTANTS.UPDATE) {
+    //   dataRequest._id = state.userSelected._id;
+    //   const apiResponse = await updateDeTai(dataRequest);
+    //   if (apiResponse) {
+    //     const docs = detai.docs.map(doc => {
+    //       if (doc._id === apiResponse._id) {
+    //         doc = apiResponse;
+    //       }
+    //       return doc;
+    //     });
+    //     setDetai(Object.assign({}, detai, { docs }));
+    //     handleShowModal(false);
+    //     toast(CONSTANTS.SUCCESS, 'Cập nhật thành công');
+    //     getDataDeTai();
+    //
+    //   }
+    // }
   }
 
   function handleEdit(userSelected) {
@@ -260,9 +296,15 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
                 })}
               </Col>
             </Row>
-            <Row style={{marginTop: '20px'}}> <Tag color='green'>Hoàn thành đề tài</Tag></Row>
+            <Row style={{marginTop: '20px'}}> <Tag onClick={() => handleShowModal(true)} color='green'>Hoàn thành đề tài</Tag></Row>
           </Loading>
-
+          <Detail
+            type={CONSTANTS.UPDATE}
+            isModalVisible={state.isShowModal}
+            handleOk={createAndModifyDetai}
+            handleCancel={() => handleShowModal(false)}
+            userSelected={state.userSelected}
+          />
         </TabPane>
       </Tabs>}
 

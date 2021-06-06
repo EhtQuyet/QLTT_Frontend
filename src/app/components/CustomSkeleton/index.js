@@ -47,6 +47,19 @@ class CustomSkeleton extends Component {
       disabled={disabled || showInputLabel}
     />;
   }
+  renderFile() {
+    const { label, prefix, suffix, size, placeholder, disabled, showInputLabel } = this.props;
+    return <Input
+      className={showInputLabel ? 'input-label' : ''}
+      type='file'
+      placeholder={placeholder || label}
+      onBlur={() => this.onBlur()}
+      prefix={prefix}
+      suffix={suffix}
+      size={size}
+      disabled={disabled || showInputLabel}
+    />;
+  }
 
   async onBlur() {
     const { form, name } = this.props;
@@ -175,6 +188,9 @@ class CustomSkeleton extends Component {
         break;
       case CONSTANTS.TEXT_AREA:
         inputHtml = this.renderArea();
+        break;
+      case CONSTANTS.FILE:
+        inputHtml = this.renderFile();
         break;
       case CONSTANTS.PASSWORD:
         inputHtml = this.renderPassword();
