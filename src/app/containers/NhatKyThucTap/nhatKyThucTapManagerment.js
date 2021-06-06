@@ -106,7 +106,7 @@ function NhatKyManagernent({ isLoading, myInfo, ...props }) {
     },
     {
       align: 'center',
-      render: (value) => <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>,
+      render: (value) =>{ value?.trangThai !== NHAT_KY.KIEM_DUYET && <ActionCell value={value} handleEdit={handleEdit} handleDelete={handleDelete}/>},
       width: 130,
     },
   ];
@@ -175,12 +175,6 @@ function NhatKyManagernent({ isLoading, myInfo, ...props }) {
 
   return (
     <div>
-      {/*<Filter*/}
-      {/*  dataSearch={[*/}
-      {/*    { name: 'ma_sinh_vien', label: 'Sinh viên', type: CONSTANTS.TEXT },*/}
-      {/*  ]}*/}
-      {/*  handleFilter={(query) => getDataNhatKy(1, nhatky.pageSize, query)}/>*/}
-
       <AddNewButton onClick={() => handleShowModal(true)} disabled={isLoading}/>
       <Loading active={isLoading}>
         <Table dataSource={dataSource} size='small' columns={columns} pagination={true} bordered/>
@@ -188,6 +182,7 @@ function NhatKyManagernent({ isLoading, myInfo, ...props }) {
       <NhatKyDetail
         type={!!state.userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE}
         isModalVisible={state.isShowModal}
+        myInfo={myInfo}
         handleOk={createAndModifyNhatKy}
         handleCancel={() => handleShowModal(false)}
         userSelected={state.userSelected}

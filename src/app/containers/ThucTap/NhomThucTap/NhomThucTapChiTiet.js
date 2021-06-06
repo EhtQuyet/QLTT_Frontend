@@ -41,7 +41,6 @@ function NhomThucTapChiTiet({
 
     const [, updateState] = React.useState();
     const forceUpdate = React.useCallback(() => updateState({}), []);
-  console.log('id', props);
 
   const recordId = useParams()?.id;
   const [form] = Form.useForm();

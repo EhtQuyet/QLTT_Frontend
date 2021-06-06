@@ -18,7 +18,6 @@ import { Link } from 'react-router-dom';
 function DotThucTap({ isLoading, myInfo, namhocList, ...props }) {
   const [dangkythuctap, setDangKyThucTap] = useState([]);
   const giangVienId =  props.maGiangVien;
-  console.log('giangVienId',giangVienId);
   useEffect(() => {
     if (!props?.namhocList?.length) {
       props.getNamHoc();

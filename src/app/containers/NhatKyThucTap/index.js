@@ -26,16 +26,18 @@ function Index({isLoading, myInfo, ...props}) {
   }
 
 
+
+
   const isAdmin = myInfo.role.includes(ROLE.ADMIN);
   const isSinhVien = myInfo && myInfo.role.includes(ROLE.SINH_VIEN);
   const isGiangVien = myInfo && myInfo.role.includes(ROLE.GIANG_VIEN);
   const isGiaoVu = myInfo && myInfo.role.includes(ROLE.GIAO_VU);
   const isBanChuNiem = myInfo && myInfo.role.includes(ROLE.BAN_CHU_NHIEM);
 
+
   return (
     <>
       <Loading active={isLoading}>
-
       {isSinhVien && <NhatKyThucTapManagerment/>}
       {isGiangVien &&  infoGiangVien && <DotThucTap maGiangVien={infoGiangVien._id}/>}
       </Loading>

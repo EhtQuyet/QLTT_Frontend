@@ -69,7 +69,6 @@ function DKTTDetail({ isLoading, sinhVienList, myInfo, ...props }) {
     const {
       maSinhVien, dot_thuc_tap, giaoVien, diaDiem, diemTichLuy, tinchi_tichluy, tenDiaDiem, diaChi,
     } = dataForm;
-    console.log('dataForm',dkttForm);
     const dataRequest = {
       sinh_vien: maSinhVien,
       dot_thuc_tap: dot_thuc_tap,
@@ -115,7 +114,6 @@ function DKTTDetail({ isLoading, sinhVienList, myInfo, ...props }) {
 
 
   function onFinish(data) {
-    console.log('data', data);
     if (props.isLoading) return;
     handleOk(userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE, data);
   }

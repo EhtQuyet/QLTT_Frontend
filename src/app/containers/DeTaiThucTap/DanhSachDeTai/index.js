@@ -168,6 +168,7 @@ function Index({ isLoading, teacherList, myInfo, detaiList, ...props }) {
     },
     {
       align: 'center',
+      width: 75,
       render: (text, record, index) => {
         const daDuyet = record.trangThai === TRANG_THAI.DA_DUOC_DUYET;
         const chuaDuocDuyet = record.trangThai === TRANG_THAI.CHUA_DUOC_DUYET;

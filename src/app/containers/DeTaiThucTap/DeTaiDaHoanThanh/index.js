@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag} from 'antd';
-import { getAllDetai } from '@app/services/DeTaiTTTN/DeTaiService';
+import { Col, Table, Tag } from 'antd';
+import { getAllDetai, getAllFile } from '@app/services/DeTaiTTTN/DeTaiService';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT, TRANG_THAI, TRANG_THAI_LABEL } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
 import { connect } from 'react-redux';
@@ -13,6 +13,7 @@ import * as bomon from '@app/store/ducks/bomon.duck';
 import * as user from '@app/store/ducks/user.duck';
 import * as detai from '@app/store/ducks/detai.reduck';
 import Detail from '@containers/DeTaiThucTap/DeTaiDangThucHien/detail';
+import { API } from '@api';
 
 
 function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props }) {
@@ -22,6 +23,7 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
     userSelected: null,
   });
   const [listLinhVuc, setListLinhVuc] = useState([]);
+  const [file, setFile] = useState([]);
   useEffect(() => {
     if (!props?.teacherList?.length) {
       props.getTeacher();
@@ -32,6 +34,7 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
     (async () => {
       await getDataDeTai();
       await getLinhVuc();
+      await loadFile();
     })();
   }, []);
 
@@ -42,12 +45,32 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
     }
   }
 
+  async function loadFile() {
+    const fileDetai = await getAllFile(1, 0, {});
+    if (fileDetai) {
+      setFile(fileDetai.docs);
+    }
+  }
+
+  function renderFile(id) {
+    const data = file.filter(x => x.detai_id === id);
+    return (
+      <>
+        {data.map((item, index) => {
+          return <div className="clearfix" style={{ lineHeight: '40px' }}>
+            <div><a key={index} href={API.FILE_ID.format(item.file_id)}>{item.file_name}</a></div>
+          </div>;
+        })}
+      </>
+    );
+  }
+
   async function getDataDeTai(
     currentPage = detai.currentPage,
     pageSize = detai.pageSize,
-    query = {}
+    query = {},
   ) {
-    query.trang_thai = TRANG_THAI.DA_HOAN_THANH
+    query.trang_thai = TRANG_THAI.DA_HOAN_THANH;
     const apiResponse = await getAllDetai(currentPage, pageSize, query);
     if (apiResponse) {
       setDetai({
@@ -100,8 +123,7 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
     },
     {
       title: 'Kết quả nghiên cứu',
-      dataIndex: '',
-      key: '',
+      render: value => renderFile(value._id),
       width: 200,
     },
     {

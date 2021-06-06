@@ -55,7 +55,6 @@ function KiemDuyetNhatKy({ isLoading, myInfo, ...props }) {
     // }
   }
 
-  console.log(myInfo);
 
   async function getData() {
     if (isGiangVien) {

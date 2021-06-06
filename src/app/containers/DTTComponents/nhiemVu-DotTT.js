@@ -81,7 +81,6 @@ function DotThucTapNV({ isLoading, myInfo, namhocList, ...props }) {
     {
       align: 'center',
       render: (value) =>
-
         <Link to={URL.MENU.NHIEM_VU_ID.format(value._id)}>
           <Tag color='cyan' className='tag-action'>
             <EyeOutlined/><span className='ml-1'>Chi tiết</span>

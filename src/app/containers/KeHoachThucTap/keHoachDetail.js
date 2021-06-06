@@ -32,7 +32,6 @@ function keHoachDetail({ isLoading, ...props }) {
   const [isFinish, setFinish] = useState(false);
 
   const [stateUpload, setStateUpload] = useState(false);
-  console.log('kehoachID', kehoachID);
   useEffect(() => {
   }, []);
 
@@ -48,7 +47,6 @@ function keHoachDetail({ isLoading, ...props }) {
 
   async function getDataRecord() {
     const apiResponse = await getKeHoachById(kehoachID)
-    console.log('apiResponse', apiResponse);
   }
 
 

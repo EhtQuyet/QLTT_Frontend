@@ -55,8 +55,6 @@ function NhiemVuManagerment({ isLoading, myInfo, ...props }) {
     if (isSinhVien) {
       const apiSV = await getAllSinhVien(1, 0, { ma_sinh_vien: myInfo?.username });
       const apiResponse = await getAllNhiemVu(1, 0, { sinh_vien: apiSV.docs[0]?._id });
-      console.log('sinh_vien', sinhVien?._id);
-      console.log('apiResponse', apiResponse);
       if (apiResponse) {
         setNhiemVu(apiResponse);
       }

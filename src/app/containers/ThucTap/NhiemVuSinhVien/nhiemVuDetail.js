@@ -29,7 +29,6 @@ function NhiemVuDetail({ isModalVisible, handleOk, myInfo, handleCancel, userSel
   function onFinish(data) {
     if(type)
     {data.trangThai = type}
-    console.log('data',data);
 
     if (props.isLoading) return;
     handleOk(userSelected ? CONSTANTS.UPDATE : CONSTANTS.CREATE, data);

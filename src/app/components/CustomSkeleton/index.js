@@ -60,6 +60,18 @@ class CustomSkeleton extends Component {
       disabled={disabled || showInputLabel}
     />;
   }
+  renderCheckbox() {
+    const { label, prefix, suffix, size, placeholder, disabled, showInputLabel } = this.props;
+    return <Checkbox
+      className={showInputLabel ? 'input-label' : ''}
+      onBlur={() => this.onBlur()}
+      prefix={prefix}
+      suffix={suffix}
+      size={size}
+      disabled={disabled || showInputLabel}
+      onChange={onChange}
+    />;
+  }
 
   async onBlur() {
     const { form, name } = this.props;

@@ -3,7 +3,6 @@ import { API } from '@api';
 import { convertParam, renderMessageError } from '@app/common/functionCommons';
 
 export function createNhatKy(data) {
-  console.log('data',data);
   return axios.post(`${API.NHAT_KY}`, data)
     .then(response => {
       if (response.status === 200) return response.data?.data;

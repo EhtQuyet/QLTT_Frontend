@@ -41,7 +41,6 @@ function CreateAndModify({ isModalVisible, handleOk, myInfo, teacherList, handle
     }
   }
 
-  console.log('diadiemTT',diadiemTT);
   async function getData() {
     const apiResponse = await getAllDiaDiemThucTap(1, 0, { trang_thai: DIA_DIEM_THUC_TAP.DA_XAC_NHAN });
     if(apiResponse) {

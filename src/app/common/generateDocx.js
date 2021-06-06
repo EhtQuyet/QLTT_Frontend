@@ -74,7 +74,6 @@ export function generateDocx(dataDocx, templateFilename, outputFilename) {
         const errorMessages = error.properties.errors.map(function(error) {
           return error.properties.explanation;
         }).join('\n');
-        console.log('errorMessages', errorMessages);
       }
       throw error;
     }

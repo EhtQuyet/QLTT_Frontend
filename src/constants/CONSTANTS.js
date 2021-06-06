@@ -67,6 +67,12 @@ export const GENDER_OPTIONS = [
   { label: 'Nữ', value: 'Nữ' },
   { label: 'Khác', value: 'Khác' },
 ];
+
+export const TT_OPTIONS = [
+  { label: 'Xác nhận hoàn thành', value: 'KIEM_DUYET' },
+  { label: 'Đã khóa', value: 'DA_KHOA' },
+];
+
 export const HOCVI_OPTIONS = [
   { label: 'Giáo sư', value: 'Giáo sư' },
   { label: 'Phó giáo sư', value: 'Phó giáo sư' },

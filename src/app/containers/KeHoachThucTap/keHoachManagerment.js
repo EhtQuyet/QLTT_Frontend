@@ -36,7 +36,6 @@ function keHoachManagerment({ isLoading, ...props }) {
     query = kehoach.query,
   ) {
     const apiResponse = await getAllKeHoach(currentPage, pageSize, query)
-    console.log('apiResponse', apiResponse);
     if (apiResponse) {
       setKeHoach({
         docs: apiResponse.docs,

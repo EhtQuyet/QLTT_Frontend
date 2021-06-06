@@ -49,6 +49,7 @@ function DangKyThucTap({ isLoading, myInfo, namhocList, ...props }) {
     if (isSinhVien) {
       const apiSinhVien = await getAllSinhVien(1, 0, { ma_sinh_vien: myInfo.username });
       if (apiSinhVien) {
+        setIsSV(apiSinhVien.docs[0]);
         const api = await getAllDKTT(1, 0, { sinh_vien: apiSinhVien.docs[0]._id });
         if (api.docs.length > 0) {
           setIsSignUp(true);
@@ -157,6 +158,7 @@ function DangKyThucTap({ isLoading, myInfo, namhocList, ...props }) {
     if (type === CONSTANTS.CREATE) {
       const apiResponse = await createDKTT(dataRequest);
       if (apiResponse) {
+        setIsSignUp(true);
         handleShowModal(false);
         toast(CONSTANTS.SUCCESS, 'Đăng ký thực tập thành công');
       }

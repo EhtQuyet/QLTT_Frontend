@@ -41,7 +41,6 @@ function PheDuyetDangKy({ isLoading, myInfo, dotthuctapList, teacherList, diadie
   });
   const [isSig, setIsSig] = useState(null);
   const recordId = useParams()?.id;
-  console.log('recordId', recordId);
 
   useEffect(() => {
     if (!props?.teacherList?.length) {
@@ -58,22 +57,8 @@ function PheDuyetDangKy({ isLoading, myInfo, dotthuctapList, teacherList, diadie
     }
     (async () => {
       await getData();
-      await getDataInfo();
     })();
   }, []);
-
-  async function getDataInfo() {
-    // const apiResponse = await getById(myInfo.username);
-    // if (apiResponse) {
-    //   setIsSig(apiResponse);
-    // }
-  }
-
-  async function xacNhanHuongDan(value) {
-    const api = await xacNhanHD(value);
-    console.log('api', api);
-    console.log('id', value);
-  }
 
   async function getData(
     currentPage = dkthuctap.currentPage,
@@ -83,7 +68,7 @@ function PheDuyetDangKy({ isLoading, myInfo, dotthuctapList, teacherList, diadie
     query.dot_thuc_tap = recordId;
     if (isGiangVien) {
       const apiGiangVien = await getAllGiaoVien(1, 0, { ma_giao_vien: myInfo.username });
-      query.giao_vien_huong_dan = apiGiangVien.docs[0]._id
+      query.giao_vien_huong_dan = apiGiangVien.docs[0]._id;
       const apiResponse = await getAllDKTT(currentPage, pageSize, query);
       if (apiResponse) {
         setDkthuctap({
@@ -119,6 +104,7 @@ function PheDuyetDangKy({ isLoading, myInfo, dotthuctapList, teacherList, diadie
     tinchi_tichluy: data.so_tctl,
     trang_thai: data.trang_thai,
   }));
+
   const columns = [
     columnIndex(dkthuctap.pageSize, dkthuctap.currentPage),
     {
@@ -139,12 +125,6 @@ function PheDuyetDangKy({ isLoading, myInfo, dotthuctapList, teacherList, diadie
       render: value => value?.ma_sinh_vien,
       width: 200,
     },
-    // {
-    //   title: 'Tên giảng viên',
-    //   dataIndex: 'giaovien_huongdan',
-    //   render: value => value?.ten_giao_vien,
-    //   width: 200,
-    // },
     {
       title: 'Địa điểm thực tập',
       dataIndex: 'diadiem_thuctap',
@@ -163,17 +143,16 @@ function PheDuyetDangKy({ isLoading, myInfo, dotthuctapList, teacherList, diadie
     },
     {
       title: 'Trạng thái',
-      dataIndex: 'trang_thai ',
-      render: value => {
-        <>
-          value === DANG_KY_THUC_TAP.DA_DANG_KY ? <Tag color='lime'>Đã đăng ký</Tag>
+      dataIndex: 'trang_thai',
+      render: value => <> {
+        value === DANG_KY_THUC_TAP.DA_DANG_KY ? <Tag color='lime'>Đã đăng ký</Tag>
           : value === DANG_KY_THUC_TAP.KHONG_DU_DIEU_KIEN ? <Tag color='red'>Không đủ ĐKTT</Tag>
           : value === DANG_KY_THUC_TAP.DU_DIEU_KIEN ? <Tag color='lime'>Đủ ĐKTT</Tag>
-          : value === DANG_KY_THUC_TAP.CHON_GIANG_VIEN ? <Tag color='lime'>Chọn giảng viên</Tag>
-          : value === DANG_KY_THUC_TAP.GV_XAC_NHAN ? <Tag color='lime'>GV xác nhận</Tag>
-          : value === DANG_KY_THUC_TAP.GV_TU_CHOI ? <Tag color='gold'>GV từ chối</Tag>
-          : <Tag color='green'>Đã chia nhóm</Tag></>;
-      }
+            : value === DANG_KY_THUC_TAP.CHON_GIANG_VIEN ? <Tag color='lime'>Chọn giảng viên</Tag>
+              : value === DANG_KY_THUC_TAP.GV_XAC_NHAN ? <Tag color='lime'>GV xác nhận</Tag>
+                : value === DANG_KY_THUC_TAP.GV_TU_CHOI ? <Tag color='gold'>GV từ chối</Tag>
+                  : <Tag color='green'>Đã chia nhóm</Tag>
+      }</>
       ,
       width: 200,
     },
@@ -214,7 +193,7 @@ function PheDuyetDangKy({ isLoading, myInfo, dotthuctapList, teacherList, diadie
             {chonGV && isGiangVien && myInfo.username === value.giaovien_huongdan.ma_giao_vien &&
             <Popconfirm
               title='Xác nhận hướng dẫn sinh viên'
-              onConfirm={() => xacNhanHuongDan(value)}
+              onConfirm={() => handleTrangThai(value._id, DANG_KY_THUC_TAP.GV_XAC_NHAN)}
               cancelText='Huỷ' okText='Xác nhận' okButtonProps={{ type: 'access' }}>
               <Tag color='green' className='tag-action'>
                 <SendOutlined/><span className='ml-1'>Chấp nhận</span>
@@ -260,7 +239,7 @@ function PheDuyetDangKy({ isLoading, myInfo, dotthuctapList, teacherList, diadie
     }
   }
 
-// function create or modify
+
   async function createAndModify(type, dataForm) {
     const { giaoVien, diemTichLuy, tinchi_tichluy, diaDiem, maSinhVien, tenDiaDiem, diaChi } = dataForm;
     let dataRequest = {
@@ -340,7 +319,8 @@ function PheDuyetDangKy({ isLoading, myInfo, dotthuctapList, teacherList, diadie
         }
         return doc;
       });
-      setDkthuctap(Object.assign({}, dkthuctap, { docs }));
+      // setDkthuctap(Object.assign({}, dkthuctap, { docs }));
+      getData();
       toast(CONSTANTS.SUCCESS, 'thành công');
     }
   }

@@ -31,6 +31,7 @@ function renderRowData(label, value, labelWidth = '100px') {
 
 function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props }) {
   const [detai, setDetai] = useState(PAGINATION_INIT);
+  const [fileItem, setFileItem] = useState();
   const [state, setState] = useState({
     isShowModal: false,
     userSelected: null,
@@ -64,11 +65,9 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
       if (sinhVien) {
         const topic = await getAllDetai(1, 0, { sinh_vien_thuc_hien: sinhVien.docs[0]._id });
         if (topic) {
-          console.log('id', topic.docs[0]._id);
           setDeTaiId(topic.docs[0]._id);
           setMyTopic(topic.docs[0]);
           const fileDetai = await getAllFile(1, 0, { detai_id: topic.docs[0]._id });
-          console.log('fileDetai', fileDetai);
           setFileList(fileDetai.docs);
         }
       }
@@ -162,38 +161,26 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
     });
   }
 
-  async function createAndModifyDetai(type, dataForm) {
+  async function createAndModifyDetai() {
     const dataRequest = {
-      ten_de_tai: dataForm.tenDeTai,
-      ma_de_tai: dataForm.maDeTai,
-      ngay_tao: dataForm.ngayTao ? dataForm.ngayTao.toString() : null,
-      ma_giang_vien: dataForm.giangVien,
-      file: dataForm.file,
-      noi_dung: dataForm.noiDung,
-      tu_khoa: dataForm.tuKhoa,
-      ma_linh_vuc: dataForm.linhVuc,
-      ma_nguoi_tao: myInfo._id,
-      nam_hoc: dataForm.namHoc,
+      trang_thai: TRANG_THAI.DA_HOAN_THANH,
     };
-
-    // if (type === CONSTANTS.UPDATE) {
-    //   dataRequest._id = state.userSelected._id;
-    //   const apiResponse = await updateDeTai(dataRequest);
-    //   if (apiResponse) {
-    //     const docs = detai.docs.map(doc => {
-    //       if (doc._id === apiResponse._id) {
-    //         doc = apiResponse;
-    //       }
-    //       return doc;
-    //     });
-    //     setDetai(Object.assign({}, detai, { docs }));
-    //     handleShowModal(false);
-    //     toast(CONSTANTS.SUCCESS, 'Cập nhật thành công');
-    //     getDataDeTai();
-    //
-    //   }
-    // }
+    action(fileItem);
+    dataRequest._id = myTopic._id;
+    const apiResponse = await updateDeTai(dataRequest);
+    // if (apiResponse) {
+    //   const docs = detai.docs.map(doc => {
+    //     if (doc._id === apiResponse._id) {
+    //       doc = apiResponse;
+    //     }
+    //     return doc;
+    //   });
+    setMyTopic(apiResponse);
+    handleShowModal(false);
+    toast(CONSTANTS.SUCCESS, 'Cập nhật thành công');
+    getDataDeTai();
   }
+
 
   function handleEdit(userSelected) {
     setState({ isShowModal: true, userSelected });
@@ -221,11 +208,16 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
   const [fileUpload, setFile] = React.useState(null);
   const [progressUpload, setProgressUpload] = React.useState(0);
   const [dataUpload, setDataUpload] = useState([]);
+
   const [detaiId, setDeTaiId] = useState('');
   const [fileList, setFileList] = useState([]);
 
+  async function loadFile(file) {
+    setFileItem(file);
+  }
+
+
   async function action(file) {
-    console.log('detaiId', detaiId);
     await setProgressUpload(0);
     const dataFile = {
       name: file.name,
@@ -285,13 +277,6 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
         <Loading active={isLoading}>
           <Table dataSource={dataSource} size="small" columns={columns} pagination={pagination} bordered/>
         </Loading>
-        {/*<ChiTietDangKyDeTai*/}
-        {/*  type={!!state.userSelected}*/}
-        {/*  isModalVisible={state.isShowModal}*/}
-        {/*  handleOk={handleRegisTopic}*/}
-        {/*  handleCancel={() => handleShowModal(false)}*/}
-        {/*  userSelected={state.userSelected}*/}
-        {/*/>*/}
       </div>}
       {isSinhVien && <Tabs defaultActiveKey="1">
         <TabPane tab="Danh sách đề tài" key="1">
@@ -313,13 +298,6 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
             <Loading active={isLoading}>
               <Table dataSource={dataSource} size="small" columns={columns} pagination={pagination} bordered/>
             </Loading>
-            {/*<ChiTietDangKyDeTai*/}
-            {/*  type={!!state.userSelected}*/}
-            {/*  isModalVisible={state.isShowModal}*/}
-            {/*  handleOk={handleRegisTopic}*/}
-            {/*  handleCancel={() => handleShowModal(false)}*/}
-            {/*  userSelected={state.userSelected}*/}
-            {/*/>*/}
           </div>
         </TabPane>
         <TabPane tab="Đề tài của tôi" key="2">
@@ -332,6 +310,8 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
                 {renderRowData('Giảng viên', myTopic?.ma_giang_vien.ten_giao_vien, '150px')}
                 {renderRowData('Năm học', myTopic?.nam_hoc.nam_hoc, '150px')}
                 {renderRowData('Từ khóa', myTopic?.tu_khoa.map((i, k) => <Tag key={k}>{i.tu_khoa}</Tag>), '150px')}
+                {myTopic?.noi_dung && renderRowData('Nội dung', myTopic?.noi_dung, '150px')}
+                {myTopic?.ket_qua && renderRowData('Nội dung', myTopic?.ket_qua, '150px')}
 
               </Col>
               <Col span={12}>
@@ -339,7 +319,7 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
                   listType="text"
                   fileList={fileUpload ? [Object.assign({}, fileUpload, { percent: progressUpload })] : null}
                   progress={{ strokeColor: { '0%': '#108ee9', '100%': '#87d068' } }}
-                  beforeUpload={action}
+                  beforeUpload={loadFile}
                   // accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document.spreadsheetml.sheet"
                   showUploadList={false}
                   customRequest={() => null}
@@ -349,17 +329,12 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
                 {fileList.map((item, index) => {
                   return <div className="clearfix" style={{ lineHeight: '40px' }}>
                     <div><a key={index} href={API.FILE_ID.format(item.file_id)}>{item.file_name}</a></div>
-                  </div>
+                  </div>;
                 })}
-                {/*<List*/}
-                {/*  size="small"*/}
-                {/*  dataSource={fileList}*/}
-                {/*  renderItem={item => <List.Item><a*/}
-                {/*    href={API.FILE_ID.format(item.file_id)}>{item.file_name}</a></List.Item>}*/}
-                {/*/>*/}
               </Col>
             </Row>
-            {/*<Row style={{marginTop: '20px'}}> <Tag onClick={() => handleShowModal(true)} color='green'>Hoàn thành đề tài</Tag></Row>*/}
+            <Row style={{ marginTop: '20px' }}> <Tag onClick={() => createAndModifyDetai()} color='green'>Hoàn thành đề
+              tài</Tag></Row>
           </Loading>
         </TabPane>
       </Tabs>}

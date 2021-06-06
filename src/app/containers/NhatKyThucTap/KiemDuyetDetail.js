@@ -7,8 +7,9 @@ import Form from 'antd/es/form';
 import { connect } from 'react-redux';
 import Loading from '@components/Loading';
 import moment from 'moment';
+import { ROLE } from '@src/constants/contans';
 
-function KiemDuyetDetail({ isModalVisible, handleOk, handleCancel, userSelected, ...props }) {
+function KiemDuyetDetail({ isModalVisible, handleOk, myInfo, handleCancel, userSelected, ...props }) {
   const [nhatkyFom] = Form.useForm();
   useEffect(() => {
     if (userSelected && isModalVisible) {
@@ -25,6 +26,9 @@ function KiemDuyetDetail({ isModalVisible, handleOk, handleCancel, userSelected,
     if (props.isLoading) return;
     handleOk(CONSTANTS.UPDATE, data);
   }
+
+
+
 
   return (
     <Modal

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table } from 'antd';
+import { Table, Tag } from 'antd';
 import AddNewButton from '@AddNewButton';
 import NhatKyDetail from './nhatKyThucTapDetail';
 import { Link, useParams} from 'react-router-dom';
@@ -10,17 +10,17 @@ import {
   updateNhatKy,
 } from '@app/services/NhatKyThucTap/nhatKyThucTap.service';
 import ActionCell from '@components/ActionCell';
-import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT } from '@constants';
+import { CONSTANTS, NHAT_KY, PAGINATION_CONFIG, PAGINATION_INIT } from '@constants';
 import { columnIndex, toast } from '@app/common/functionCommons';
 import Filter from '@components/Filter';
 import Loading from '@components/Loading';
 import { connect } from 'react-redux';
 import { URL } from '@url';
 import ThemSuaSinhVien from '@containers/QuanLyDanhMuc/QuanLySinhVienTTTN/ThemSuaSinhVien';
+import { DOT_THUC_TAP } from '@src/constants/contans';
 
 function NhatKyItem({ isLoading, ...props }) {
   const recordId = useParams()?.id;
-  console.log('recordId',recordId);
   const [nhatky, setNhatKy] = useState([]);
   const [state, setState] = useState({
     isShowModal: false,
@@ -40,6 +40,11 @@ function NhatKyItem({ isLoading, ...props }) {
       setNhatKy(apiResponse);
     }
   }
+
+  console.log('nhatky.docs',nhatky.docs);
+
+
+  console.log("Nhật ký item");
 
   const dataSource = nhatky.docs?.map((data, index) => ({
     key: data._id,
@@ -61,19 +66,19 @@ function NhatKyItem({ isLoading, ...props }) {
       dataIndex: 'maSinhVien',
       key: 'maSinhVien',
       render: value => value?.ten_sinh_vien,
-      width: 300,
+      width: 200,
     },
     {
       title: 'Ngày tháng',
       dataIndex: 'ngay',
       key: 'ngay',
-      width: 300,
+      width: 200,
     },
     {
       title: 'Công việc',
       dataIndex: 'congViec',
       key: 'congViec',
-      width: 300,
+      width: 200,
     },
     {
       title: 'Kết quả',
@@ -91,6 +96,12 @@ function NhatKyItem({ isLoading, ...props }) {
       title: 'Trạng thái',
       dataIndex: 'trangThai',
       key: 'trangThai',
+      render: value => <>
+        {value === NHAT_KY.XAC_NHAN ? <Tag color='green'>Xác nhận</Tag>
+          : value === NHAT_KY.DA_KHOA ? <Tag color='red'> Đã khóa</Tag>
+          : value === NHAT_KY.KIEM_DUYET ? <Tag color='gold'>Kiểm duyệt</Tag>
+            : <Tag color='green'>Hoàn thành</Tag>}
+      </>,
       width: 200,
     },
     {
@@ -130,7 +141,6 @@ function NhatKyItem({ isLoading, ...props }) {
       nhan_xet: nhanXet,
       trang_thai: trangThai,
     };
-    console.log('dataRequest',dataRequest);
     if (type === CONSTANTS.CREATE) {
       const apiResponse = await createNhatKy(dataRequest);
       if (apiResponse) {
