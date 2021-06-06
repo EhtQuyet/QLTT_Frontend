@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Tabs, Row, Col } from 'antd';
+import { Table, Tag, Tabs, Row, Col, List, Upload, Divider } from 'antd';
 import Detail from '@containers/DeTaiThucTap/DeTaiDangThucHien/detail';
+import { ExclamationCircleOutlined, UploadOutlined, DownloadOutlined, DeleteOutlined } from '@ant-design/icons';
+import { API } from '@api';
 
 const { TabPane } = Tabs;
-import { createDeTai, getAllDetai, updateDeTai } from '@app/services/DeTaiTTTN/DeTaiService';
+import { createDeTai, getAllDetai, updateDeTai, uploadFile, getAllFile } from '@app/services/DeTaiTTTN/DeTaiService';
 import { CONSTANTS, PAGINATION_CONFIG, PAGINATION_INIT, TRANG_THAI, TRANG_THAI_LABEL } from '@constants';
-import { columnIndex, toast } from '@app/common/functionCommons';
+import { columnIndex, formatBytesFile, toast } from '@app/common/functionCommons';
 import { connect } from 'react-redux';
 import Filter from '@components/Filter';
 import Loading from '@components/Loading';
@@ -18,6 +20,14 @@ import * as detai from '@app/store/ducks/detai.reduck';
 import { ROLE } from '@src/constants/contans';
 import { getAllSinhVien } from '@app/services/SinhVienTTTN/sinhVienTTService';
 
+function renderRowData(label, value, labelWidth = '100px') {
+  return <div className="clearfix" style={{ lineHeight: '40px' }}>
+    <strong style={{ fontSize: '14px', fontStyle: 'italic', width: labelWidth }} className="float-left">
+      {label}:
+    </strong>
+    <div>{value}</div>
+  </div>;
+}
 
 function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props }) {
   const [detai, setDetai] = useState(PAGINATION_INIT);
@@ -48,15 +58,22 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
     }
   }
 
-  async function getMyTopic(){
-    if(isSinhVien){
-      const sinhVien = await getAllSinhVien(1,0,{ma_sinh_vien: myInfo?.username})
-      if(sinhVien) {
-        const topic = await getAllDetai(1,0, {sinh_vien_thuc_hien: sinhVien.docs[0]._id})
-        if(topic){
-          setMyTopic(topic.docs[0])
+  async function getMyTopic() {
+    if (isSinhVien) {
+      const sinhVien = await getAllSinhVien(1, 0, { ma_sinh_vien: myInfo?.username });
+      if (sinhVien) {
+        const topic = await getAllDetai(1, 0, { sinh_vien_thuc_hien: sinhVien.docs[0]._id });
+        if (topic) {
+          console.log('id', topic.docs[0]._id);
+          setDeTaiId(topic.docs[0]._id);
+          setMyTopic(topic.docs[0]);
+          const fileDetai = await getAllFile(1, 0, { detai_id: topic.docs[0]._id });
+          console.log('fileDetai', fileDetai);
+          setFileList(fileDetai.docs);
         }
       }
+
+
     }
   }
 
@@ -159,7 +176,6 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
       nam_hoc: dataForm.namHoc,
     };
 
-    console.log('dataRequest',dataRequest);
     // if (type === CONSTANTS.UPDATE) {
     //   dataRequest._id = state.userSelected._id;
     //   const apiResponse = await updateDeTai(dataRequest);
@@ -187,7 +203,6 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
     getDataDeTai(current, pageSize);
   }
 
-  console.log(myTopic);
 
   const isAdmin = myInfo.role.includes(ROLE.ADMIN);
   const isSinhVien = myInfo && myInfo.role.includes(ROLE.SINH_VIEN);
@@ -200,6 +215,55 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
   pagination.current = detai.currentPage;
   pagination.total = detai.totalDocs;
   pagination.pageSize = detai.pageSize;
+
+  //upload file
+
+  const [fileUpload, setFile] = React.useState(null);
+  const [progressUpload, setProgressUpload] = React.useState(0);
+  const [dataUpload, setDataUpload] = useState([]);
+  const [detaiId, setDeTaiId] = useState('');
+  const [fileList, setFileList] = useState([]);
+
+  async function action(file) {
+    console.log('detaiId', detaiId);
+    await setProgressUpload(0);
+    const dataFile = {
+      name: file.name,
+      size: formatBytesFile(file.size),
+      status: 'uploading',
+    };
+    await setFile(dataFile);
+    const config = {
+      onUploadProgress: function(progressEvent) {
+        let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        setProgressUpload(percentCompleted === 100 ? 99 : percentCompleted);
+      },
+    };
+    const apiResponse = await uploadFile(file, detaiId, config);
+    if (apiResponse) {
+      getMyTopic();
+      setFile(Object.assign({}, dataFile, { status: 'done' }));
+      toast(CONSTANTS.SUCCESS, `Tải lên tập tin thành công!`);
+    } else {
+      setFile(Object.assign({}, dataFile, { status: 'error' }));
+    }
+    setProgressUpload(100);
+    return false;
+  }
+
+  function renderLoadingIcon() {
+    if (!fileUpload?.status) return <div>a</div>;
+    if (['uploading', 'done'].includes(fileUpload.status)) {
+      return <Progress
+        // type="circle"
+        strokeColor={{ '0%': '#108ee9', '100%': '#87d068' }}
+        percent={progressUpload}
+        width={50}
+      />;
+    } else return <ExclamationCircleOutlined style={{ fontSize: '50px', color: '#ff4d4f' }}/>;
+  }
+
+
   return (
     <>
 
@@ -219,7 +283,7 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
           handleFilter={(query) => getDataDeTai(1, detai.pageSize, query)}
         />
         <Loading active={isLoading}>
-          <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
+          <Table dataSource={dataSource} size="small" columns={columns} pagination={pagination} bordered/>
         </Loading>
         {/*<ChiTietDangKyDeTai*/}
         {/*  type={!!state.userSelected}*/}
@@ -229,7 +293,7 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
         {/*  userSelected={state.userSelected}*/}
         {/*/>*/}
       </div>}
-      { isSinhVien && <Tabs defaultActiveKey="1">
+      {isSinhVien && <Tabs defaultActiveKey="1">
         <TabPane tab="Danh sách đề tài" key="1">
           <div>
             <Filter
@@ -247,7 +311,7 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
               handleFilter={(query) => getDataDeTai(1, detai.pageSize, query)}
             />
             <Loading active={isLoading}>
-              <Table dataSource={dataSource} size='small' columns={columns} pagination={pagination} bordered/>
+              <Table dataSource={dataSource} size="small" columns={columns} pagination={pagination} bordered/>
             </Loading>
             {/*<ChiTietDangKyDeTai*/}
             {/*  type={!!state.userSelected}*/}
@@ -262,49 +326,41 @@ function Index({ isLoading, bomonList, teacherList, myInfo, detaiList, ...props 
 
           <Loading active={isLoading}>
             <Row>
-              <Col span={4} style={{ padding: '10px', fontWeight: '500', borderBottom: '1px #DDDDDD solid' }}>Tên đề
-                tài</Col>
-              <Col span={10} style={{ padding: '10px', borderBottom: '1px #DDDDDD solid' }}>{myTopic?.ten_de_tai}</Col>
-            </Row>
-            <Row>
-              <Col span={4} style={{ padding: '10px', fontWeight: '500', borderBottom: '1px #DDDDDD solid' }}>lĩnh vực</Col>
-              <Col span={10}
-                   style={{ padding: '10px', borderBottom: '1px #DDDDDD solid' }}>{myTopic?.ma_linh_vuc.ten_linh_vuc}</Col>
-            </Row>
-            <Row>
-              <Col span={4} style={{ padding: '10px', fontWeight: '500', borderBottom: '1px #DDDDDD solid' }}>Giảng
-                viên</Col>
-              <Col span={10} style={{
-                padding: '10px',
-                borderBottom: '1px #DDDDDD solid',
-              }}>{myTopic?.ma_giang_vien.ten_giao_vien}</Col>
-            </Row>
-            <Row>
-              <Col span={4} style={{ padding: '10px', fontWeight: '500', borderBottom: '1px #DDDDDD solid' }}>Nội dung</Col>
-              <Col span={10} style={{ padding: '10px', borderBottom: '1px #DDDDDD solid' }}>{myTopic?.noi_dung}</Col>
-            </Row>
-            <Row>
-              <Col span={4} style={{ padding: '10px', fontWeight: '500', borderBottom: '1px #DDDDDD solid' }}>Năm học</Col>
-              <Col span={10}
-                   style={{ padding: '10px', borderBottom: '1px #DDDDDD solid' }}>{myTopic?.nam_hoc.nam_hoc}</Col>
-            </Row>
-            <Row>
-              <Col span={4} style={{ padding: '10px', fontWeight: '500', borderBottom: '1px #DDDDDD solid' }}>Từ khóa</Col>
-              <Col span={10} style={{ padding: '10px', borderBottom: '1px #DDDDDD solid' }}>
-                {myTopic?.tu_khoa.map((i, k) => {
-                  return <Tag style={{ marginBottom: '3px' }} key={k}>{i.tu_khoa}</Tag>;
+              <Col span={12}>
+                {renderRowData('Tên đề tài', myTopic?.ten_de_tai, '150px')}
+                {renderRowData('Lĩnh vực', myTopic?.ma_linh_vuc.ten_linh_vuc, '150px')}
+                {renderRowData('Giảng viên', myTopic?.ma_giang_vien.ten_giao_vien, '150px')}
+                {renderRowData('Năm học', myTopic?.nam_hoc.nam_hoc, '150px')}
+                {renderRowData('Từ khóa', myTopic?.tu_khoa.map((i, k) => <Tag key={k}>{i.tu_khoa}</Tag>), '150px')}
+
+              </Col>
+              <Col span={12}>
+                <Upload
+                  listType="text"
+                  fileList={fileUpload ? [Object.assign({}, fileUpload, { percent: progressUpload })] : null}
+                  progress={{ strokeColor: { '0%': '#108ee9', '100%': '#87d068' } }}
+                  beforeUpload={action}
+                  // accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document.spreadsheetml.sheet"
+                  showUploadList={false}
+                  customRequest={() => null}
+                >
+                  <Tag color="purple" className="float-right"><UploadOutlined/>Tải tập tin</Tag>
+                </Upload>
+                {fileList.map((item, index) => {
+                  return <div className="clearfix" style={{ lineHeight: '40px' }}>
+                    <div><a key={index} href={API.FILE_ID.format(item.file_id)}>{item.file_name}</a></div>
+                  </div>
                 })}
+                {/*<List*/}
+                {/*  size="small"*/}
+                {/*  dataSource={fileList}*/}
+                {/*  renderItem={item => <List.Item><a*/}
+                {/*    href={API.FILE_ID.format(item.file_id)}>{item.file_name}</a></List.Item>}*/}
+                {/*/>*/}
               </Col>
             </Row>
-            <Row style={{marginTop: '20px'}}> <Tag onClick={() => handleShowModal(true)} color='green'>Hoàn thành đề tài</Tag></Row>
+            {/*<Row style={{marginTop: '20px'}}> <Tag onClick={() => handleShowModal(true)} color='green'>Hoàn thành đề tài</Tag></Row>*/}
           </Loading>
-          <Detail
-            type={CONSTANTS.UPDATE}
-            isModalVisible={state.isShowModal}
-            handleOk={createAndModifyDetai}
-            handleCancel={() => handleShowModal(false)}
-            userSelected={state.userSelected}
-          />
         </TabPane>
       </Tabs>}
 

@@ -65,3 +65,37 @@ export function deleteDeTai(detaiId) {
       return null;
     });
 }
+
+export function uploadFile(file, detaiId, config = {}) {
+  // console.log('data', data);
+  config.headers = { 'content-type': 'multipart/form-data' };
+  config.loading = false;
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('detai_id', detaiId);
+  return axios.post(API.UPLOAD_FILE, formData, config)
+    .then(response => {
+      if (response.status === 200) {
+        return response?.data?.data;
+      }
+      return null;
+    })
+    .catch(err => {
+      renderMessageError(err);
+      return null;
+    });
+}
+
+export function getAllFile(currentPage = 1, totalDocs = 0, query, loading = true) {
+  const params = convertParam(query, '&');
+  const config = { loading };
+  return axios.get(`${API.FILE}?page=${currentPage}&limit=${totalDocs}${params}`, config)
+    .then(response => {
+      if (response.status === 200 && Array.isArray(response.data?.data?.docs)) return response.data.data;
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}

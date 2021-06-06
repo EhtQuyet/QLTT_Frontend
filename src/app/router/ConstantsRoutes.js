@@ -1,6 +1,23 @@
 import React, { lazy } from 'react';
 import {ROLE} from '@src/constants/contans';
 import { URL } from '@url';
+import {
+  DashboardOutlined,
+  UserOutlined,
+  UnorderedListOutlined,
+  InboxOutlined,
+  HddOutlined,
+  DeploymentUnitOutlined,
+  ClusterOutlined,
+  GroupOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  DiffOutlined,
+  SnippetsOutlined,
+  ArrowsAltOutlined,
+  UsergroupAddOutlined
+} from '@ant-design/icons';
+
 const Dashboard = lazy(() => import('@containers/Dashboard/Dashboard'));
 const User = lazy(() => import('@containers/User/User'));
 const MyInfo = lazy(() => import('@containers/MyInfo/MyInfo'));
@@ -19,12 +36,15 @@ const LinhVuc = lazy(() => import('@containers/LinhVuc/linhVucManagerment'));
 const TuKhoa = lazy(() => import('@containers/QuanLyTuKhoa/tuKhoaManagerment'));
 const Ngach = lazy(() => import('@containers/NgachGiangVien/ngachGVManagerment'));
 
-const KeHoach = lazy(() => import('@containers/KeHoachThucTap/keHoachManagerment'));
-const NhatKyIndex = lazy(() => import('@containers/NhatKyThucTap/index'));
-const KeHoachDetail = lazy(() => import('@containers/KeHoachThucTap/keHoachDetail'));
-const ThemKeHoach = lazy(() => import('@containers/KeHoachThucTap/keHoachDetail'));
+// const KeHoach = lazy(() => import('@containers/KeHoachThucTap/keHoachManagerment'));
+// const NhatKyIndex = lazy(() => import('@containers/NhatKyThucTap/index'));
+// const KeHoachDetail = lazy(() => import('@containers/KeHoachThucTap/keHoachDetail'));
+// const ThemKeHoach = lazy(() => import('@containers/KeHoachThucTap/keHoachDetail'));
 const KiemDuyetNhatKy = lazy(() => import('@containers/NhatKyThucTap/KiemDuyetNhatKy'));
 const NhatKyItem = lazy(() => import('@containers/NhatKyThucTap/NhatKyItem'));
+const KeHoach = lazy(() => import('@containers/ThucTap/KeHoachThucTap/KeHoach'));
+const KeHoachChiTiet = lazy(() => import('@containers/ThucTap/KeHoachThucTap/KeHoachChiTiet'));
+const ThemKeHoach = lazy(() => import('@containers/ThucTap/KeHoachThucTap/KeHoachChiTiet'));
 
 const NhiemVu_DotThucTap = lazy(() => import('@containers/ThucTap/NhiemVuSinhVien/nhiemVu-dotThucTap'));
 const NhiemVu_SinhVien = lazy(() => import('@containers/ThucTap/NhiemVuSinhVien/nhiemVu-sinhVien'));
@@ -194,13 +214,13 @@ export const ConstantsRoutes = [
         icon: renderIcon('user-friends'),
         role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN],
       },
-      {
-        path: URL.MENU.NHAT_KY_THUC_TAP,
-        menuName: 'Nhật ký thực tập',
-        component: NhatKyIndex,
-        icon: renderIcon('user-friends'),
-        role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN],
-      },
+      // {
+      //   path: URL.MENU.NHAT_KY_THUC_TAP,
+      //   menuName: 'Nhật ký thực tập',
+      //   component: NhatKyIndex,
+      //   icon: renderIcon('user-friends'),
+      //   role : [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN],
+      // },
       {
         path: URL.MENU.NHIEM_VU_DOT_THUC_TAP,
         menuName: 'Nhiệm vụ sinh viên',
@@ -299,7 +319,7 @@ export const ConstantsRoutes = [
   {
     path: `${URL.MENU.KE_HOACH_CHI_TIET}/:id`,
     breadcrumbName: 'Chi tiết kế hoạch',
-    component: KeHoachDetail,
+    component: KeHoachChiTiet,
     role: [ROLE.ADMIN, ROLE.GIANG_VIEN, ROLE.SINH_VIEN, ROLE.GIAO_VU],
   },
   // {

@@ -6,6 +6,11 @@ export const API = {
   UPDATE_MY_INFO: '/api/users/info',
   DE_TAI: '/api/detai',
   DE_TAI_ID: '/api/detai/{0}',
+
+  UPLOAD_FILE: '/api/file/upload',
+  FILE: '/api/file',
+  FILE_ID: '/api/file/{0}',
+
   ROLE: '/api/roles',
 
   SINH_VIEN: '/api/sinhvien',
@@ -17,26 +22,27 @@ export const API = {
   SV_THUC_TAP_ID: '/api/dangkythuctap/sv/{0}',
   XAC_NHAN_HUONG_DAN: '/api/dangkythuctap/xacnhanhuongdan',
 
-  BO_MON: '/api/bomon',
-  BO_MON_ID: '/api/bomon/{0}',
+  BO_MON: 'api/bomon',
+  BO_MON_ID: 'api/bomon/{0}',
 
   NHIEM_VU: '/api/nhiemvusinhvien',
   NHIEM_VU_ID: '/api/nhiemvusinhvien/{0}',
 
-  DIA_DIEM_THUC_TAP: '/api/diadiemthuctap',
-  DIA_DIEM_THUC_TAP_ID: '/api/diadiemthuctap/{0}',
+  DIA_DIEM_THUC_TAP: 'api/diadiemthuctap',
+  DIA_DIEM_THUC_TAP_ID: 'api/diadiemthuctap/{0}',
 
-  NAM_HOC: '/api/namhoc',
-  NAM_HOC_ID: '/api/namhoc/{0}',
+  NAM_HOC: 'api/namhoc',
+  NAM_HOC_ID: 'api/namhoc/{0}',
 
-  TU_KHOA: '/api/tukhoa',
-  TU_KHOA_ID: '/api/tukhoa/{0}',
+  TU_KHOA: 'api/tukhoa',
+  TU_KHOA_ID: 'api/tukhoa/{0}',
 
-  LINH_VUC: '/api/linhvuc',
-  LINH_VUC_ID: '/api/linhvuc/{0}',
+  LINH_VUC: 'api/linhvuc',
+  LINH_VUC_ID: 'api/linhvuc/{0}',
 
-  KE_HOACH: '/api/kehoachthuctap',
-  KE_HOACH_ID: '/api/kehoachthuctap/{0}',
+  KE_HOACH_TT: '/api/kehoachthuctap',
+  KE_HOACH_TT_ID: '/api/kehoachthuctap/{0}',
+  KE_HOACH_CHI_TIET: '/api/kehoachchitiet',
 
   NHAT_KY: '/api/nhatkythuctap',
   NHAT_KY_ID: '/api/nhatkythuctap/{0}',
